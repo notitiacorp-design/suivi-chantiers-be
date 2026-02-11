@@ -7,6 +7,7 @@ import { supabase } from './lib/supabase';
 import MainLayout from './components/layout/MainLayout';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import LoadingSpinner from './components/common/LoadingSpinner';
+import { AuthProvider } from './contexts/AuthContext';
 import toast from 'react-hot-toast';
 
 // Lazy loading des pages
@@ -43,7 +44,7 @@ const App: React.FC = () => {
       }
     }, 5000);
 
-    // VÃ©rifier la session au chargement
+    // VÃÂ©rifier la session au chargement
     supabase.auth.getSession()
       .then(({ data: { session } }) => {
         setSession(session);
@@ -56,7 +57,7 @@ const App: React.FC = () => {
         setSession(null);
       });
 
-    // Ãcouter les changements d'auth
+    // ÃÂcouter les changements d'auth
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -75,7 +76,7 @@ const App: React.FC = () => {
   }, [setSession, setUser]);
 
   useEffect(() => {
-    // VÃ©rifier les alertes Ã  la connexion de l'utilisateur
+    // VÃÂ©rifier les alertes ÃÂ  la connexion de l'utilisateur
     if (user?.id) {
       checkUserAlerts();
     }
@@ -111,24 +112,25 @@ const App: React.FC = () => {
 
       if (alerts && alerts.length > 0) {
         alerts.forEach((alert: any) => {
-          const severity = alert.severite === 'critique' ? 'ð´' : alert.severite === 'importante' ? 'ð ' : 'ð¡';
+          const severity = alert.severite === 'critique' ? 'Ã°ÂÂÂ´' : alert.severite === 'importante' ? 'Ã°ÂÂÂ ' : 'Ã°ÂÂÂ¡';
           toast(
             `${severity} ${alert.chantiers?.nom || 'Chantier'}: ${alert.message}`,
             {
               duration: 6000,
-              icon: 'â ï¸',
+              icon: 'Ã¢ÂÂ Ã¯Â¸Â',
             }
           );
         });
       }
     } catch (error) {
-      console.error('Erreur vÃ©rification alertes:', error);
+      console.error('Erreur vÃÂ©rification alertes:', error);
     }
   };
 
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+      <AuthProvider>
         <Suspense
           fallback={
             <div className="flex items-center justify-center min-h-screen bg-slate-50">
@@ -141,7 +143,7 @@ const App: React.FC = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
-            {/* Routes protÃ©gÃ©es */}
+            {/* Routes protÃÂ©gÃÂ©es */}
             <Route
               path="/"
               element={
@@ -175,6 +177,7 @@ const App: React.FC = () => {
             },
           }}
         />
+      </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );
