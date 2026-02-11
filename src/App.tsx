@@ -1,0 +1,184 @@
+import React, { Suspense, lazy, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from 'react-hot-toast';
+import { useAuthStore } from './stores/authStore';
+import { supabase } from './lib/supabase';
+import MainLayout from './components/layout/MainLayout';
+import ProtectedRoute from './components/common/ProtectedRoute';
+import LoadingSpinner from './components/common/LoadingSpinner';
+import toast from 'react-hot-toast';
+
+// Lazy loading des pages
+const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
+const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const MesChrantiersPage = lazy(() => import('./pages/MesChantiersPage'));
+const TousChantiersPage = lazy(() => import('./pages/TousChantiersPage'));
+const TableauChargePage = lazy(() => import('./pages/TableauChargePage'));
+const FacturationPage = lazy(() => import('./pages/FacturationPage'));
+const DocumentsPage = lazy(() => import('./pages/DocumentsPage'));
+const NotificationsPage = lazy(() => import('./pages/NotificationsPage'));
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  },
+});
+
+const App: React.FC = () => {
+  const { user, setUser, setSession } = useAuthStore();
+
+  useEffect(() => {
+    // Vérifier la session au chargement
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session?.user) {
+        loadUserProfile(session.user.id);
+      }
+    });
+
+    // Écouter les changements d'auth
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      if (session?.user) {
+        loadUserProfile(session.user.id);
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [setSession, setUser]);
+
+  useEffect(() => {
+    // Vérifier les alertes à la connexion de l'utilisateur
+    if (user?.id) {
+      checkUserAlerts();
+    }
+  }, [user?.id]);
+
+  const loadUserProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (error) throw error;
+      setUser(data);
+    } catch (error) {
+      console.error('Erreur chargement profil:', error);
+      toast.error('Erreur lors du chargement du profil');
+    }
+  };
+
+  const checkUserAlerts = async () => {
+    try {
+      const { data: alerts, error } = await supabase
+        .from('alertes')
+        .select('*, chantiers(nom)')
+        .eq('user_id', user?.id)
+        .eq('resolue', false)
+        .order('created_at', { ascending: false })
+        .limit(3);
+
+      if (error) throw error;
+
+      if (alerts && alerts.length > 0) {
+        alerts.forEach((alert: any) => {
+          const severity = alert.severite === 'critique' ? '🔴' : alert.severite === 'importante' ? '🟠' : '🟡';
+          toast(
+            `${severity} ${alert.chantiers?.nom || 'Chantier'}: ${alert.message}`,
+            {
+              duration: 6000,
+              icon: '⚠️',
+            }
+          );
+        });
+      }
+    } catch (error) {
+      console.error('Erreur vérification alertes:', error);
+    }
+  };
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center min-h-screen bg-slate-50">
+              <LoadingSpinner size="lg" />
+            </div>
+          }
+        >
+          <Routes>
+            {/* Routes publiques */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/mot-de-passe-oublie" element={<ForgotPasswordPage />} />
+
+            {/* Routes protégées */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <MainLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<Navigate to="/dashboard" replace />} />
+              <Route path="dashboard" element={<DashboardPage />} />
+              <Route path="mes-chantiers" element={<MesChantiersPage />} />
+              <Route
+                path="tous-chantiers"
+                element={
+                  <ProtectedRoute requiredRole="directeur">
+                    <TousChantiersPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="tableau-charge" element={<TableauChargePage />} />
+              <Route path="facturation" element={<FacturationPage />} />
+              <Route path="documents" element={<DocumentsPage />} />
+              <Route path="notifications" element={<NotificationsPage />} />
+            </Route>
+
+            {/* 404 */}
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </Suspense>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: '#363636',
+              color: '#fff',
+            },
+            success: {
+              iconTheme: {
+                primary: '#10b981',
+                secondary: '#fff',
+              },
+            },
+            error: {
+              iconTheme: {
+                primary: '#ef4444',
+                secondary: '#fff',
+              },
+            },
+          }}
+        />
+      </BrowserRouter>
+    </QueryClientProvider>
+  );
+};
+
+export default App;
