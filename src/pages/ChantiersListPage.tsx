@@ -640,7 +640,6 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
  ))}
  </div>
  )}
- </div>
 
  {/* Modal Nouveau Chantier */}
  {showNewChantierForm && (
