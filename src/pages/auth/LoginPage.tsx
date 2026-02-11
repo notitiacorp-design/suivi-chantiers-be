@@ -26,7 +26,7 @@ const LoginPage: React.FC = () => {
     if (!password) {
       newErrors.password = 'Le mot de passe est requis';
     } else if (password.length < 6) {
-      newErrors.password = 'Le mot de passe doit contenir au moins 6 caractères';
+      newErrors.password = 'Le mot de passe doit contenir au moins 6 caractÃ¨res';
     }
 
     setErrors(newErrors);
@@ -53,7 +53,7 @@ const LoginPage: React.FC = () => {
 
         // Charger le profil utilisateur
         const { data: userData, error: userError } = await supabase
-          .from('users')
+          .from('profiles')
           .select('*')
           .eq('id', data.user.id)
           .single();
@@ -71,7 +71,7 @@ const LoginPage: React.FC = () => {
       } else {
         setErrors({ general: error.message || 'Erreur de connexion' });
       }
-      toast.error('Échec de la connexion');
+      toast.error('Ãchec de la connexion');
     } finally {
       setLoading(false);
     }
@@ -92,10 +92,10 @@ const LoginPage: React.FC = () => {
           {/* Title */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-slate-900 mb-2">Suivi BE</h1>
-            <p className="text-slate-600">Connectez-vous à votre compte</p>
+            <p className="text-slate-600">Connectez-vous Ã  votre compte</p>
           </div>
 
-          {/* Error général */}
+          {/* Error gÃ©nÃ©ral */}
           {errors.general && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
               <p className="text-sm text-red-600">{errors.general}</p>
@@ -144,7 +144,7 @@ const LoginPage: React.FC = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="â¢â¢â¢â¢â¢â¢â¢â¢"
                   className={`
                     w-full pl-10 pr-4 py-3 border rounded-lg text-sm
                     focus:outline-none focus:ring-2 transition-all
@@ -166,7 +166,7 @@ const LoginPage: React.FC = () => {
                 to="/mot-de-passe-oublie"
                 className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
               >
-                Mot de passe oublié ?
+                Mot de passe oubliÃ© ?
               </Link>
             </div>
 
@@ -191,7 +191,7 @@ const LoginPage: React.FC = () => {
         {/* Footer */}
         <div className="mt-6 text-center">
           <p className="text-sm text-white/80">
-            © 2024 Suivi BE - Tous droits réservés
+            Â© 2024 Suivi BE - Tous droits rÃ©servÃ©s
           </p>
         </div>
       </div>
