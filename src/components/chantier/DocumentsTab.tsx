@@ -28,7 +28,7 @@ interface DocumentsTabProps {
 
 const CATEGORIES = [
  { value: 'plans', label: 'Plans', icon: FileText },
- { value: 'pv_reunion', label: 'PV Réunion', icon: FileText },
+ { value: 'pv_reunion', label: 'PV RÃ©union', icon: FileText },
  { value: 'doe', label: 'DOE', icon: FileText },
  { value: 'dgd', label: 'DGD', icon: FileText },
  { value: 'fiches_techniques', label: 'Fiches Techniques', icon: FileText },
@@ -104,7 +104,7 @@ export default function DocumentsTab({ chantierId }: DocumentsTabProps) {
  const deleteMutation = useMutation({
  mutationFn: async (documentId: string) => {
  const document = documents.find(d => d.id === documentId);
- if (!document) throw new Error('Document non trouvé');
+ if (!document) throw new Error('Document non trouvÃ©');
 
  const filePath = document.url.split('/documents/')[1];
  await supabase.storage.from('documents').remove([filePath]);
@@ -173,7 +173,7 @@ export default function DocumentsTab({ chantierId }: DocumentsTabProps) {
  </div>
  </div>
 
- {/* Filtres par catégorie */}
+ {/* Filtres par catÃ©gorie */}
  <div className="flex gap-2 overflow-x-auto pb-2">
  <button
  onClick={() => setSelectedCategory('all')}
@@ -201,7 +201,7 @@ export default function DocumentsTab({ chantierId }: DocumentsTabProps) {
  ))}
  </div>
 
- {/* Grille de documents par catégorie */}
+ {/* Grille de documents par catÃ©gorie */}
  {isLoading ? (
  <div className="flex justify-center items-center h-64">
  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -234,7 +234,7 @@ export default function DocumentsTab({ chantierId }: DocumentsTabProps) {
  </div>
  )}
 
- {/* Modal de prévisualisation */}
+ {/* Modal de prÃ©visualisation */}
  {previewDocument && (
  <PreviewModal
  document={previewDocument}
@@ -309,8 +309,8 @@ function CategorySection({
  <Upload className="h-12 w-12 text-gray-400 mx-auto mb-3" />
  <p className="text-gray-600 mb-1">
  {isDragActive
- ? 'Déposez les fichiers ici...'
- : 'Glissez-déposez des fichiers ici ou cliquez pour sélectionner'}
+ ? 'DÃ©posez les fichiers ici...'
+ : 'Glissez-dÃ©posez des fichiers ici ou cliquez pour sÃ©lectionner'}
  </p>
  <p className="text-sm text-gray-500">
  {category.value === 'photos' ? 'Images uniquement' : 'PDF, Word, Excel, Images'}
@@ -348,14 +348,14 @@ function CategorySection({
  <button
  onClick={() => onPreview(doc)}
  className="opacity-0 group-hover:opacity-100 transition-opacity bg-white text-gray-900 p-2 rounded-full hover:bg-gray-100"
- title="Prévisualiser"
+ title="PrÃ©visualiser"
  >
  <Eye className="h-5 w-5" />
  </button>
  <button
  onClick={() => onDownload(doc)}
  className="opacity-0 group-hover:opacity-100 transition-opacity bg-white text-gray-900 p-2 rounded-full hover:bg-gray-100"
- title="Télécharger"
+ title="TÃ©lÃ©charger"
  >
  <Download className="h-5 w-5" />
  </button>
@@ -388,7 +388,7 @@ function CategorySection({
  <span>{formatFileSize(doc.taille)}</span>
  </div>
  <div className="flex justify-between">
- <span>Uploadé par:</span>
+ <span>UploadÃ© par:</span>
  <span className="truncate max-w-[120px]" title={doc.uploade_par}>
  {doc.uploade_par}
  </span>
@@ -404,7 +404,7 @@ function CategorySection({
  </div>
  ) : (
  <div className="text-center py-8 text-gray-500">
- Aucun document dans cette catégorie
+ Aucun document dans cette catÃ©gorie
  </div>
  )}
  </div>
@@ -436,7 +436,7 @@ function PreviewModal({ document: doc, onClose, onDownload }: PreviewModalProps)
  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
  >
  <Download className="h-4 w-4" />
- Télécharger
+ TÃ©lÃ©charger
  </button>
  <button
  onClick={onClose}
@@ -456,12 +456,12 @@ function PreviewModal({ document: doc, onClose, onDownload }: PreviewModalProps)
  ) : (
  <div className="flex flex-col items-center justify-center h-64">
  <File className="h-24 w-24 text-gray-400 mb-4" />
- <p className="text-gray-600">Aperçu non disponible pour ce type de fichier</p>
+ <p className="text-gray-600">AperÃ§u non disponible pour ce type de fichier</p>
  <button
  onClick={onDownload}
  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
  >
- Télécharger le fichier
+ TÃ©lÃ©charger le fichier
  </button>
  </div>
  )}
@@ -470,7 +470,3 @@ function PreviewModal({ document: doc, onClose, onDownload }: PreviewModalProps)
  </div>
  );
 }
-
-// ============================================
-// FICHIER 2: src/components/chantier/AvenantsTable.tsx
-// ============================================
