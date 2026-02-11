@@ -25,13 +25,13 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, setMobileOpen }) => {
   const [unreadNotifications, setUnreadNotifications] = useState(3); // TODO: Charger depuis Supabase
 
   const navigation = [
-    { name: 'Tableau de bord', href: '/dashboard', icon: HomeIcon, roles: ['chef_atelier', 'directeur'] },
-    { name: 'Mes Chantiers', href: '/mes-chantiers', icon: BuildingOffice2Icon, roles: ['chef_atelier', 'directeur'] },
+    { name: 'Tableau de bord', href: '/dashboard', icon: HomeIcon, roles: ['charge_affaires', 'directeur'] },
+    { name: 'Mes Chantiers', href: '/mes-chantiers', icon: BuildingOffice2Icon, roles: ['charge_affaires', 'directeur'] },
     { name: 'Tous les Chantiers', href: '/tous-chantiers', icon: RectangleStackIcon, roles: ['directeur'] },
-    { name: 'Tableau de Charge', href: '/tableau-charge', icon: CalendarDaysIcon, roles: ['chef_atelier', 'directeur'] },
-    { name: 'Facturation', href: '/facturation', icon: BanknotesIcon, roles: ['chef_atelier', 'directeur'] },
-    { name: 'Documents', href: '/documents', icon: DocumentTextIcon, roles: ['chef_atelier', 'directeur'] },
-    { name: 'Notifications', href: '/notifications', icon: BellIcon, roles: ['chef_atelier', 'directeur'], badge: unreadNotifications },
+    { name: 'Tableau de Charge', href: '/tableau-charge', icon: CalendarDaysIcon, roles: ['charge_affaires', 'directeur'] },
+    { name: 'Facturation', href: '/facturation', icon: BanknotesIcon, roles: ['charge_affaires', 'directeur'] },
+    { name: 'Documents', href: '/documents', icon: DocumentTextIcon, roles: ['charge_affaires', 'directeur'] },
+    { name: 'Notifications', href: '/notifications', icon: BellIcon, roles: ['charge_affaires', 'directeur'], badge: unreadNotifications },
   ];
 
   const filteredNavigation = navigation.filter((item) =>
