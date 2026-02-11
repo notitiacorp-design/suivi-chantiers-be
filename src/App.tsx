@@ -34,13 +34,27 @@ const App: React.FC = () => {
   const { user, setUser, setSession } = useAuthStore();
 
   useEffect(() => {
-    // VÃ©rifier la session au chargement
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (session?.user) {
-        loadUserProfile(session.user.id);
+    // Safety timeout: if auth is not resolved within 5 seconds, force session to null
+    const timeout = setTimeout(() => {
+      const currentSession = useAuthStore.getState().session;
+      if (currentSession === undefined) {
+        console.warn('Auth timeout: forcing session to null after 5s');
+        setSession(null);
       }
-    });
+    }, 5000);
+
+    // VÃ©rifier la session au chargement
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        setSession(session);
+        if (session?.user) {
+          loadUserProfile(session.user.id);
+        }
+      })
+      .catch((error) => {
+        console.error('Error getting session:', error);
+        setSession(null);
+      });
 
     // Ãcouter les changements d'auth
     const {
@@ -54,7 +68,10 @@ const App: React.FC = () => {
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      clearTimeout(timeout);
+      subscription.unsubscribe();
+    };
   }, [setSession, setUser]);
 
   useEffect(() => {
@@ -122,7 +139,7 @@ const App: React.FC = () => {
           <Routes>
             {/* Routes publiques */}
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/mot-de-passe-oublie" element={<ForgotPasswordPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
             {/* Routes protÃ©gÃ©es */}
             <Route
@@ -136,22 +153,15 @@ const App: React.FC = () => {
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard" element={<DashboardPage />} />
               <Route path="mes-chantiers" element={<MesChantiersPage />} />
-              <Route
-                path="tous-chantiers"
-                element={
-                  <ProtectedRoute requiredRole="directeur">
-                    <TousChantiersPage />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="tous-chantiers" element={<TousChantiersPage />} />
               <Route path="tableau-charge" element={<TableauChargePage />} />
               <Route path="facturation" element={<FacturationPage />} />
               <Route path="documents" element={<DocumentsPage />} />
               <Route path="notifications" element={<NotificationsPage />} />
             </Route>
 
-            {/* 404 */}
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            {/* Fallback */}
+            <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </Suspense>
         <Toaster
@@ -159,20 +169,9 @@ const App: React.FC = () => {
           toastOptions={{
             duration: 4000,
             style: {
-              background: '#363636',
-              color: '#fff',
-            },
-            success: {
-              iconTheme: {
-                primary: '#10b981',
-                secondary: '#fff',
-              },
-            },
-            error: {
-              iconTheme: {
-                primary: '#ef4444',
-                secondary: '#fff',
-              },
+              background: '#1e293b',
+              color: '#f8fafc',
+              borderRadius: '8px',
             },
           }}
         />
