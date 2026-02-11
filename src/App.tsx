@@ -13,7 +13,7 @@ import toast from 'react-hot-toast';
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
-const MesChrantiersPage = lazy(() => import('./pages/MesChantiersPage'));
+const MesChantiersPage = lazy(() => import('./pages/MesChantiersPage'));
 const TousChantiersPage = lazy(() => import('./pages/TousChantiersPage'));
 const TableauChargePage = lazy(() => import('./pages/TableauChargePage'));
 const FacturationPage = lazy(() => import('./pages/FacturationPage'));
@@ -34,7 +34,7 @@ const App: React.FC = () => {
   const { user, setUser, setSession } = useAuthStore();
 
   useEffect(() => {
-    // Vérifier la session au chargement
+    // VÃ©rifier la session au chargement
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       if (session?.user) {
@@ -42,7 +42,7 @@ const App: React.FC = () => {
       }
     });
 
-    // Écouter les changements d'auth
+    // Ãcouter les changements d'auth
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -58,7 +58,7 @@ const App: React.FC = () => {
   }, [setSession, setUser]);
 
   useEffect(() => {
-    // Vérifier les alertes à la connexion de l'utilisateur
+    // VÃ©rifier les alertes Ã  la connexion de l'utilisateur
     if (user?.id) {
       checkUserAlerts();
     }
@@ -94,18 +94,18 @@ const App: React.FC = () => {
 
       if (alerts && alerts.length > 0) {
         alerts.forEach((alert: any) => {
-          const severity = alert.severite === 'critique' ? '🔴' : alert.severite === 'importante' ? '🟠' : '🟡';
+          const severity = alert.severite === 'critique' ? 'ð´' : alert.severite === 'importante' ? 'ð ' : 'ð¡';
           toast(
             `${severity} ${alert.chantiers?.nom || 'Chantier'}: ${alert.message}`,
             {
               duration: 6000,
-              icon: '⚠️',
+              icon: 'â ï¸',
             }
           );
         });
       }
     } catch (error) {
-      console.error('Erreur vérification alertes:', error);
+      console.error('Erreur vÃ©rification alertes:', error);
     }
   };
 
@@ -124,7 +124,7 @@ const App: React.FC = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/mot-de-passe-oublie" element={<ForgotPasswordPage />} />
 
-            {/* Routes protégées */}
+            {/* Routes protÃ©gÃ©es */}
             <Route
               path="/"
               element={
