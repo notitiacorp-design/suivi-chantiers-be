@@ -6,7 +6,7 @@ interface User {
   email: string;
   nom: string;
   prenom: string;
-  role: 'chef_atelier' | 'directeur';
+  role: 'directeur' | 'charge_affaires';
   actif: boolean;
   created_at: string;
 }
