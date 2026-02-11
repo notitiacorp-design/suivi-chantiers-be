@@ -14,13 +14,17 @@ interface User {
 interface AuthState {
   user: User | null;
   session: Session | null | undefined;
+  initialized: boolean;
   setUser: (user: User | null) => void;
   setSession: (session: Session | null) => void;
+  setInitialized: (initialized: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   session: undefined,
+  initialized: false,
   setUser: (user) => set({ user }),
-  setSession: (session) => set({ session }),
+  setSession: (session) => set({ session, initialized: true }),
+  setInitialized: (initialized) => set({ initialized }),
 }));
