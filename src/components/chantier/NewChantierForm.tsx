@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '../../lib/supabase';
 import { X, Check, ArrowRight, ArrowLeft, Building, FileText, DollarSign, Users } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 

@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabase';
 import { format, startOfWeek, addWeeks, isSameWeek } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from 'recharts';

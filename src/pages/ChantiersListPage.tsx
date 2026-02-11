@@ -37,7 +37,11 @@ type SortField = 'nom' | 'client_nom' | 'phase' | 'score_sante' | 'avancement' |
 type SortOrder = 'asc' | 'desc';
 type ViewMode = 'table' | 'cards';
 
-const ChantiersListPage: React.FC = () => {
+interface ChantiersListPageProps {
+  filterMine?: boolean;
+}
+
+const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = false }) => {
  const navigate = useNavigate();
  const [searchTerm, setSearchTerm] = useState('');
  const [phaseFilter, setPhaseFilter] = useState<string>('all');
