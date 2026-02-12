@@ -72,10 +72,10 @@ interface Alert {
 }
 
 const phaseLabels: { [key: string]: string } = {
- etude: 'Ãtude',
- preparation: 'PrÃ©paration',
- execution: 'ExÃ©cution',
- reception: 'RÃ©ception',
+ etude: '\u00c9tude',
+ preparation: 'Pr\u00e9paration',
+ execution: 'Ex\u00e9cution',
+ reception: 'R\u00e9ception',
  garantie: 'Garantie',
 };
 
@@ -105,7 +105,7 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  const phases = ['etude', 'preparation', 'execution', 'reception', 'garantie'];
  const scores: PhaseScore[] = phases.map((phase) => {
  const tachesPhase = data?.filter((t: any) => t.phase === phase) || [];
- const terminees = tachesPhase.filter((t: any) => t.statut === 'TerminÃ©');
+ const terminees = tachesPhase.filter((t: any) => t.statut === 'Termin\u00e9');
  const score =
  tachesPhase.length > 0
  ? (terminees.reduce((sum: number, t: any) => sum + (t.poids || 0), 0) /
@@ -171,7 +171,7 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  const totalPoids = data?.reduce((sum, t) => sum + (t.poids || 0), 0) || 0;
  const poidsTermines =
  data
- ?.filter((t) => t.statut === 'TerminÃ©')
+ ?.filter((t) => t.statut === 'Termin\u00e9')
  .reduce((sum, t) => sum + (t.poids || 0), 0) || 0;
 
  setAvancement(totalPoids > 0 ? Math.round((poidsTermines / totalPoids) * 100) : 0);
@@ -226,7 +226,7 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  onClick={() => setEditing(field)}
  >
  {type === 'number' && (field === 'budget_initial' || field === 'budget_actuel' || field === 'montant_marche')
- ? `${parseFloat(value || 0).toLocaleString('fr-FR')} Ã¢ÃÂÃÂ¬`
+ ? `${parseFloat(value || 0).toLocaleString('fr-FR')} \u00e2\u0082\u00ac`
  : value || '-'}
  </p>
  )}
@@ -247,18 +247,18 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  switch (type) {
  case 'Alerte':
  case 'alerte':
- return 'ÃÂ°ÃÂÃÂÃÂ¨';
+ return '\u00f0\u009f\u009a\u00a8';
  case 'Note':
  case 'note':
- return 'ÃÂ°ÃÂÃÂÃÂ';
+ return '\u00f0\u009f\u0093\u009d';
  case 'Modification':
  case 'modification':
- return 'Ã¢ÃÂÃÂÃ¯ÃÂ¸ÃÂ';
+ return '\u00e2\u009c\u008f\u00ef\u00b8\u008f';
  case 'Photo':
  case 'photo':
- return 'ÃÂ°ÃÂÃÂÃÂ·';
+ return '\u00f0\u009f\u0093\u00b7';
  default:
- return 'ÃÂ°ÃÂÃÂÃÂ';
+ return '\u00f0\u009f\u0093\u0084';
  }
  };
 
@@ -270,9 +270,9 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
 
  return (
  <div className="space-y-6">
- {/* Informations gÃ©nÃ©rales */}
+ {/* Informations g\u00e9n\u00e9rales */}
  <div>
- <h2 className="text-lg font-semibold text-gray-900 mb-4">Informations gÃ©nÃ©rales</h2>
+ <h2 className="text-lg font-semibold text-gray-900 mb-4">Informations g\u00e9n\u00e9rales</h2>
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
  <InfoCard icon={MapPin} label="Adresse" value={chantier.adresse} field="adresse" />
  <InfoCard
@@ -284,7 +284,7 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  />
  <InfoCard
  icon={DollarSign}
- label="Montant marchÃ©"
+ label="Montant march\u00e9"
  value={chantier.montant_marche}
  field="montant_marche"
  type="number"
@@ -297,14 +297,14 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  />
  <InfoCard
  icon={Calendar}
- label="Date dÃ©but"
+ label="Date d\u00e9but"
  value={new Date(chantier.date_debut).toLocaleDateString('fr-FR')}
  field="date_debut"
  type="date"
  />
  <InfoCard
  icon={Calendar}
- label="Date fin prÃ©vue"
+ label="Date fin pr\u00e9vue"
  value={new Date(chantier.date_fin_prevue).toLocaleDateString('fr-FR')}
  field="date_fin_prevue"
  type="date"
@@ -329,16 +329,16 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  </div>
  </div>
 
- {/* Score santÃ© par phase */}
+ {/* Score sant\u00e9 par phase */}
  <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
- <h3 className="text-lg font-semibold text-gray-900 mb-4">Score santÃ© par phase</h3>
+ <h3 className="text-lg font-semibold text-gray-900 mb-4">Score sant\u00e9 par phase</h3>
  <div className="space-y-4">
  {phaseScores.map((phase) => (
  <div key={phase.phase}>
  <div className="flex items-center justify-between mb-2">
  <span className="text-sm font-medium text-gray-700">{phase.phase}</span>
  <span className="text-sm text-gray-600">
- {phase.taches_terminees}/{phase.total_taches} tÃ¢ches Ã¢ÃÂÃÂ¢ {phase.score}%
+ {phase.taches_terminees}/{phase.total_taches} t\u00e2ches \u00e2\u0080\u00a2 {phase.score}%
  </span>
  </div>
  <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
@@ -352,10 +352,10 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  </div>
  </div>
 
- {/* DerniÃ¨res entrÃ©es journal */}
+ {/* Derni\u00e8res entr\u00e9es journal */}
  <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
  <h3 className="text-lg font-semibold text-gray-900 mb-4">
- DerniÃ¨res entrÃ©es du journal
+ Derni\u00e8res entr\u00e9es du journal
  </h3>
  {recentEntries.length > 0 ? (
  <div className="space-y-3">
@@ -368,7 +368,7 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  <div className="flex-1 min-w-0">
  <p className="text-sm text-gray-900 truncate">{entry.contenu}</p>
  <p className="text-xs text-gray-500 mt-1">
- {entry.auteur} Ã¢ÃÂÃÂ¢{' '}
+ {entry.auteur} \u00e2\u0080\u00a2{' '}
  {new Date(entry.created_at).toLocaleDateString('fr-FR', {
  day: 'numeric',
  month: 'short',
@@ -381,7 +381,7 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  ))}
  </div>
  ) : (
- <p className="text-sm text-gray-500">Aucune entrÃ©e dans le journal</p>
+ <p className="text-sm text-gray-500">Aucune entr\u00e9e dans le journal</p>
  )}
  </div>
 

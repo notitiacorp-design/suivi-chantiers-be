@@ -73,8 +73,8 @@ export default function AvenantsTable({ chantierId, budgetInitial }: AvenantsTab
  };
  const labels = {
  en_attente: 'En attente',
- accepte: 'Accepté',
- refuse: 'Refusé',
+ accepte: 'Accept\u00e9',
+ refuse: 'Refus\u00e9',
  };
  return (
  <span className={`px-3 py-1 rounded-full text-xs font-medium ${styles[statut]}`}>
@@ -89,33 +89,33 @@ export default function AvenantsTable({ chantierId, budgetInitial }: AvenantsTab
  };
 
  const handleDelete = (id: string) => {
- if (confirm('Êtes-vous sûr de vouloir supprimer cet avenant ?')) {
+ if (confirm('\u00cates-vous s\u00fbr de vouloir supprimer cet avenant ?')) {
  deleteMutation.mutate(id);
  }
  };
 
  return (
  <div className="space-y-6">
- {/* En-tête avec statistiques */}
+ {/* En-t\u00eate avec statistiques */}
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
  <div className="bg-white rounded-lg shadow p-6">
  <div className="text-sm text-gray-600 mb-1">Budget Initial</div>
  <div className="text-2xl font-bold text-gray-900">
- {budgetInitial.toLocaleString('fr-FR')} €
+ {budgetInitial.toLocaleString('fr-FR')} \u20ac
  </div>
  </div>
  <div className="bg-white rounded-lg shadow p-6">
- <div className="text-sm text-gray-600 mb-1">Total Avenants Acceptés</div>
+ <div className="text-sm text-gray-600 mb-1">Total Avenants Accept\u00e9s</div>
  <div className={`text-2xl font-bold ${
  totalAvenantsAcceptes >= 0 ? 'text-green-600' : 'text-red-600'
  }`}>
- {totalAvenantsAcceptes >= 0 ? '+' : ''}{totalAvenantsAcceptes.toLocaleString('fr-FR')} €
+ {totalAvenantsAcceptes >= 0 ? '+' : ''}{totalAvenantsAcceptes.toLocaleString('fr-FR')} \u20ac
  </div>
  </div>
  <div className="bg-white rounded-lg shadow p-6">
  <div className="text-sm text-gray-600 mb-1">Budget Actuel</div>
  <div className="text-2xl font-bold text-blue-600">
- {budgetActuel.toLocaleString('fr-FR')} €
+ {budgetActuel.toLocaleString('fr-FR')} \u20ac
  </div>
  </div>
  <div className="bg-white rounded-lg shadow p-6">
@@ -157,14 +157,14 @@ export default function AvenantsTable({ chantierId, budgetInitial }: AvenantsTab
  ) : avenants.length === 0 ? (
  <div className="text-center py-12">
  <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
- <p className="text-gray-600">Aucun avenant enregistré</p>
+ <p className="text-gray-600">Aucun avenant enregistr\u00e9</p>
  </div>
  ) : (
  <table className="min-w-full divide-y divide-gray-200">
  <thead className="bg-gray-50">
  <tr>
  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
- N°
+ N\u00b0
  </th>
  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
  Description
@@ -199,7 +199,7 @@ export default function AvenantsTable({ chantierId, budgetInitial }: AvenantsTab
  <span className={`text-sm font-semibold ${
  avenant.montant >= 0 ? 'text-green-600' : 'text-red-600'
  }`}>
- {avenant.montant >= 0 ? '+' : ''}{avenant.montant.toLocaleString('fr-FR')} €
+ {avenant.montant >= 0 ? '+' : ''}{avenant.montant.toLocaleString('fr-FR')} \u20ac
  </span>
  </td>
  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
@@ -306,7 +306,7 @@ function AvenantForm({ chantierId, avenant, onClose, onSuccess }: AvenantFormPro
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Numéro *
+ Num\u00e9ro *
  </label>
  <input
  type="text"
@@ -349,7 +349,7 @@ function AvenantForm({ chantierId, avenant, onClose, onSuccess }: AvenantFormPro
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Montant (€) *
+ Montant (\u20ac) *
  </label>
  <input
  type="number"
@@ -358,10 +358,10 @@ function AvenantForm({ chantierId, avenant, onClose, onSuccess }: AvenantFormPro
  value={formData.montant}
  onChange={(e) => setFormData({ ...formData, montant: parseFloat(e.target.value) })}
  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
- placeholder="Positif ou négatif"
+ placeholder="Positif ou n\u00e9gatif"
  />
  <p className="text-xs text-gray-500 mt-1">
- Montant positif pour augmentation, négatif pour réduction
+ Montant positif pour augmentation, n\u00e9gatif pour r\u00e9duction
  </p>
  </div>
 
@@ -375,8 +375,8 @@ function AvenantForm({ chantierId, avenant, onClose, onSuccess }: AvenantFormPro
  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
  >
  <option value="en_attente">En attente</option>
- <option value="accepte">Accepté</option>
- <option value="refuse">Refusé</option>
+ <option value="accepte">Accept\u00e9</option>
+ <option value="refuse">Refus\u00e9</option>
  </select>
  </div>
  </div>
@@ -407,7 +407,7 @@ function AvenantForm({ chantierId, avenant, onClose, onSuccess }: AvenantFormPro
  disabled={mutation.isPending}
  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
  >
- {mutation.isPending ? 'Enregistrement...' : avenant ? 'Modifier' : 'Créer'}
+ {mutation.isPending ? 'Enregistrement...' : avenant ? 'Modifier' : 'Cr\u00e9er'}
  </button>
  </div>
  </form>

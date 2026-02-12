@@ -5,7 +5,7 @@ interface Chantier {
  id: string;
  nom: string;
  client: string;
- phase: 'Études' | 'Exécution' | 'OPR';
+ phase: '\u00c9tudes' | 'Ex\u00e9cution' | 'OPR';
  score_sante: number;
  taux_avancement: number;
  ca_responsable: string;
@@ -20,7 +20,7 @@ interface PredictionRetardProps {
 
 const PredictionRetard: React.FC<PredictionRetardProps> = ({ chantier }) => {
  const prediction = useMemo(() => {
- // Mock data pour les tâches
+ // Mock data pour les t\u00e2ches
  const tachesTotales = 100;
  const tachesCompletes = Math.round((chantier.taux_avancement / 100) * tachesTotales);
 
@@ -28,27 +28,27 @@ const PredictionRetard: React.FC<PredictionRetardProps> = ({ chantier }) => {
  const dateFinPrevue = new Date(chantier.date_fin_prevue);
  const dateActuelle = new Date();
 
- // Jours écoulés depuis le début
+ // Jours \u00e9coul\u00e9s depuis le d\u00e9but
  const joursEcoules = Math.max(
  1,
  Math.floor((dateActuelle.getTime() - dateDebut.getTime()) / (1000 * 60 * 60 * 24))
  );
 
- // Jours totaux prévus
+ // Jours totaux pr\u00e9vus
  const joursTotauxPrevus = Math.floor(
  (dateFinPrevue.getTime() - dateDebut.getTime()) / (1000 * 60 * 60 * 24)
  );
 
- // Vélocité: tâches complétées par jour
+ // V\u00e9locit\u00e9: t\u00e2ches compl\u00e9t\u00e9es par jour
  const velocite = tachesCompletes / joursEcoules;
 
- // Tâches restantes
+ // T\u00e2ches restantes
  const tachesRestantes = tachesTotales - tachesCompletes;
 
- // Jours nécessaires pour finir (à la vélocité actuelle)
+ // Jours n\u00e9cessaires pour finir (\u00e0 la v\u00e9locit\u00e9 actuelle)
  const joursNecessaires = velocite > 0 ? Math.ceil(tachesRestantes / velocite) : Infinity;
 
- // Date de fin prédite
+ // Date de fin pr\u00e9dite
  const dateFinPredite = new Date(dateActuelle);
  dateFinPredite.setDate(dateFinPredite.getDate() + joursNecessaires);
 
@@ -83,14 +83,14 @@ const PredictionRetard: React.FC<PredictionRetardProps> = ({ chantier }) => {
 
  <div className="space-y-3">
  <div className="flex justify-between items-center">
- <span className="text-sm text-gray-600">Vélocité</span>
+ <span className="text-sm text-gray-600">V\u00e9locit\u00e9</span>
  <span className="font-semibold text-gray-900">
- {prediction.velocite} tâches/jour
+ {prediction.velocite} t\u00e2ches/jour
  </span>
  </div>
 
  <div className="flex justify-between items-center">
- <span className="text-sm text-gray-600">Tâches</span>
+ <span className="text-sm text-gray-600">T\u00e2ches</span>
  <span className="font-semibold text-gray-900">
  {prediction.tachesCompletes} / {prediction.tachesTotales}
  </span>
@@ -99,7 +99,7 @@ const PredictionRetard: React.FC<PredictionRetardProps> = ({ chantier }) => {
  <div className="flex justify-between items-center">
  <span className="text-sm text-gray-600">Jours restants</span>
  <span className="font-semibold text-gray-900">
- {prediction.joursNecessaires === Infinity ? '∞' : prediction.joursNecessaires}
+ {prediction.joursNecessaires === Infinity ? '\u221e' : prediction.joursNecessaires}
  </span>
  </div>
 
@@ -107,7 +107,7 @@ const PredictionRetard: React.FC<PredictionRetardProps> = ({ chantier }) => {
  <div className="flex items-center justify-between">
  <div className="flex items-center">
  <Calendar className="w-4 h-4 mr-2 text-gray-600" />
- <span className="text-sm text-gray-600">Date fin prédite</span>
+ <span className="text-sm text-gray-600">Date fin pr\u00e9dite</span>
  </div>
  <span className="font-semibold text-gray-900">
  {prediction.dateFinPredite}
@@ -119,7 +119,7 @@ const PredictionRetard: React.FC<PredictionRetardProps> = ({ chantier }) => {
  <div className="flex items-center justify-center p-3 bg-red-100 rounded-lg">
  <AlertTriangle className="w-5 h-5 text-red-600 mr-2" />
  <span className="font-bold text-red-600">
- Retard prédit: {prediction.joursRetard} jours
+ Retard pr\u00e9dit: {prediction.joursRetard} jours
  </span>
  </div>
  )}

@@ -73,7 +73,7 @@ const KPICard: React.FC<KPICardProps> = ({
  <p className="text-3xl font-bold text-gray-900">
  {value}{suffix}
  </p>
- <p className="text-xs text-gray-500 mt-2">vs semaine précédente</p>
+ <p className="text-xs text-gray-500 mt-2">vs semaine pr\u00e9c\u00e9dente</p>
  </div>
  );
 };

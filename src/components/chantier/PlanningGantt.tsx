@@ -50,11 +50,11 @@ const PlanningGantt: React.FC<PlanningGanttProps> = ({ chantierId }) => {
 
  const getStatutColor = (statut: string) => {
  switch (statut) {
- case 'Terminé':
+ case 'Termin\u00e9':
  return 'bg-green-500';
  case 'En cours':
  return 'bg-blue-500';
- case 'Bloqué':
+ case 'Bloqu\u00e9':
  return 'bg-red-500';
  default:
  return 'bg-gray-400';
@@ -74,7 +74,7 @@ const PlanningGantt: React.FC<PlanningGanttProps> = ({ chantierId }) => {
  return Math.max(1, Math.floor(diff / (1000 * 60 * 60 * 24)));
  };
 
- // Calculer la plage de dates affichée
+ // Calculer la plage de dates affich\u00e9e
  const getDateRange = () => {
  const dates: Date[] = [];
 
@@ -129,9 +129,9 @@ const PlanningGantt: React.FC<PlanningGanttProps> = ({ chantierId }) => {
  <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
  <div className="text-center py-12">
  <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
- <p className="text-gray-500">Aucune tâche planifiée</p>
+ <p className="text-gray-500">Aucune t\u00e2che planifi\u00e9e</p>
  <p className="text-sm text-gray-400 mt-1">
- Ajoutez des dates aux tâches pour voir le planning
+ Ajoutez des dates aux t\u00e2ches pour voir le planning
  </p>
  </div>
  </div>
@@ -201,7 +201,7 @@ const PlanningGantt: React.FC<PlanningGanttProps> = ({ chantierId }) => {
  {/* Header dates */}
  <div className="flex border-b border-gray-200">
  <div className="w-64 flex-shrink-0 px-4 py-3 bg-gray-50 border-r border-gray-200">
- <span className="text-sm font-semibold text-gray-900">Tâche</span>
+ <span className="text-sm font-semibold text-gray-900">T\u00e2che</span>
  </div>
  <div className="flex flex-1">
  {dateRange.map((date, i) => {
@@ -230,7 +230,7 @@ const PlanningGantt: React.FC<PlanningGanttProps> = ({ chantierId }) => {
  </div>
  </div>
 
- {/* Tâches */}
+ {/* T\u00e2ches */}
  <div className="relative">
  {/* Ligne aujourd'hui */}
  {todayOffset >= 0 && todayOffset < dateRange.length && (
@@ -282,7 +282,7 @@ const PlanningGantt: React.FC<PlanningGanttProps> = ({ chantierId }) => {
  className={`h-6 rounded-md ${
  getStatutColor(tache.statut)
  } opacity-80 hover:opacity-100 transition-opacity cursor-pointer group`}
- title={`${tache.nom}\n${tache.statut}\nDébut: ${new Date(
+ title={`${tache.nom}\n${tache.statut}\nD\u00e9but: ${new Date(
  tache.date_debut
  ).toLocaleDateString('fr-FR')}\nFin: ${new Date(
  tache.date_fin_prevue
@@ -302,12 +302,12 @@ const PlanningGantt: React.FC<PlanningGanttProps> = ({ chantierId }) => {
  </div>
  </div>
 
- {/* Légende */}
+ {/* L\u00e9gende */}
  <div className="bg-white rounded-lg shadow p-4 border border-gray-200">
  <div className="flex items-center justify-center space-x-6 text-sm">
  <div className="flex items-center space-x-2">
  <div className="w-4 h-4 rounded bg-gray-400" />
- <span className="text-gray-600">À faire</span>
+ <span className="text-gray-600">\u00c0 faire</span>
  </div>
  <div className="flex items-center space-x-2">
  <div className="w-4 h-4 rounded bg-blue-500" />
@@ -315,11 +315,11 @@ const PlanningGantt: React.FC<PlanningGanttProps> = ({ chantierId }) => {
  </div>
  <div className="flex items-center space-x-2">
  <div className="w-4 h-4 rounded bg-green-500" />
- <span className="text-gray-600">Terminé</span>
+ <span className="text-gray-600">Termin\u00e9</span>
  </div>
  <div className="flex items-center space-x-2">
  <div className="w-4 h-4 rounded bg-red-500" />
- <span className="text-gray-600">Bloqué</span>
+ <span className="text-gray-600">Bloqu\u00e9</span>
  </div>
  <div className="flex items-center space-x-2">
  <div className="w-0.5 h-4 bg-red-500" />
@@ -334,15 +334,15 @@ const PlanningGantt: React.FC<PlanningGanttProps> = ({ chantierId }) => {
 export default PlanningGantt;
 
 // ============================================================================
-// NOTES D'IMPLÉMENTATION
+// NOTES D'IMPL\u00c9MENTATION
 // ============================================================================
-// 1. Toutes les données sont synchronisées en temps réel via Supabase Realtime
-// 2. Les mises à jour sont optimistes avec rollback en cas d'erreur
-// 3. Les composants utilisent React hooks pour la gestion d'état
+// 1. Toutes les donn\u00e9es sont synchronis\u00e9es en temps r\u00e9el via Supabase Realtime
+// 2. Les mises \u00e0 jour sont optimistes avec rollback en cas d'erreur
+// 3. Les composants utilisent React hooks pour la gestion d'\u00e9tat
 // 4. Tailwind CSS pour le styling responsive
 // 5. React Hot Toast pour les notifications
-// 6. Lucide React pour les icônes
+// 6. Lucide React pour les ic\u00f4nes
 // 7. Le journal utilise infinite scroll pour les performances
 // 8. Le Gantt est responsive et supporte vue semaine/mois
-// 9. La checklist calcule automatiquement les scores de santé
-// 10. Tous les champs sont éditables inline avec sauvegarde auto
+// 9. La checklist calcule automatiquement les scores de sant\u00e9
+// 10. Tous les champs sont \u00e9ditables inline avec sauvegarde auto

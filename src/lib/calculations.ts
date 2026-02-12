@@ -22,8 +22,8 @@ export interface Chantier {
 }
 
 /**
- * Calcule le score de santé d'un chantier (0-100)
- * Basé sur 30 critères avec un poids de 0.0333 chacun
+ * Calcule le score de sant\u00e9 d'un chantier (0-100)
+ * Bas\u00e9 sur 30 crit\u00e8res avec un poids de 0.0333 chacun
  */
 export function calculScoreSante(taches: Tache[]): number {
  if (!taches || taches.length === 0) return 100;
@@ -38,14 +38,14 @@ export function calculScoreSante(taches: Tache[]): number {
  const tache = taches[i];
  let penalite = 0;
 
- // Calculer la pénalité pour cette tâche
+ // Calculer la p\u00e9nalit\u00e9 pour cette t\u00e2che
  if (tache.statut === 'en_retard') {
  const dateFinPrevue = parseISO(tache.date_fin_prevue);
  const aujourdHui = new Date();
  const joursRetard = differenceInDays(aujourdHui, dateFinPrevue);
 
  if (joursRetard > 30) {
- penalite = 100; // Pénalité maximale
+ penalite = 100; // P\u00e9nalit\u00e9 maximale
  } else if (joursRetard > 14) {
  penalite = 75;
  } else if (joursRetard > 7) {
@@ -57,12 +57,12 @@ export function calculScoreSante(taches: Tache[]): number {
  const dateFinPrevue = parseISO(tache.date_fin_prevue);
  const aujourdHui = new Date();
  
- // Si la date de fin prévue est dépassée mais statut encore "en_cours"
+ // Si la date de fin pr\u00e9vue est d\u00e9pass\u00e9e mais statut encore "en_cours"
  if (isAfter(aujourdHui, dateFinPrevue)) {
  const joursRetard = differenceInDays(aujourdHui, dateFinPrevue);
  penalite = Math.min(joursRetard * 2, 80);
  } else if (tache.pourcentage_completion < 50) {
- // Tâche en cours mais faible avancement
+ // T\u00e2che en cours mais faible avancement
  const joursRestants = differenceInDays(dateFinPrevue, aujourdHui);
  const dateDebut = tache.date_debut_reelle 
  ? parseISO(tache.date_debut_reelle) 
@@ -79,14 +79,14 @@ export function calculScoreSante(taches: Tache[]): number {
  const dateDebutPrevue = parseISO(tache.date_debut_prevue);
  const aujourdHui = new Date();
 
- // Si la tâche aurait dû commencer
+ // Si la t\u00e2che aurait d\u00fb commencer
  if (isAfter(aujourdHui, dateDebutPrevue)) {
  const joursRetard = differenceInDays(aujourdHui, dateDebutPrevue);
  penalite = Math.min(joursRetard * 3, 90);
  }
  }
 
- // Appliquer la pénalité pondérée
+ // Appliquer la p\u00e9nalit\u00e9 pond\u00e9r\u00e9e
  scoreTotal -= penalite * POIDS_PAR_TACHE;
  }
 
@@ -95,7 +95,7 @@ export function calculScoreSante(taches: Tache[]): number {
 }
 
 /
- * Prédit la date de fin réelle basée sur la vélocité actuelle
+ * Pr\u00e9dit la date de fin r\u00e9elle bas\u00e9e sur la v\u00e9locit\u00e9 actuelle
  */
 export function predictionRetard(
  taches: Tache[],
@@ -112,7 +112,7 @@ export function predictionRetard(
  };
  }
 
- // Calculer la vélocité (tâches par jour)
+ // Calculer la v\u00e9locit\u00e9 (t\u00e2ches par jour)
  let velocite = 1;
  if (tachesTerminees.length > 0) {
  const debut = parseISO(dateDebut);
@@ -124,14 +124,14 @@ export function predictionRetard(
  }
  }
 
- // Prédire les jours nécessaires pour finir
+ // Pr\u00e9dire les jours n\u00e9cessaires pour finir
  const joursRestantsEstimes = velocite > 0 
  ? Math.ceil(tachesRestantes.length / velocite) 
- : tachesRestantes.length * 7; // Si pas de vélocité, estimer 7j par tâche
+ : tachesRestantes.length * 7; // Si pas de v\u00e9locit\u00e9, estimer 7j par t\u00e2che
 
  const dateFinPredite = addDays(new Date(), joursRestantsEstimes);
 
- // Calculer le retard par rapport à la date de fin prévue la plus tardive
+ // Calculer le retard par rapport \u00e0 la date de fin pr\u00e9vue la plus tardive
  const dateFinPrevueMax = taches.reduce((max, tache) => {
  const dateFin = parseISO(tache.date_fin_prevue);
  return isAfter(dateFin, max) ? dateFin : max;
@@ -162,11 +162,11 @@ export function calculChargeCA(
  
  if (!chantier) continue;
 
- // Ne compter que les chantiers en cours (non terminés)
+ // Ne compter que les chantiers en cours (non termin\u00e9s)
  const aujourdHui = new Date();
  const dateFin = parseISO(chantier.date_fin_prevue);
  
- if (isAfter(aujourdHui, dateFin)) continue; // Chantier terminé
+ if (isAfter(aujourdHui, dateFin)) continue; // Chantier termin\u00e9
 
  const caId = affectation.chef_chantier_id;
 
@@ -187,7 +187,7 @@ export function calculChargeCA(
 }
 
 /
- * Calcule et génère une alerte trésorerie
+ * Calcule et g\u00e9n\u00e8re une alerte tr\u00e9sorerie
  */
 export function calculAlerteTresorerie(
  chantiers: Chantier[]
@@ -201,7 +201,7 @@ export function calculAlerteTresorerie(
  const aujourdHui = new Date();
  const dateFin = parseISO(chantier.date_fin_prevue);
 
- // Ne considérer que les chantiers en cours
+ // Ne consid\u00e9rer que les chantiers en cours
  if (isAfter(aujourdHui, dateFin)) continue;
 
  budgetTotalPrevu += chantier.budget_initial;
@@ -222,7 +222,7 @@ export function calculAlerteTresorerie(
 
  let niveau: 'critique' | 'attention' | 'ok' = 'ok';
  let alerte = false;
- let message = 'Trésorerie saine';
+ let message = 'Tr\u00e9sorerie saine';
 
  if (tauxFacturation < 60) {
  niveau = 'critique';
@@ -231,7 +231,7 @@ export function calculAlerteTresorerie(
  } else if (tauxFacturation < 80) {
  niveau = 'attention';
  alerte = true;
- message = `Attention: facturation à ${tauxFacturation.toFixed(0)}% de l'attendu`;
+ message = `Attention: facturation \u00e0 ${tauxFacturation.toFixed(0)}% de l'attendu`;
  }
 
  return {
@@ -280,17 +280,17 @@ export function getHealthLabel(score: number): string {
 }
 
 /
- * Retourne l'icône appropriée selon le score
+ * Retourne l'ic\u00f4ne appropri\u00e9e selon le score
  */
 export function getHealthIcon(score: number): string {
  if (score >= 80) {
- return '✅';
+ return '\u2705';
  } else if (score >= 60) {
- return '⚠️';
+ return '\u26a0\ufe0f';
  } else if (score >= 40) {
- return '🔶';
+ return '\ud83d\udd36';
  } else {
- return '🚨';
+ return '\ud83d\udea8';
  }
 }
 

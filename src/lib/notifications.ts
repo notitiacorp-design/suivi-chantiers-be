@@ -10,7 +10,7 @@ export interface NotificationPayload {
 
 export async function sendNotification(payload: NotificationPayload) {
  try {
- // Insérer dans la table notifications
+ // Ins\u00e9rer dans la table notifications
  const { data, error } = await supabase
  .from('notifications')
  .insert({
@@ -46,7 +46,7 @@ export async function sendNotification(payload: NotificationPayload) {
 
 export async function notifyRetard(chantierId: string, tacheNom: string, joursRetard: number) {
  try {
- // Récupérer le chantier et le chef de chantier
+ // R\u00e9cup\u00e9rer le chantier et le chef de chantier
  const { data: chantier, error: chantierError } = await supabase
  .from('chantiers')
  .select('nom, chef_chantier_id')
@@ -55,7 +55,7 @@ export async function notifyRetard(chantierId: string, tacheNom: string, joursRe
 
  if (chantierError) throw chantierError;
 
- // Récupérer le directeur général
+ // R\u00e9cup\u00e9rer le directeur g\u00e9n\u00e9ral
  const { data: users, error: usersError } = await supabase
  .from('profiles')
  .select('id, role')
@@ -67,12 +67,12 @@ export async function notifyRetard(chantierId: string, tacheNom: string, joursRe
  u => u.role === 'directeur' || u.id === chantier.chef_chantier_id
  );
 
- // Envoyer notification à chaque destinataire
+ // Envoyer notification \u00e0 chaque destinataire
  for (const recipient of recipients) {
  await sendNotification({
  userId: recipient.id,
- title: `⚠️ Retard détecté: ${chantier.nom}`,
- message: `La tâche "${tacheNom}" accuse un retard de ${joursRetard} jour(s).`,
+ title: `\u26a0\ufe0f Retard d\u00e9tect\u00e9: ${chantier.nom}`,
+ message: `La t\u00e2che "${tacheNom}" accuse un retard de ${joursRetard} jour(s).`,
  type: 'retard',
  metadata: {
  chantier_id: chantierId,
@@ -114,8 +114,8 @@ export async function notifyScoreCritique(chantierId: string, score: number) {
  for (const recipientId of recipients) {
  await sendNotification({
  userId: recipientId,
- title: `🚨 Score santé critique: ${chantier.nom}`,
- message: `Le score santé du chantier est tombé à ${score}/100. Action immédiate requise.`,
+ title: `\ud83d\udea8 Score sant\u00e9 critique: ${chantier.nom}`,
+ message: `Le score sant\u00e9 du chantier est tomb\u00e9 \u00e0 ${score}/100. Action imm\u00e9diate requise.`,
  type: 'score_critique',
  metadata: {
  chantier_id: chantierId,
@@ -168,8 +168,8 @@ export async function notifyFactureEchue(factureId: string) {
  for (const recipientId of recipients) {
  await sendNotification({
  userId: recipientId,
- title: `💰 Facture échue: ${facture.numero}`,
- message: `La facture ${facture.numero} (${montantFormate}) du chantier "${facture.chantier.nom}" est échue depuis le ${new Date(facture.date_echeance).toLocaleDateString('fr-FR')}.`,
+ title: `\ud83d\udcb0 Facture \u00e9chue: ${facture.numero}`,
+ message: `La facture ${facture.numero} (${montantFormate}) du chantier "${facture.chantier.nom}" est \u00e9chue depuis le ${new Date(facture.date_echeance).toLocaleDateString('fr-FR')}.`,
  type: 'facture_echue',
  metadata: {
  facture_id: factureId,
@@ -225,8 +225,8 @@ export async function notifyNouvelAvenant(avenantId: string) {
  for (const recipientId of recipients) {
  await sendNotification({
  userId: recipientId,
- title: `📝 Nouvel avenant: ${avenant.numero}`,
- message: `L'avenant ${avenant.numero} (${montantFormate}) a été créé pour le chantier "${avenant.chantier.nom}".`,
+ title: `\ud83d\udcdd Nouvel avenant: ${avenant.numero}`,
+ message: `L'avenant ${avenant.numero} (${montantFormate}) a \u00e9t\u00e9 cr\u00e9\u00e9 pour le chantier "${avenant.chantier.nom}".`,
  type: 'avenant',
  metadata: {
  avenant_id: avenantId,
