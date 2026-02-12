@@ -226,7 +226,7 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  onClick={() => setEditing(field)}
  >
  {type === 'number' && (field === 'budget_initial' || field === 'budget_actuel' || field === 'montant_marche')
- ? `${parseFloat(value || 0).toLocaleString('fr-FR')} â¬`
+ ? `${parseFloat(value || 0).toLocaleString('fr-FR')} Ã¢ÂÂ¬`
  : value || '-'}
  </p>
  )}
@@ -247,18 +247,18 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  switch (type) {
  case 'Alerte':
  case 'alerte':
- return 'ð¨';
+ return 'Ã°ÂÂÂ¨';
  case 'Note':
  case 'note':
- return 'ð';
+ return 'Ã°ÂÂÂ';
  case 'Modification':
  case 'modification':
- return 'âï¸';
+ return 'Ã¢ÂÂÃ¯Â¸Â';
  case 'Photo':
  case 'photo':
- return 'ð·';
+ return 'Ã°ÂÂÂ·';
  default:
- return 'ð';
+ return 'Ã°ÂÂÂ';
  }
  };
 
@@ -338,7 +338,7 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  <div className="flex items-center justify-between mb-2">
  <span className="text-sm font-medium text-gray-700">{phase.phase}</span>
  <span className="text-sm text-gray-600">
- {phase.taches_terminees}/{phase.total_taches} tÃ¢ches â¢ {phase.score}%
+ {phase.taches_terminees}/{phase.total_taches} tÃ¢ches Ã¢ÂÂ¢ {phase.score}%
  </span>
  </div>
  <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
@@ -368,7 +368,7 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  <div className="flex-1 min-w-0">
  <p className="text-sm text-gray-900 truncate">{entry.contenu}</p>
  <p className="text-xs text-gray-500 mt-1">
- {entry.auteur} â¢{' '}
+ {entry.auteur} Ã¢ÂÂ¢{' '}
  {new Date(entry.created_at).toLocaleDateString('fr-FR', {
  day: 'numeric',
  month: 'short',
