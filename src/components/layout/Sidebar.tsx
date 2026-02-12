@@ -71,7 +71,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     <div className="flex h-full flex-col bg-gradient-to-b from-slate-900 to-slate-800">
       <div className="flex items-center justify-between border-b border-slate-700 px-6 py-6">
         <div>
-          <h1 className="text-2xl font-bold text-amber-500">NOTITIA</h1>
+          <h1 className="text-2xl font-bold text-amber-500">BE Pilot</h1>
           <p className="text-sm text-slate-400">Bureau d'Ãtudes</p>
         </div>
         <button
