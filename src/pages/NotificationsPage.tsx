@@ -65,7 +65,7 @@ const NotificationsPage: React.FC = () => {
       );
       toast.success('Notification marquÃ©e comme lue');
     } catch (error) {
-      toast.error('Erreur lors de la mise ÃÂ  jour');
+      toast.error('Erreur lors de la mise Ã  jour');
     }
   };
 
@@ -83,7 +83,7 @@ const NotificationsPage: React.FC = () => {
       );
       toast.success('Notification marquÃ©e comme non lue');
     } catch (error) {
-      toast.error('Erreur lors de la mise ÃÂ  jour');
+      toast.error('Erreur lors de la mise Ã  jour');
     }
   };
 
@@ -101,7 +101,7 @@ const NotificationsPage: React.FC = () => {
       setNotifications(prev => prev.map(n => ({ ...n, lue: true })));
       toast.success('Toutes les notifications marquÃ©es comme lues');
     } catch (error) {
-      toast.error('Erreur lors de la mise ÃÂ  jour');
+      toast.error('Erreur lors de la mise Ã  jour');
     }
   };
 
@@ -238,7 +238,7 @@ const NotificationsPage: React.FC = () => {
           </h3>
           <p className="text-gray-500">
             {filter === 'unread'
-              ? 'Vous Ãªtes ÃÂ  jour avec vos notifications'
+              ? 'Vous Ãªtes Ã  jour avec vos notifications'
               : 'Vous n\'avez pas encore de notifications'}
           </p>
         </div>
