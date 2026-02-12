@@ -50,39 +50,39 @@ const LoginPage: React.FC = () => {
       if (data.session) {
         setSession(data.session);
 
+        // Load user profile from users table (matching App.tsx loadUserProfile)
         try {
           const { data: userData, error: userError } = await supabase
-            .from('profiles')
+            .from('users')
             .select('*')
             .eq('id', data.user.id)
             .single();
 
           if (!userError && userData) {
-            setUser({
-              id: data.user.id,
-              email: data.user.email || '',
-              full_name: userData.full_name || '',
-              role: userData.role || 'ingenieur',
-              avatar_url: userData.avatar_url,
-            });
+            setUser(userData);
           } else {
+            // Fallback: set minimal user matching authStore interface
             setUser({
               id: data.user.id,
               email: data.user.email || '',
-              full_name: data.user.email || '',
-              role: 'charge_affaires',
-              avatar_url: null,
-            });
+              nom: 'Admin',
+              prenom: '',
+              role: 'directeur',
+              actif: true,
+              created_at: new Date().toISOString(),
+            } as any);
           }
         } catch (profileError) {
           console.warn('Profile fetch failed:', profileError);
           setUser({
             id: data.user.id,
             email: data.user.email || '',
-            full_name: data.user.email || '',
-            role: 'charge_affaires',
-            avatar_url: null,
-          });
+            nom: 'Admin',
+            prenom: '',
+            role: 'directeur',
+            actif: true,
+            created_at: new Date().toISOString(),
+          } as any);
         }
 
         toast.success('Connexion r\u00e9ussie !');
