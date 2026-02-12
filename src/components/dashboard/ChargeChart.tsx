@@ -6,7 +6,7 @@ const ChargeChart: React.FC = () => {
  const [periode, setPeriode] = useState<4 | 8 | 12>(4);
 
  const data = useMemo(() => {
- // Générer des données mockées pour la charge
+ // GÃ©nÃ©rer des donnÃ©es mockÃ©es pour la charge
  const semaines = [];
  const today = new Date();
  const cas = ['Jean Dupont', 'Marie Martin', 'Pierre Dubois'];
@@ -101,11 +101,11 @@ const ChargeChart: React.FC = () => {
 
  <div className="mb-4 p-4 bg-blue-50 rounded-lg">
  <p className="text-sm text-gray-700">
- <span className="font-semibold">Barres pleines:</span> Heures prévues
- <span className="ml-4 font-semibold">Barres hachurées:</span> Heures réelles
+ <span className="font-semibold">Barres pleines:</span> Heures prÃ©vues
+ <span className="ml-4 font-semibold">Barres hachurÃ©es:</span> Heures rÃ©elles
  </p>
  <p className="text-sm text-red-600 font-semibold mt-2">
- â ï¸ Seuil de surcharge: 45h/semaine
+ Ã¢ÂÂ Ã¯Â¸Â Seuil de surcharge: 45h/semaine
  </p>
  </div>
 
@@ -127,13 +127,13 @@ const ChargeChart: React.FC = () => {
  <Bar
  dataKey="Jean Dupont_prevues"
  fill={colors['Jean Dupont'].prevues}
- name="J. Dupont (prévues)"
+ name="J. Dupont (prÃ©vues)"
  stackId="Jean Dupont"
  />
  <Bar
  dataKey="Jean Dupont_reelles"
  fill={colors['Jean Dupont'].reelles}
- name="J. Dupont (réelles)"
+ name="J. Dupont (rÃ©elles)"
  stackId="Jean Dupont"
  />
 
@@ -141,13 +141,13 @@ const ChargeChart: React.FC = () => {
  <Bar
  dataKey="Marie Martin_prevues"
  fill={colors['Marie Martin'].prevues}
- name="M. Martin (prévues)"
+ name="M. Martin (prÃ©vues)"
  stackId="Marie Martin"
  />
  <Bar
  dataKey="Marie Martin_reelles"
  fill={colors['Marie Martin'].reelles}
- name="M. Martin (réelles)"
+ name="M. Martin (rÃ©elles)"
  stackId="Marie Martin"
  />
 
@@ -155,13 +155,13 @@ const ChargeChart: React.FC = () => {
  <Bar
  dataKey="Pierre Dubois_prevues"
  fill={colors['Pierre Dubois'].prevues}
- name="P. Dubois (prévues)"
+ name="P. Dubois (prÃ©vues)"
  stackId="Pierre Dubois"
  />
  <Bar
  dataKey="Pierre Dubois_reelles"
  fill={colors['Pierre Dubois'].reelles}
- name="P. Dubois (réelles)"
+ name="P. Dubois (rÃ©elles)"
  stackId="Pierre Dubois"
  />
  </BarChart>

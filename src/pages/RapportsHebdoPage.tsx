@@ -242,7 +242,7 @@ const RapportsHebdoPage: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce rapport ?')) {
+    if (window.confirm('Ãtes-vous sÃ»r de vouloir supprimer ce rapport ?')) {
       deleteMutation.mutate(id);
     }
   };
@@ -339,7 +339,7 @@ const RapportsHebdoPage: React.FC = () => {
           <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Validés</p>
+                <p className="text-sm text-gray-600">ValidÃ©s</p>
                 <p className="text-2xl font-bold text-green-600">{stats.valide}</p>
               </div>
               <CheckCircle className="w-8 h-8 text-green-400" />
@@ -379,7 +379,7 @@ const RapportsHebdoPage: React.FC = () => {
                   <option value="tous">Tous les statuts</option>
                   <option value="brouillon">Brouillon</option>
                   <option value="soumis">Soumis</option>
-                  <option value="valide">Validé</option>
+                  <option value="valide">ValidÃ©</option>
                 </select>
               </div>
               <div className="relative">
@@ -461,19 +461,19 @@ const RapportsHebdoPage: React.FC = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                           {rapport.travaux_realises && (
                             <div>
-                              <p className="font-medium text-gray-700 mb-1">Travaux réalisés</p>
+                              <p className="font-medium text-gray-700 mb-1">Travaux rÃ©alisÃ©s</p>
                               <p className="text-gray-600 line-clamp-2">{rapport.travaux_realises}</p>
                             </div>
                           )}
                           {rapport.travaux_prevus && (
                             <div>
-                              <p className="font-medium text-gray-700 mb-1">Travaux prévus</p>
+                              <p className="font-medium text-gray-700 mb-1">Travaux prÃ©vus</p>
                               <p className="text-gray-600 line-clamp-2">{rapport.travaux_prevus}</p>
                             </div>
                           )}
                           {!rapport.planning_respecte && rapport.cause_retard && (
                             <div className="md:col-span-2">
-                              <p className="font-medium text-red-600 mb-1">⚠️ Retard: {rapport.cause_retard}</p>
+                              <p className="font-medium text-red-600 mb-1">â ï¸ Retard: {rapport.cause_retard}</p>
                               {rapport.action_engagee && (
                                 <p className="text-gray-600">Action: {rapport.action_engagee}</p>
                               )}
@@ -481,7 +481,7 @@ const RapportsHebdoPage: React.FC = () => {
                           )}
                           {rapport.risque_livraison && rapport.risque_detail && (
                             <div className="md:col-span-2">
-                              <p className="font-medium text-orange-600 mb-1">⚠️ Risque livraison: {rapport.risque_detail}</p>
+                              <p className="font-medium text-orange-600 mb-1">â ï¸ Risque livraison: {rapport.risque_detail}</p>
                             </div>
                           )}
                         </div>
@@ -495,8 +495,8 @@ const RapportsHebdoPage: React.FC = () => {
           {filteredRapports.length === 0 && (
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
               <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500 text-lg">Aucun rapport trouvé</p>
-              <p className="text-gray-400 text-sm mt-2">Créez votre premier rapport hebdomadaire</p>
+              <p className="text-gray-500 text-lg">Aucun rapport trouvÃ©</p>
+              <p className="text-gray-400 text-sm mt-2">CrÃ©ez votre premier rapport hebdomadaire</p>
             </div>
           )}
         </div>
@@ -515,7 +515,7 @@ const RapportsHebdoPage: React.FC = () => {
             </div>
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
               <div className="bg-[#f5f7fa] rounded-lg p-4">
-                <h3 className="text-lg font-semibold text-[#1e3a5f] mb-4">Informations générales</h3>
+                <h3 className="text-lg font-semibold text-[#1e3a5f] mb-4">Informations gÃ©nÃ©rales</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Chantier *</label>
@@ -525,7 +525,7 @@ const RapportsHebdoPage: React.FC = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6]"
                     >
-                      <option value="">Sélectionner un chantier</option>
+                      <option value="">SÃ©lectionner un chantier</option>
                       {chantiers.map(chantier => (
                         <option key={chantier.id} value={chantier.id}>{chantier.nom}</option>
                       ))}
@@ -564,23 +564,23 @@ const RapportsHebdoPage: React.FC = () => {
                 <h3 className="text-lg font-semibold text-[#1e3a5f] mb-4">Travaux</h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Travaux réalisés</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Travaux rÃ©alisÃ©s</label>
                     <textarea
                       value={formData.travaux_realises}
                       onChange={(e) => setFormData({ ...formData, travaux_realises: e.target.value })}
                       rows={4}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6]"
-                      placeholder="Décrire les travaux réalisés cette semaine..."
+                      placeholder="DÃ©crire les travaux rÃ©alisÃ©s cette semaine..."
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Travaux prévus</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Travaux prÃ©vus</label>
                     <textarea
                       value={formData.travaux_prevus}
                       onChange={(e) => setFormData({ ...formData, travaux_prevus: e.target.value })}
                       rows={4}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6]"
-                      placeholder="Décrire les travaux prévus pour la semaine prochaine..."
+                      placeholder="DÃ©crire les travaux prÃ©vus pour la semaine prochaine..."
                     />
                   </div>
                 </div>
@@ -596,7 +596,7 @@ const RapportsHebdoPage: React.FC = () => {
                       onChange={(e) => setFormData({ ...formData, planning_respecte: e.target.checked })}
                       className="w-4 h-4 text-[#3b82f6] border-gray-300 rounded focus:ring-[#3b82f6]"
                     />
-                    <label className="ml-2 text-sm font-medium text-gray-700">Planning respecté</label>
+                    <label className="ml-2 text-sm font-medium text-gray-700">Planning respectÃ©</label>
                   </div>
                   {!formData.planning_respecte && (
                     <>
@@ -617,20 +617,20 @@ const RapportsHebdoPage: React.FC = () => {
                           onChange={(e) => setFormData({ ...formData, impact_retard: e.target.value as any })}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6]"
                         >
-                          <option value="">Sélectionner l'impact</option>
+                          <option value="">SÃ©lectionner l'impact</option>
                           <option value="aucun">Aucun</option>
-                          <option value="leger">Léger</option>
+                          <option value="leger">LÃ©ger</option>
                           <option value="important">Important</option>
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Action engagée</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Action engagÃ©e</label>
                         <textarea
                           value={formData.action_engagee}
                           onChange={(e) => setFormData({ ...formData, action_engagee: e.target.value })}
                           rows={3}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6]"
-                          placeholder="Décrire les actions engagées pour rattraper le retard..."
+                          placeholder="DÃ©crire les actions engagÃ©es pour rattraper le retard..."
                         />
                       </div>
                     </>
@@ -648,16 +648,16 @@ const RapportsHebdoPage: React.FC = () => {
                       onChange={(e) => setFormData({ ...formData, commandes_passees: e.target.checked })}
                       className="w-4 h-4 text-[#3b82f6] border-gray-300 rounded focus:ring-[#3b82f6]"
                     />
-                    <label className="ml-2 text-sm font-medium text-gray-700">Commandes passées</label>
+                    <label className="ml-2 text-sm font-medium text-gray-700">Commandes passÃ©es</label>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Livraisons reçues</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Livraisons reÃ§ues</label>
                     <textarea
                       value={formData.livraisons_recues}
                       onChange={(e) => setFormData({ ...formData, livraisons_recues: e.target.value })}
                       rows={3}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6]"
-                      placeholder="Lister les livraisons reçues..."
+                      placeholder="Lister les livraisons reÃ§ues..."
                     />
                   </div>
                   <div className="flex items-center">
@@ -671,24 +671,24 @@ const RapportsHebdoPage: React.FC = () => {
                   </div>
                   {formData.risque_livraison && (
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Détail du risque</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">DÃ©tail du risque</label>
                       <textarea
                         value={formData.risque_detail}
                         onChange={(e) => setFormData({ ...formData, risque_detail: e.target.value })}
                         rows={3}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6]"
-                        placeholder="Décrire le risque de livraison..."
+                        placeholder="DÃ©crire le risque de livraison..."
                       />
                     </div>
                   )}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Contraintes d'accès</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Contraintes d'accÃ¨s</label>
                     <textarea
                       value={formData.contraintes_acces}
                       onChange={(e) => setFormData({ ...formData, contraintes_acces: e.target.value })}
                       rows={3}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6]"
-                      placeholder="Décrire les contraintes d'accès au chantier..."
+                      placeholder="DÃ©crire les contraintes d'accÃ¨s au chantier..."
                     />
                   </div>
                 </div>
@@ -698,7 +698,7 @@ const RapportsHebdoPage: React.FC = () => {
                 <h3 className="text-lg font-semibold text-[#1e3a5f] mb-4">Observations</h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Observations générales</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Observations gÃ©nÃ©rales</label>
                     <textarea
                       value={formData.observations}
                       onChange={(e) => setFormData({ ...formData, observations: e.target.value })}
@@ -717,7 +717,7 @@ const RapportsHebdoPage: React.FC = () => {
                     >
                       <option value="brouillon">Brouillon</option>
                       <option value="soumis">Soumis</option>
-                      <option value="valide">Validé</option>
+                      <option value="valide">ValidÃ©</option>
                     </select>
                   </div>
                 </div>
@@ -736,7 +736,7 @@ const RapportsHebdoPage: React.FC = () => {
                   disabled={createMutation.isPending || updateMutation.isPending}
                   className="px-4 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {createMutation.isPending || updateMutation.isPending ? 'Enregistrement...' : editingRapport ? 'Mettre à jour' : 'Créer'}
+                  {createMutation.isPending || updateMutation.isPending ? 'Enregistrement...' : editingRapport ? 'Mettre Ã  jour' : 'CrÃ©er'}
                 </button>
               </div>
             </form>

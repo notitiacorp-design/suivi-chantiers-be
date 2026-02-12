@@ -73,7 +73,7 @@ const statusConfig = {
 
 const categorieLabels = {
   materiel: 'Matériel',
-  equipement: 'Équipement',
+  equipement: 'Ãquipement',
   sous_traitance: 'Sous-traitance',
   divers: 'Divers',
 };
@@ -291,7 +291,7 @@ const AchatsPage: React.FC = () => {
   };
 
   const handleDelete = () => {
-    if (editingAchat && window.confirm('Êtes-vous sûr de vouloir supprimer ce bon de commande ?')) {
+    if (editingAchat && window.confirm('Ãtes-vous sûr de vouloir supprimer ce bon de commande ?')) {
       deleteAchatMutation.mutate(editingAchat.id);
     }
   };
@@ -473,7 +473,7 @@ const AchatsPage: React.FC = () => {
               <thead className="bg-slate-50 border-b border-slate-200">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    N° Bon
+                    NÂ° Bon
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
                     Fournisseur
@@ -698,7 +698,7 @@ const AchatsPage: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Montant HT (€) *
+                    Montant HT (â¬) *
                   </label>
                   <input
                     type="number"
@@ -714,7 +714,7 @@ const AchatsPage: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Montant TTC (€)
+                    Montant TTC (â¬)
                   </label>
                   <input
                     type="text"

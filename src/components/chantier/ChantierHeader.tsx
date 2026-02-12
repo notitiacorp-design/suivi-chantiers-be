@@ -19,19 +19,19 @@ interface ChantierHeaderProps {
 }
 
 const phaseLabels: Record<string, string> = {
- 'etude': 'Étude',
- 'preparation': 'Préparation',
- 'execution': 'Exécution',
- 'reception': 'Réception',
+ 'etude': 'Ãtude',
+ 'preparation': 'PrÃ©paration',
+ 'execution': 'ExÃ©cution',
+ 'reception': 'RÃ©ception',
  'garantie': 'Garantie',
 };
 
 const statutLabels: Record<string, string> = {
  'en_attente': 'En attente',
  'en_cours': 'En cours',
- 'termine': 'Terminé',
+ 'termine': 'TerminÃ©',
  'suspendu': 'Suspendu',
- 'annule': 'Annulé',
+ 'annule': 'AnnulÃ©',
 };
 
 const ChantierHeader: React.FC<ChantierHeaderProps> = ({
@@ -125,11 +125,11 @@ const ChantierHeader: React.FC<ChantierHeaderProps> = ({
  <p className="text-sm text-gray-600">
  <span className="font-medium">Client :</span> {chantier.client}
  </p>
- <span className="text-gray-300">âÂÂ¢</span>
+ <span className="text-gray-300">Ã¢ÃÂÃÂ¢</span>
  <p className="text-sm text-gray-600">
  <span className="font-medium">Phase :</span> {phaseLabels[chantier.phase] || chantier.phase}
  </p>
- <span className="text-gray-300">âÂÂ¢</span>
+ <span className="text-gray-300">Ã¢ÃÂÃÂ¢</span>
  <span
  className={`px-3 py-1 rounded-full text-xs font-medium ${
  getStatutBadgeClass(chantier.statut)
@@ -142,10 +142,10 @@ const ChantierHeader: React.FC<ChantierHeaderProps> = ({
  </div>
 
  <div className="flex items-center space-x-4">
- {/* Score santé mini gauge */}
+ {/* Score santÃ© mini gauge */}
  <div className="flex items-center space-x-3">
  <div className="text-right">
- <p className="text-xs text-gray-500">Score santé</p>
+ <p className="text-xs text-gray-500">Score santÃ©</p>
  <p className={`text-2xl font-bold ${getScoreColor(chantier.score_sante)}`}>
  {chantier.score_sante}%
  </p>

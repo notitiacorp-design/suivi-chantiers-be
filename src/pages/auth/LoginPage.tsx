@@ -94,7 +94,7 @@ const LoginPage: React.FC = () => {
           </ul>
         </div>
         <div className="text-blue-200 text-sm">
-          © 2024 BE Pilot. Tous droits réservés.
+          Â© 2024 BE Pilot. Tous droits réservés.
         </div>
       </div>
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
@@ -153,7 +153,7 @@ const LoginPage: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className={`block w-full rounded-lg border ${errors.password ? 'border-red-300' : 'border-gray-300'} pl-10 pr-3 py-3 focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f] focus:ring-opacity-20 sm:text-sm transition-colors`}
-                    placeholder="••••••••"
+                    placeholder="â¢â¢â¢â¢â¢â¢â¢â¢"
                   />
                 </div>
                 {errors.password && <p className="mt-2 text-sm text-red-600">{errors.password}</p>}
