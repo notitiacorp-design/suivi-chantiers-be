@@ -48,9 +48,9 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   const handleSignOut = async () => {
     try {
       await signOut();
-      toast.success('DÃ©connexion rÃ©ussie');
+      toast.success('Déconnexion réussie');
     } catch (error) {
-      toast.error('Erreur lors de la dÃ©connexion');
+      toast.error('Erreur lors de la déconnexion');
     }
   };
 
@@ -63,7 +63,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
 
   const getRoleLabel = () => {
     if (isDirecteur) return 'Directeur';
-    if (isChargeAffaires) return 'ChargÃ© d\'Affaires';
+    if (isChargeAffaires) return 'Chargé d\'Affaires';
     return 'Utilisateur';
   };
 
@@ -119,7 +119,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                 type="text"
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
-                placeholder="Rechercher un chantier, numÃ©ro..."
+                placeholder="Rechercher un chantier, numéro..."
                 className="w-64 pl-10 pr-4 py-2 text-sm bg-slate-100 border-0 rounded-full focus:outline-none focus:ring-2 focus:ring-slate-300 focus:bg-white transition-all placeholder:text-slate-500"
               />
             </div>
@@ -215,7 +215,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                     className="flex items-center space-x-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors w-full text-left"
                   >
                     <ArrowRightOnRectangleIcon className="h-5 w-5" />
-                    <span>Se DÃ©connecter</span>
+                    <span>Se Déconnecter</span>
                   </button>
                 </div>
               </div>
