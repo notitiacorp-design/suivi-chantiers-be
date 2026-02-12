@@ -25,7 +25,7 @@ const LoginPage: React.FC = () => {
     if (!password) {
       newErrors.password = 'Le mot de passe est requis';
     } else if (password.length < 6) {
-      newErrors.password = 'Le mot de passe doit contenir au moins 6 caractÃ¨res';
+      newErrors.password = 'Le mot de passe doit contenir au moins 6 caract\u00e8res';
     }
 
     setErrors(newErrors);
@@ -50,7 +50,6 @@ const LoginPage: React.FC = () => {
       if (data.session) {
         setSession(data.session);
 
-        // Charger le profil utilisateur
         try {
           const { data: userData, error: userError } = await supabase
             .from('profiles')
@@ -67,7 +66,6 @@ const LoginPage: React.FC = () => {
               avatar_url: userData.avatar_url,
             });
           } else {
-            // Profile not found - set basic user info from auth
             setUser({
               id: data.user.id,
               email: data.user.email || '',
@@ -77,7 +75,6 @@ const LoginPage: React.FC = () => {
             });
           }
         } catch (profileError) {
-          // Profile fetch failed - still allow login with basic info
           console.warn('Profile fetch failed:', profileError);
           setUser({
             id: data.user.id,
@@ -88,7 +85,7 @@ const LoginPage: React.FC = () => {
           });
         }
 
-        toast.success('Connexion rÃ©ussie !');
+        toast.success('Connexion r\u00e9ussie !');
         navigate('/dashboard');
       }
     } catch (error: any) {
@@ -98,7 +95,7 @@ const LoginPage: React.FC = () => {
       } else {
         setErrors({ general: error.message || 'Erreur de connexion' });
       }
-      toast.error('Ãchec de la connexion');
+      toast.error('\u00c9chec de la connexion');
     } finally {
       setLoading(false);
     }
@@ -107,26 +104,22 @@ const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50 px-4">
       <div className="w-full max-w-md">
-        {/* Logo / Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4 shadow-lg">
             <span className="text-white text-2xl font-bold">BE</span>
           </div>
           <h1 className="text-2xl font-bold text-slate-900">Suivi Chantiers BE</h1>
-          <p className="text-slate-500 mt-2">Connectez-vous Ã  votre espace</p>
+          <p className="text-slate-500 mt-2">{'Connectez-vous \u00e0 votre espace'}</p>
         </div>
 
-        {/* Login Form */}
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* General Error */}
             {errors.general && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
                 {errors.general}
               </div>
             )}
 
-            {/* Email Field */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1.5">
                 Adresse email
@@ -151,7 +144,6 @@ const LoginPage: React.FC = () => {
               )}
             </div>
 
-            {/* Password Field */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1.5">
                 Mot de passe
@@ -163,7 +155,7 @@ const LoginPage: React.FC = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="â¢â¢â¢â¢â¢â¢â¢â¢"
+                  placeholder="........"
                   className={`w-full pl-10 pr-4 py-2.5 rounded-lg border ${
                     errors.password ? 'border-red-300 focus:ring-red-500' : 'border-slate-300 focus:ring-blue-500'
                   } focus:outline-none focus:ring-2 focus:border-transparent text-sm transition`}
@@ -175,17 +167,15 @@ const LoginPage: React.FC = () => {
               )}
             </div>
 
-            {/* Forgot Password Link */}
             <div className="flex justify-end">
               <Link
                 to="/forgot-password"
                 className="text-sm text-blue-600 hover:text-blue-800 transition"
               >
-                Mot de passe oubliÃ© ?
+                {'Mot de passe oubli\u00e9 ?'}
               </Link>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
@@ -209,9 +199,8 @@ const LoginPage: React.FC = () => {
           </form>
         </div>
 
-        {/* Footer */}
         <p className="text-center text-xs text-slate-400 mt-6">
-          Â© 2024 Notitia Corp â Bureau d'Ã©tudes
+          {'\u00a9 2024 Notitia Corp \u2014 Bureau d\u0027\u00e9tudes'}
         </p>
       </div>
     </div>
