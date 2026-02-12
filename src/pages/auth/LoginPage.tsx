@@ -18,7 +18,7 @@ const LoginPage: React.FC = () => {
 
     if (!email.trim()) {
       newErrors.email = "L'email est requis";
-    } else if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       newErrors.email = "Email invalide";
     }
 
