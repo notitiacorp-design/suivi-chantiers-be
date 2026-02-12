@@ -50,7 +50,7 @@ const TableauChargePage: React.FC = () => {
  } | null>(null);
  const [nbSemaines, setNbSemaines] = useState(12);
 
- // Récupération des chargés d'affaires
+ // RÃ©cupÃ©ration des chargÃ©s d'affaires
  const { data: chargesAffaires = [], isLoading: loadingCA } = useQuery({
  queryKey: ['charges-affaires'],
  queryFn: async () => {
@@ -64,7 +64,7 @@ const TableauChargePage: React.FC = () => {
  },
  });
 
- // Récupération des chantiers actifs
+ // RÃ©cupÃ©ration des chantiers actifs
  const { data: chantiers = [], isLoading: loadingChantiers } = useQuery({
  queryKey: ['chantiers-charge'],
  queryFn: async () => {
@@ -77,7 +77,7 @@ const TableauChargePage: React.FC = () => {
  },
  });
 
- // Calcul des semaines à afficher
+ // Calcul des semaines Ã  afficher
  const semaines = useMemo(() => {
  const debut = startOfWeek(new Date(), { locale: fr });
  return Array.from({ length: nbSemaines }, (_, i) => addWeeks(debut, i));
@@ -129,7 +129,7 @@ const TableauChargePage: React.FC = () => {
  return result;
  }, [chargesAffaires, chantiers, semaines]);
 
- // Données pour le graphique radar
+ // DonnÃ©es pour le graphique radar
  const dataRadar = useMemo(() => {
  return chargesAffaires.map((ca) => {
  const totalHeures = Object.values(chargeParSemaine[ca.id] || {}).reduce(
@@ -161,15 +161,15 @@ const TableauChargePage: React.FC = () => {
 
  return (
  <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
- {/* En-tête */}
- <div className="bg-white rounded-lg shadow-md p-6">
+ {/* En-tÃªte */}
+ <div className="bg-white rounded-xl shadow-sm-md p-6">
  <div className="flex items-center justify-between mb-4">
  <div>
  <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
  <Clock className="w-8 h-8 text-blue-600" />
  Tableau de Charge
  </h1>
- <p className="text-gray-600 mt-1">Vue d'ensemble de la charge de travail par chargé d'affaires</p>
+ <p className="text-gray-600 mt-1">Vue d'ensemble de la charge de travail par chargÃ© d'affaires</p>
  </div>
  <div className="flex items-center gap-4">
  <label className="text-sm font-medium text-gray-700">Nombre de semaines:</label>
@@ -192,7 +192,7 @@ const TableauChargePage: React.FC = () => {
  <div className="flex items-center gap-3">
  <Users className="w-6 h-6 text-blue-600" />
  <div>
- <p className="text-sm text-blue-600 font-medium">Chargés d'affaires</p>
+ <p className="text-sm text-blue-600 font-medium">ChargÃ©s d'affaires</p>
  <p className="text-2xl font-bold text-blue-900">{chargesAffaires.length}</p>
  </div>
  </div>
@@ -225,8 +225,8 @@ const TableauChargePage: React.FC = () => {
  </div>
 
  {/* Graphique Radar */}
- <div className="bg-white rounded-lg shadow-md p-6">
- <h2 className="text-xl font-bold text-gray-900 mb-4">Charge moyenne par chargé d'affaires</h2>
+ <div className="bg-white rounded-xl shadow-sm-md p-6">
+ <h2 className="text-xl font-bold text-gray-900 mb-4">Charge moyenne par chargÃ© d'affaires</h2>
  <ResponsiveContainer width="100%" height={400}>
  <RadarChart data={dataRadar}>
  <PolarGrid />
@@ -239,13 +239,13 @@ const TableauChargePage: React.FC = () => {
  </div>
 
  {/* Tableau de charge */}
- <div className="bg-white rounded-lg shadow-md overflow-hidden">
+ <div className="bg-white rounded-xl shadow-sm-md overflow-hidden">
  <div className="overflow-x-auto">
  <table className="min-w-full divide-y divide-gray-200">
  <thead className="bg-gray-100 sticky top-0 z-10">
  <tr>
  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider sticky left-0 bg-gray-100 z-20">
- Chargé d'affaires
+ ChargÃ© d'affaires
  </th>
  {semaines.map((semaine) => (
  <th
@@ -322,7 +322,7 @@ const TableauChargePage: React.FC = () => {
  </table>
  </div>
 
- {/* Légende */}
+ {/* LÃ©gende */}
  <div className="bg-gray-50 px-6 py-4 border-t flex items-center gap-6 justify-center">
  <div className="flex items-center gap-2">
  <div className="w-4 h-4 bg-green-100 border border-green-300 rounded"></div>
@@ -330,7 +330,7 @@ const TableauChargePage: React.FC = () => {
  </div>
  <div className="flex items-center gap-2">
  <div className="w-4 h-4 bg-orange-100 border border-orange-300 rounded"></div>
- <span className="text-sm text-gray-700">35-45h (charge élevée)</span>
+ <span className="text-sm text-gray-700">35-45h (charge Ã©levÃ©e)</span>
  </div>
  <div className="flex items-center gap-2">
  <div className="w-4 h-4 bg-red-100 border border-red-300 rounded"></div>
@@ -339,14 +339,14 @@ const TableauChargePage: React.FC = () => {
  </div>
  </div>
 
- {/* Modal détail cellule */}
+ {/* Modal dÃ©tail cellule */}
  {selectedCell && (
  <div
  className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
  onClick={() => setSelectedCell(null)}
  >
  <div
- className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden"
+ className="bg-white rounded-xl shadow-sm-xl max-w-2xl w-full max-h-[80vh] overflow-hidden"
  onClick={(e) => e.stopPropagation()}
  >
  <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-4 flex items-center justify-between">
@@ -376,7 +376,7 @@ const TableauChargePage: React.FC = () => {
  </div>
  </div>
 
- <h4 className="text-lg font-semibold text-gray-900 mb-3">Détail des chantiers</h4>
+ <h4 className="text-lg font-semibold text-gray-900 mb-3">DÃ©tail des chantiers</h4>
  <div className="space-y-2 max-h-[400px] overflow-y-auto">
  {selectedCell.data.chantiersDetails.map((chantier, idx) => (
  <div
