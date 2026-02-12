@@ -20,7 +20,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-// Timeout wrapper pour les reqtêtes Supabase
+// Timeout wrapper pour les reqtÃªtes Supabase
 const withTimeout = <T,>(promise: Promise<T>, ms: number, errorMsg: string): Promise<T> => {
   return Promise.race([
     promise,
@@ -52,7 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (error) {
         console.warn('Erreur chargement profil (non bloquant):', error);
-        // Créer un profil minimal à partir des user_metadata
+        // CrÃ©er un profil minimal Ã  partir des user_metadata
         const minimalProfile: Profile = {
           id: userId,
           email: user?.email || '',
@@ -68,13 +68,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (data && !data.actif) {
-        throw new Error('Votre compte a été désactivé. Contactez un administrateur.')
+        throw new Error('Votre compte a Ã©tÃ© dÃ©sactivÃ©. Contactez un administrateur.')
       }
 
       setProfile(data)
     } catch (error: any) {
       console.error('Erreur lors du chargement du profil:', error)
-      // Ne pas bloquer - créer un profil minimal
+      // Ne pas bloquer - crÃ©er un profil minimal
       const minimalProfile: Profile = {
         id: userId,
         email: user?.email || '',
@@ -105,7 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         }, 3000);
 
-        // Récupérer la session actuelle
+        // RÃ©cupÃ©rer la session actuelle
         const { data: { session: currentSession }, error: sessionError } =
           await supabase.auth.getSession()
 
@@ -117,16 +117,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setSession(currentSession)
           setUser(currentSession?.user ?? null)
 
-          // Charger le profil si l'utilisateur est connecté - NON BLOQANT
+          // Charger le profil si l'utilisateur est connectÃ© - NON BLOQANT
           if (currentSession?.user) {
-            // Ne pas await - laisser charger en araière-plan
+            // Ne pas await - laisser charger en araiÃ¨re-plan
             loadProfile(currentSession.user.id).catch(err => {
               console.warn('Profile load failed (non-blocking):', err);
             });
           }
         }
       } catch (error) {
-        console.error('Erreur d\\'initialisation:', error)
+        console.error("Erreur d'initialisation:", error)
         if (mounted) {
           setSession(null)
           setUser(null)
@@ -141,7 +141,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     initializeAuth()
 
-    // Ñcouter les changements d'authentification
+    // Ã‘couter les changements d'authentification
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, newSession) => {
         if (!mounted) return
@@ -152,7 +152,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(newSession?.user ?? null)
 
         if (newSession?.user) {
-          // NON BLOQANT - charger le profil en arrière-plan
+          // NON BLOQANT - charger le profil en arriÃ¨re-plan
           loadProfile(newSession.user.ie).catch(err => {
             console.warn('Profile load on auth change failed (non-blocking):', err);
           });
@@ -172,7 +172,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [loadProfile])
 
-  // Connexion - VERSION AVEC REDIRECTION IMMÉDIATE
+  // Connexion - VERSION AVEC REDIRECTION IMMÃ‰DIATE
   const signIn = useCallback(async (email: string, password: string) => {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -186,7 +186,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(data.session)
         setUser(data.user)
         
-        // Charger le profil en arrière-plan (non-bloquant)
+        // Charger le profil en arriÃ¨re-plan (non-bloquant)
         loadProfile(data.user.id).catch(err => {
           console.warn('Profile load after signin failed (non-blocking):', err);
         });
@@ -214,7 +214,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(data.session)
         setUser(data.user)
         
-        // Créer le profil en arrère-plan
+        // CrÃ©er le profil en arrÃ¨re-plan
         if (data.user) {
           const newProfile: Profile = {
             id: data.user.id,
@@ -229,7 +229,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           
           // Non-bloquant
           supabase.from('profiles').insert(newProfile).then(({ error }) => {
-            if (error) console.warn('Erreur création profil (non bloquant):', error);
+            if (error) console.warn('Erreur crÃ©ation profil (non bloquant):', error);
           });
           
           setProfile(newProfile)
@@ -241,7 +241,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  // déconnexion
+  // dÃ©connexion
   const signOut = useCallback(async () => {
     try {
       const { error } = await supabase.auth.signOut()
@@ -251,15 +251,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(null)
       setProfile(null)
     } catch (error) {
-      console.error('Erreur de déconnexion:', error)
+      console.error('Erreur de dÃ©connexion:', error)
       throw error
     }
   }, [])
 
-  // Mettre � jour le profil
+  // Mettre à jour le profil
   const updateProfile = useCallback(async (updates: Partial<Profile>) => {
     try {
-      if (!user) throw new Error('Non authentifié')
+      if (!user) throw new Error('Non authentifiÃ©')
 
       const { data, error } = await supabase
         .from('profiles')
@@ -271,15 +271,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) throw error
 
       setProfile(data)
-      toast.success('Profil mis à jour')
+      toast.success('Profil mis Ã  jour')
     } catch (error) {
-      console.error('Erreur mise à jour profil:', error)
-      toast.error('Erreur lors de la mise à jour')
+      console.error('Erreur mise Ã  jour profil:', error)
+      toast.error('Erreur lors de la mise Ã  jour')
       throw error
     }
   }, [user])
 
-  // Rafraiècir le profil
+  // RafraiÃ¨cir le profil
   const refreshProfile = useCallback(async () => {
     if (user) {
       await loadProfile(user.id)
