@@ -41,7 +41,6 @@ const LoginPage: React.FC = () => {
     setErrors({});
 
     try {
-      // Authentification simple avec Supabase
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password: password
@@ -67,122 +66,140 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex justify-center">
-          <div className="bg-indigo-600 p-3 rounded-lg">
-            <EnvelopeIcon className="h-8 w-8 text-white" />
-          </div>
+    <div className="min-h-screen flex">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] text-white p-12 flex-col justify-between">
+        <div>
+          <h1 className="text-4xl font-bold mb-2">BE Pilot</h1>
+          <p className="text-xl text-blue-200 mb-12">Plateforme de gestion de projets</p>
+          <p className="text-2xl font-semibold mb-8 text-blue-100">Pilotez vos projets d'Ã©tudes avec prÃ©cision</p>
+          <ul className="space-y-4">
+            <li className="flex items-start">
+              <svg className="w-6 h-6 text-blue-300 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="text-lg">Suivi en temps rÃ©el de tous vos projets</span>
+            </li>
+            <li className="flex items-start">
+              <svg className="w-6 h-6 text-blue-300 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="text-lg">Gestion collaborative des Ã©quipes</span>
+            </li>
+            <li className="flex items-start">
+              <svg className="w-6 h-6 text-blue-300 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="text-lg">Tableaux de bord et analyses dÃ©taillÃ©es</span>
+            </li>
+          </ul>
         </div>
-        <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-          Connexion ÃÂ  votre compte
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          AccÃ©dez ÃÂ  votre tableau de bord de suivi de chantiers
-        </p>
+        <div className="text-blue-200 text-sm">
+          Â© 2024 BE Pilot. Tous droits rÃ©servÃ©s.
+        </div>
       </div>
-
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            {errors.general && (
-              <div className="rounded-md bg-red-50 p-4">
-                <div className="flex">
-                  <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800">{errors.general}</h3>
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
+        <div className="w-full max-w-md">
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">Connexion</h2>
+            <p className="text-gray-600">AccÃ©dez Ã  votre espace de gestion de projets</p>
+          </div>
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              {errors.general && (
+                <div className="rounded-lg bg-red-50 p-4 border border-red-200">
+                  <div className="flex">
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-red-800">{errors.general}</h3>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Adresse email
-              </label>
-              <div className="relative mt-1 rounded-md shadow-sm">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <EnvelopeIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                </div>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className={`block w-full rounded-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${errors.email ? 'border-red-300' : ''}`}
-                  placeholder="vous@exemple.com"
-                />
-              </div>
-              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Mot de passe
-              </label>
-              <div className="relative mt-1 rounded-md shadow-sm">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <LockClosedIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                </div>
-                <input
-                  type="password"
-                  name="password"
-                  id="password"
-                  autoComplete="current-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={`block w-full rounded-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${errors.password ? 'border-red-300' : ''}`}
-                />
-              </div>
-              {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                  Se souvenir de moi
+              )}
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  Adresse e-mail
                 </label>
+                <div className="relative">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                    <EnvelopeIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                  </div>
+                  <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    autoComplete="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className={`block w-full rounded-lg border ${errors.email ? 'border-red-300' : 'border-gray-300'} pl-10 pr-3 py-3 focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f] focus:ring-opacity-20 sm:text-sm transition-colors`}
+                    placeholder="vous@exemple.com"
+                  />
+                </div>
+                {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email}</p>}
               </div>
-
-              <div className="text-sm">
-                <Link to="/forgot-password" className="font-medium text-indigo-600 hover:text-indigo-500">
-                  Mot de passe oubliÃ© ?
-                </Link>
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                  Mot de passe
+                </label>
+                <div className="relative">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                    <LockClosedIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                  </div>
+                  <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    autoComplete="current-password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className={`block w-full rounded-lg border ${errors.password ? 'border-red-300' : 'border-gray-300'} pl-10 pr-3 py-3 focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f] focus:ring-opacity-20 sm:text-sm transition-colors`}
+                    placeholder="â¢â¢â¢â¢â¢â¢â¢â¢"
+                  />
+                </div>
+                {errors.password && <p className="mt-2 text-sm text-red-600">{errors.password}</p>}
               </div>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="flex w-full justify-center items-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  <>
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 4.418 3.582 8 8 8v-4c-2.133 0-4.067-.832-5.464-2.209l2.464-2.5z"></path>
-                    </svg>
-                    Connexion en cours...
-                  </>
-                ) : (
-                  <>
-                    Se connecter
-                    <ArrowRightIcon className="ml-2 -mr-1 h-5 w-5" aria-hidden="true" />
-                  </>
-                )}
-              </button>
-            </div>
-          </form>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <input
+                    id="remember-me"
+                    name="remember-me"
+                    type="checkbox"
+                    className="h-4 w-4 rounded border-gray-300 text-[#1e3a5f] focus:ring-[#1e3a5f]"
+                  />
+                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+                    Se souvenir de moi
+                  </label>
+                </div>
+                <div className="text-sm">
+                  <Link to="/forgot-password" className="font-medium text-[#1e3a5f] hover:text-[#0f172a] transition-colors">
+                    Mot de passe oubliÃ© ?
+                  </Link>
+                </div>
+              </div>
+              <div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex w-full justify-center items-center rounded-lg bg-[#1e3a5f] py-3 px-4 text-sm font-semibold text-white shadow-md hover:bg-[#0f172a] focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                >
+                  {loading ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 4.418 3.582 8 8 8v-4c-2.133 0-4.067-.832-5.464-2.209l2.464-2.5z"></path>
+                      </svg>
+                      Connexion en cours...
+                    </>
+                  ) : (
+                    <>
+                      Se connecter
+                      <ArrowRightIcon className="ml-2 -mr-1 h-5 w-5" aria-hidden="true" />
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
