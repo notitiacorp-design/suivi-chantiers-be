@@ -6,7 +6,7 @@ import Badge from '../common/Badge';
 import toast from 'react-hot-toast';
 
 interface HeaderProps {
-  onMenuClick: () => void;
+  setMobileOpen: (open: boolean) => void;
 }
 
 const breadcrumbMapping: Record<string, string> = {
@@ -19,7 +19,7 @@ const breadcrumbMapping: Record<string, string> = {
   notifications: 'Notifications',
 };
 
-const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
+const Header: React.FC<HeaderProps> = ({ setMobileOpen }) => {
   const { user, profile, signOut, isDirecteur, isChargeAffaires } = useAuth();
   const location = useLocation();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -73,7 +73,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
         {/* Left side: Hamburger + Breadcrumb */}
         <div className="flex items-center space-x-4 flex-1 min-w-0">
           <button
-            onClick={() => onMenuClick()}
+            onClick={() => setMobileOpen(true)}
             className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-slate-100 text-slate-700 transition-colors"
             aria-label="Ouvrir le menu"
           >
