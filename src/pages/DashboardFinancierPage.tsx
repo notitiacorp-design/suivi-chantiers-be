@@ -44,7 +44,7 @@ const DashboardFinancierPage: React.FC = () => {
  const navigate = useNavigate();
  const [selectedPeriod, setSelectedPeriod] = useState<number>(12);
 
- // RÃ©cupÃ©rer les chantiers
+ // R\u00e9cup\u00e9rer les chantiers
  const { data: chantiers = [] } = useQuery<Chantier[]>({
  queryKey: ['chantiers'],
  queryFn: async () => {
@@ -57,7 +57,7 @@ const DashboardFinancierPage: React.FC = () => {
  }
  });
 
- // RÃ©cupÃ©rer les factures
+ // R\u00e9cup\u00e9rer les factures
  const { data: factures = [] } = useQuery<Facture[]>({
  queryKey: ['factures-all'],
  queryFn: async () => {
@@ -70,7 +70,7 @@ const DashboardFinancierPage: React.FC = () => {
  }
  });
 
- // RÃ©cupÃ©rer les avenants
+ // R\u00e9cup\u00e9rer les avenants
  const { data: avenants = [] } = useQuery<Avenant[]>({
  queryKey: ['avenants-all'],
  queryFn: async () => {
@@ -82,7 +82,7 @@ const DashboardFinancierPage: React.FC = () => {
  }
  });
 
- // RÃ©cupÃ©rer les budgets postes
+ // R\u00e9cup\u00e9rer les budgets postes
  const { data: budgetsPostes = [] } = useQuery<BudgetPoste[]>({
  queryKey: ['budgets-postes-all'],
  queryFn: async () => {
@@ -108,7 +108,7 @@ const DashboardFinancierPage: React.FC = () => {
  const totalAvenants = avenants.reduce((sum, a) => sum + (a.montant || 0), 0);
  const budgetTotalActuel = budgetTotalInitial + totalAvenants;
 
- // Budget consommÃ©
+ // Budget consomm\u00e9
  const budgetConsomme = budgetsPostes.reduce(
  (sum, b) => sum + (b.montant_actuel * b.avancement / 100),
  0
@@ -179,7 +179,7 @@ const DashboardFinancierPage: React.FC = () => {
  .sort((a, b) => b.budgetActuel - a.budgetActuel);
  }, [chantiers, factures, avenants, budgetsPostes]);
 
- // Ãvolution CA mensuel
+ // \u00c9volution CA mensuel
  const evolutionCA = useMemo(() => {
  const startDate = subMonths(new Date(), selectedPeriod - 1);
  const months = eachMonthOfInterval({
@@ -206,7 +206,7 @@ const DashboardFinancierPage: React.FC = () => {
  });
  }, [factures, selectedPeriod, kpisGlobaux.budgetTotalActuel]);
 
- // RÃ©partition budget par chantier
+ // R\u00e9partition budget par chantier
  const repartitionBudget = useMemo(() => {
  return performanceChantiers
  .slice(0, 5)
@@ -256,7 +256,7 @@ const DashboardFinancierPage: React.FC = () => {
  return (
  <div className="min-h-screen bg-gray-50 p-6">
  <div className="max-w-7xl mx-auto space-y-6">
- {/* En-tÃªte */}
+ {/* En-t\u00eate */}
  <div className="flex items-center justify-between">
  <div>
  <h1 className="text-3xl font-bold text-gray-900">Dashboard Financier</h1>
@@ -297,7 +297,7 @@ const DashboardFinancierPage: React.FC = () => {
  trend={kpisGlobaux.margePourcentage > 15 ? 'up' : kpisGlobaux.margePourcentage < 5 ? 'down' : 'neutral'}
  />
  <KPICard
- title="Budget ConsommÃ©"
+ title="Budget Consomm\u00e9"
  value={formatEuro(kpisGlobaux.budgetConsomme)}
  subtitle={`sur ${formatEuro(kpisGlobaux.budgetTotalActuel)}`}
  icon={<TrendingDown className="w-5 h-5 text-orange-600" />}
@@ -313,10 +313,10 @@ const DashboardFinancierPage: React.FC = () => {
  </div>
 
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
- {/* Ãvolution CA Mensuel */}
+ {/* \u00c9volution CA Mensuel */}
  <div className="bg-white rounded-xl shadow-sm p-6">
  <div className="flex items-center justify-between mb-4">
- <h3 className="text-lg font-semibold text-gray-900">Ãvolution CA Mensuel</h3>
+ <h3 className="text-lg font-semibold text-gray-900">\u00c9volution CA Mensuel</h3>
  <select
  value={selectedPeriod}
  onChange={(e) => setSelectedPeriod(Number(e.target.value))}
@@ -334,15 +334,15 @@ const DashboardFinancierPage: React.FC = () => {
  <YAxis />
  <Tooltip formatter={(value: any) => formatEuro(Number(value))} />
  <Legend />
- <Line type="monotone" dataKey="ca" stroke="#10B981" strokeWidth={2} name="CA RÃ©alisÃ©" />
+ <Line type="monotone" dataKey="ca" stroke="#10B981" strokeWidth={2} name="CA R\u00e9alis\u00e9" />
  <Line type="monotone" dataKey="objectif" stroke="#3B82F6" strokeWidth={2} strokeDasharray="5 5" name="Objectif" />
  </LineChart>
  </ResponsiveContainer>
  </div>
 
- {/* RÃ©partition Budget Top 5 */}
+ {/* R\u00e9partition Budget Top 5 */}
  <div className="bg-white rounded-xl shadow-sm p-6">
- <h3 className="text-lg font-semibold text-gray-900 mb-4">RÃ©partition Budget - Top 5 Chantiers</h3>
+ <h3 className="text-lg font-semibold text-gray-900 mb-4">R\u00e9partition Budget - Top 5 Chantiers</h3>
  <ResponsiveContainer width="100%" height={300}>
  <PieChart>
  <Pie
@@ -378,8 +378,8 @@ const DashboardFinancierPage: React.FC = () => {
  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Chantier</th>
  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Budget</th>
- <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">FacturÃ©</th>
- <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">ConsommÃ©</th>
+ <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Factur\u00e9</th>
+ <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Consomm\u00e9</th>
  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Marge</th>
  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Avancement</th>
  </tr>
@@ -481,7 +481,7 @@ const DashboardFinancierPage: React.FC = () => {
  <div>
  <p className="text-sm font-medium text-red-900">Marge globale faible</p>
  <p className="text-sm text-red-700 mt-1">
- La marge globale est de {(Number(kpisGlobaux.margePourcentage) || 0).toFixed(1)}%. Il est recommandÃ© de rÃ©viser les coÃ»ts et d'optimiser les budgets.
+ La marge globale est de {(Number(kpisGlobaux.margePourcentage) || 0).toFixed(1)}%. Il est recommand\u00e9 de r\u00e9viser les co\u00fbts et d'optimiser les budgets.
  </p>
  </div>
  </div>
@@ -495,7 +495,7 @@ const DashboardFinancierPage: React.FC = () => {
  {performanceChantiers.filter(c => c.margePourcentage < 5).length} chantier(s) avec marge critique
  </p>
  <p className="text-sm text-orange-700 mt-1">
- Certains chantiers ont une marge infÃ©rieure Ã  5%. Analysez les dÃ©passements budgÃ©taires.
+ Certains chantiers ont une marge inf\u00e9rieure \u00e0 5%. Analysez les d\u00e9passements budg\u00e9taires.
  </p>
  </div>
  </div>
@@ -505,9 +505,9 @@ const DashboardFinancierPage: React.FC = () => {
  <div className="flex items-start gap-3 p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
  <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
  <div>
- <p className="text-sm font-medium text-yellow-900">Taux de facturation Ã  amÃ©liorer</p>
+ <p className="text-sm font-medium text-yellow-900">Taux de facturation \u00e0 am\u00e9liorer</p>
  <p className="text-sm text-yellow-700 mt-1">
- Seulement {(Number(kpisGlobaux.tauxFacturation) || 0).toFixed(1)}% du budget est facturÃ©. Ãmettez des factures d'acompte.
+ Seulement {(Number(kpisGlobaux.tauxFacturation) || 0).toFixed(1)}% du budget est factur\u00e9. \u00c9mettez des factures d'acompte.
  </p>
  </div>
  </div>
@@ -520,9 +520,9 @@ const DashboardFinancierPage: React.FC = () => {
  <div className="flex items-start gap-3 p-4 bg-green-50 border border-green-200 rounded-xl">
  <TrendingUp className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
  <div>
- <p className="text-sm font-medium text-green-900">Situation financiÃ¨re saine</p>
+ <p className="text-sm font-medium text-green-900">Situation financi\u00e8re saine</p>
  <p className="text-sm text-green-700 mt-1">
- Tous les indicateurs sont au vert. Continuez sur cette lancÃ©e !
+ Tous les indicateurs sont au vert. Continuez sur cette lanc\u00e9e !
  </p>
  </div>
  </div>

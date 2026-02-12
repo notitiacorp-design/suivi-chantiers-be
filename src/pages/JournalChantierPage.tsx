@@ -64,7 +64,7 @@ const weatherIcons = {
 };
 
 const weatherLabels = {
-  ensoleille: 'EnsoleillÃ©',
+  ensoleille: 'Ensoleill\u00e9',
   nuageux: 'Nuageux',
   pluie: 'Pluie',
   orage: 'Orage',
@@ -236,7 +236,7 @@ const JournalChantierPage: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-[#1e3a5f] mb-2">Journal de Chantier</h1>
-          <p className="text-[#64748b]">Suivi quotidien des activitÃ©s de chantier</p>
+          <p className="text-[#64748b]">Suivi quotidien des activit\u00e9s de chantier</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
@@ -263,7 +263,7 @@ const JournalChantierPage: React.FC = () => {
             <div className="flex-1">
               <label className="block text-sm font-medium text-[#1e293b] mb-2">
                 <Calendar className="w-4 h-4 inline mr-1" />
-                Date de dÃ©but
+                Date de d\u00e9but
               </label>
               <input
                 type="date"
@@ -291,7 +291,7 @@ const JournalChantierPage: React.FC = () => {
               className="px-6 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#2563eb] transition-colors flex items-center gap-2 whitespace-nowrap"
             >
               <Plus className="w-5 h-5" />
-              Nouvelle entrÃ©e
+              Nouvelle entr\u00e9e
             </button>
           </div>
         </div>
@@ -310,14 +310,14 @@ const JournalChantierPage: React.FC = () => {
         ) : entries.length === 0 ? (
           <div className="bg-white rounded-xl shadow-sm p-12 text-center">
             <Calendar className="w-16 h-16 text-[#64748b] mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-[#1e293b] mb-2">Aucune entrÃ©e trouvÃ©e</h3>
-            <p className="text-[#64748b] mb-6">CrÃ©ez votre premiÃ¨re entrÃ©e de journal de chantier</p>
+            <h3 className="text-xl font-semibold text-[#1e293b] mb-2">Aucune entr\u00e9e trouv\u00e9e</h3>
+            <p className="text-[#64748b] mb-6">Cr\u00e9ez votre premi\u00e8re entr\u00e9e de journal de chantier</p>
             <button
               onClick={() => setShowModal(true)}
               className="px-6 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#2563eb] transition-colors inline-flex items-center gap-2"
             >
               <Plus className="w-5 h-5" />
-              Nouvelle entrÃ©e
+              Nouvelle entr\u00e9e
             </button>
           </div>
         ) : (
@@ -344,9 +344,9 @@ const JournalChantierPage: React.FC = () => {
                           <div className="flex items-center gap-2">
                             <Thermometer className="w-5 h-5 text-[#f59e0b]" />
                             <span className="text-sm text-[#64748b]">
-                              {entry.temperature_min !== null && entry.temperature_min !== undefined ? `${entry.temperature_min}Â°` : '--'}
+                              {entry.temperature_min !== null && entry.temperature_min !== undefined ? `${entry.temperature_min}\u00b0` : '--'}
                               {' / '}
-                              {entry.temperature_max !== null && entry.temperature_max !== undefined ? `${entry.temperature_max}Â°` : '--'}
+                              {entry.temperature_max !== null && entry.temperature_max !== undefined ? `${entry.temperature_max}\u00b0` : '--'}
                             </span>
                           </div>
                         )}
@@ -366,7 +366,7 @@ const JournalChantierPage: React.FC = () => {
                         <div className="flex items-start gap-3">
                           <AlertTriangle className="w-5 h-5 text-[#ef4444] flex-shrink-0 mt-0.5" />
                           <div className="flex-1">
-                            <h4 className="font-semibold text-[#ef4444] mb-1">Incidents de sÃ©curitÃ©</h4>
+                            <h4 className="font-semibold text-[#ef4444] mb-1">Incidents de s\u00e9curit\u00e9</h4>
                             <p className="text-sm text-[#1e293b] whitespace-pre-wrap">{entry.securite_incidents}</p>
                           </div>
                         </div>
@@ -375,13 +375,13 @@ const JournalChantierPage: React.FC = () => {
 
                     <div className="space-y-4">
                       <div>
-                        <h3 className="font-semibold text-[#1e3a5f] mb-2">Travaux rÃ©alisÃ©s</h3>
+                        <h3 className="font-semibold text-[#1e3a5f] mb-2">Travaux r\u00e9alis\u00e9s</h3>
                         <p className="text-[#1e293b] whitespace-pre-wrap">{entry.travaux_realises}</p>
                       </div>
 
                       {entry.travaux_prevus_lendemain && (
                         <div>
-                          <h3 className="font-semibold text-[#1e3a5f] mb-2">Travaux prÃ©vus pour le lendemain</h3>
+                          <h3 className="font-semibold text-[#1e3a5f] mb-2">Travaux pr\u00e9vus pour le lendemain</h3>
                           <p className="text-[#1e293b] whitespace-pre-wrap">{entry.travaux_prevus_lendemain}</p>
                         </div>
                       )}
@@ -411,7 +411,7 @@ const JournalChantierPage: React.FC = () => {
                             onClick={() => toggleSection(entry.id, 'problemes')}
                             className="flex items-center justify-between w-full text-left font-semibold text-[#1e3a5f] hover:text-[#3b82f6] transition-colors"
                           >
-                            <span>ProblÃ¨mes rencontrÃ©s</span>
+                            <span>Probl\u00e8mes rencontr\u00e9s</span>
                             {expandedSections[entry.id]?.problemes ? (
                               <ChevronUp className="w-5 h-5" />
                             ) : (
@@ -430,7 +430,7 @@ const JournalChantierPage: React.FC = () => {
                             onClick={() => toggleSection(entry.id, 'decisions')}
                             className="flex items-center justify-between w-full text-left font-semibold text-[#1e3a5f] hover:text-[#3b82f6] transition-colors"
                           >
-                            <span>DÃ©cisions prises</span>
+                            <span>D\u00e9cisions prises</span>
                             {expandedSections[entry.id]?.decisions ? (
                               <ChevronUp className="w-5 h-5" />
                             ) : (
@@ -451,7 +451,7 @@ const JournalChantierPage: React.FC = () => {
                           >
                             <div className="flex items-center gap-2">
                               <Package className="w-5 h-5" />
-                              <span>MatÃ©riaux reÃ§us</span>
+                              <span>Mat\u00e9riaux re\u00e7us</span>
                             </div>
                             {expandedSections[entry.id]?.materiaux ? (
                               <ChevronUp className="w-5 h-5" />
@@ -490,7 +490,7 @@ const JournalChantierPage: React.FC = () => {
 
                     <div className="mt-6 pt-4 border-t border-gray-200 flex items-center justify-between text-sm text-[#64748b]">
                       <span>
-                        RÃ©digÃ© par {entry.profiles?.prenom} {entry.profiles?.nom}
+                        R\u00e9dig\u00e9 par {entry.profiles?.prenom} {entry.profiles?.nom}
                       </span>
                       <span>{formatDateTime(entry.created_at)}</span>
                     </div>
@@ -506,7 +506,7 @@ const JournalChantierPage: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-[#1e3a5f]">Nouvelle entrÃ©e de journal</h2>
+              <h2 className="text-2xl font-bold text-[#1e3a5f]">Nouvelle entr\u00e9e de journal</h2>
               <button
                 onClick={() => setShowModal(false)}
                 className="text-[#64748b] hover:text-[#1e293b] transition-colors"
@@ -540,7 +540,7 @@ const JournalChantierPage: React.FC = () => {
                     onChange={(e) => setFormData({ ...formData, chantier_id: e.target.value })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent"
                   >
-                    <option value="">SÃ©lectionner un chantier</option>
+                    <option value="">S\u00e9lectionner un chantier</option>
                     {chantiers.map((chantier) => (
                       <option key={chantier.id} value={chantier.id}>
                         {chantier.nom}
@@ -552,7 +552,7 @@ const JournalChantierPage: React.FC = () => {
 
               <div>
                 <label className="block text-sm font-medium text-[#1e293b] mb-2">
-                  MÃ©tÃ©o <span className="text-[#ef4444]">*</span>
+                  M\u00e9t\u00e9o <span className="text-[#ef4444]">*</span>
                 </label>
                 <div className="grid grid-cols-5 gap-3">
                   {(Object.entries(weatherIcons) as [keyof typeof weatherIcons, any][]).map(([key, Icon]) => (
@@ -576,7 +576,7 @@ const JournalChantierPage: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-[#1e293b] mb-2">
-                    TempÃ©rature min (Â°C)
+                    Temp\u00e9rature min (\u00b0C)
                   </label>
                   <input
                     type="number"
@@ -590,7 +590,7 @@ const JournalChantierPage: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-[#1e293b] mb-2">
-                    TempÃ©rature max (Â°C)
+                    Temp\u00e9rature max (\u00b0C)
                   </label>
                   <input
                     type="number"
@@ -621,7 +621,7 @@ const JournalChantierPage: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-[#1e293b] mb-2">
-                    Heures travaillÃ©es <span className="text-[#ef4444]">*</span>
+                    Heures travaill\u00e9es <span className="text-[#ef4444]">*</span>
                   </label>
                   <input
                     type="number"
@@ -638,7 +638,7 @@ const JournalChantierPage: React.FC = () => {
 
               <div>
                 <label className="block text-sm font-medium text-[#1e293b] mb-2">
-                  Travaux rÃ©alisÃ©s <span className="text-[#ef4444]">*</span>
+                  Travaux r\u00e9alis\u00e9s <span className="text-[#ef4444]">*</span>
                 </label>
                 <textarea
                   required
@@ -646,20 +646,20 @@ const JournalChantierPage: React.FC = () => {
                   value={formData.travaux_realises}
                   onChange={(e) => setFormData({ ...formData, travaux_realises: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent resize-none"
-                  placeholder="DÃ©crivez les travaux effectuÃ©s aujourd'hui..."
+                  placeholder="D\u00e9crivez les travaux effectu\u00e9s aujourd'hui..."
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-[#1e293b] mb-2">
-                  Travaux prÃ©vus pour le lendemain
+                  Travaux pr\u00e9vus pour le lendemain
                 </label>
                 <textarea
                   rows={3}
                   value={formData.travaux_prevus_lendemain}
                   onChange={(e) => setFormData({ ...formData, travaux_prevus_lendemain: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent resize-none"
-                  placeholder="DÃ©crivez les travaux prÃ©vus..."
+                  placeholder="D\u00e9crivez les travaux pr\u00e9vus..."
                 />
               </div>
 
@@ -672,46 +672,46 @@ const JournalChantierPage: React.FC = () => {
                   value={formData.observations}
                   onChange={(e) => setFormData({ ...formData, observations: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent resize-none"
-                  placeholder="Observations gÃ©nÃ©rales..."
+                  placeholder="Observations g\u00e9n\u00e9rales..."
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-[#1e293b] mb-2">
-                  ProblÃ¨mes rencontrÃ©s
+                  Probl\u00e8mes rencontr\u00e9s
                 </label>
                 <textarea
                   rows={3}
                   value={formData.problemes}
                   onChange={(e) => setFormData({ ...formData, problemes: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent resize-none"
-                  placeholder="DÃ©crivez les problÃ¨mes..."
+                  placeholder="D\u00e9crivez les probl\u00e8mes..."
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-[#1e293b] mb-2">
-                  DÃ©cisions prises
+                  D\u00e9cisions prises
                 </label>
                 <textarea
                   rows={3}
                   value={formData.decisions}
                   onChange={(e) => setFormData({ ...formData, decisions: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent resize-none"
-                  placeholder="Listez les dÃ©cisions..."
+                  placeholder="Listez les d\u00e9cisions..."
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-[#1e293b] mb-2">
-                  MatÃ©riaux reÃ§us
+                  Mat\u00e9riaux re\u00e7us
                 </label>
                 <textarea
                   rows={3}
                   value={formData.materiaux_recus}
                   onChange={(e) => setFormData({ ...formData, materiaux_recus: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent resize-none"
-                  placeholder="Listez les matÃ©riaux..."
+                  placeholder="Listez les mat\u00e9riaux..."
                 />
               </div>
 
@@ -730,14 +730,14 @@ const JournalChantierPage: React.FC = () => {
 
               <div>
                 <label className="block text-sm font-medium text-[#1e293b] mb-2">
-                  Incidents de sÃ©curitÃ©
+                  Incidents de s\u00e9curit\u00e9
                 </label>
                 <textarea
                   rows={3}
                   value={formData.securite_incidents}
                   onChange={(e) => setFormData({ ...formData, securite_incidents: e.target.value })}
                   className="w-full px-4 py-2 border border-red-300 rounded-lg focus:ring-2 focus:ring-[#ef4444] focus:border-transparent resize-none"
-                  placeholder="DÃ©crivez tout incident de sÃ©curitÃ©..."
+                  placeholder="D\u00e9crivez tout incident de s\u00e9curit\u00e9..."
                 />
               </div>
 

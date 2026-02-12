@@ -55,10 +55,10 @@ interface StageConfig {
 
 const stages: StageConfig[] = [
   { id: 'prospection', label: 'Prospection', color: 'text-gray-700', bgColor: 'bg-gray-50', borderColor: 'border-gray-300' },
-  { id: 'decouverte', label: 'DÃ©couverte', color: 'text-blue-700', bgColor: 'bg-blue-50', borderColor: 'border-blue-300' },
+  { id: 'decouverte', label: 'D\u00e9couverte', color: 'text-blue-700', bgColor: 'bg-blue-50', borderColor: 'border-blue-300' },
   { id: 'proposition', label: 'Proposition', color: 'text-indigo-700', bgColor: 'bg-indigo-50', borderColor: 'border-indigo-300' },
-  { id: 'negociation', label: 'NÃ©gociation', color: 'text-amber-700', bgColor: 'bg-amber-50', borderColor: 'border-amber-300' },
-  { id: 'gagne', label: 'GagnÃ©', color: 'text-green-700', bgColor: 'bg-green-50', borderColor: 'border-green-300' },
+  { id: 'negociation', label: 'N\u00e9gociation', color: 'text-amber-700', bgColor: 'bg-amber-50', borderColor: 'border-amber-300' },
+  { id: 'gagne', label: 'Gagn\u00e9', color: 'text-green-700', bgColor: 'bg-green-50', borderColor: 'border-green-300' },
   { id: 'perdu', label: 'Perdu', color: 'text-red-700', bgColor: 'bg-red-50', borderColor: 'border-red-300' },
 ];
 
@@ -68,7 +68,7 @@ const sources = [
   'Recommandation',
   'Salon professionnel',
   'Prospection directe',
-  'RÃ©seaux sociaux',
+  'R\u00e9seaux sociaux',
   'Partenaire',
   'Autre',
 ];
@@ -320,7 +320,7 @@ export default function PipelineCommercialPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Pipeline Commercial</h1>
-            <p className="mt-1 text-sm text-gray-600">Gestion des opportunitÃ©s commerciales</p>
+            <p className="mt-1 text-sm text-gray-600">Gestion des opportunit\u00e9s commerciales</p>
           </div>
           <button
             onClick={() => handleOpenModal()}
@@ -347,7 +347,7 @@ export default function PipelineCommercialPage() {
           <div className="bg-white rounded-xl p-6 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Valeur pondÃ©rÃ©e</p>
+                <p className="text-sm font-medium text-gray-600">Valeur pond\u00e9r\u00e9e</p>
                 <p className="text-2xl font-bold text-gray-900 mt-1">{formatCurrency(stats.weightedValue)}</p>
               </div>
               <div className="p-3 bg-indigo-50 rounded-lg">
@@ -465,7 +465,7 @@ export default function PipelineCommercialPage() {
                               </button>
                               <button
                                 onClick={() => {
-                                  if (window.confirm('Ãtes-vous sÃ»r de vouloir supprimer cette affaire ?')) {
+                                  if (window.confirm('\u00cates-vous s\u00fbr de vouloir supprimer cette affaire ?')) {
                                     deleteDealMutation.mutate(deal.id);
                                   }
                                 }}
@@ -499,7 +499,7 @@ export default function PipelineCommercialPage() {
 
                           <div className="mb-3">
                             <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
-                              <span>ProbabilitÃ©</span>
+                              <span>Probabilit\u00e9</span>
                               <span className="font-medium">{deal.probabilite}%</span>
                             </div>
                             <div className="w-full bg-gray-200 rounded-full h-2">
@@ -576,7 +576,7 @@ export default function PipelineCommercialPage() {
                     value={formData.nom_affaire}
                     onChange={(e) => setFormData({ ...formData, nom_affaire: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Ex: RÃ©novation immeuble centre-ville"
+                    placeholder="Ex: R\u00e9novation immeuble centre-ville"
                   />
                 </div>
 
@@ -604,7 +604,7 @@ export default function PipelineCommercialPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">TÃ©lÃ©phone</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">T\u00e9l\u00e9phone</label>
                   <input
                     type="tel"
                     value={formData.telephone}
@@ -626,7 +626,7 @@ export default function PipelineCommercialPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Montant estimÃ© (â¬) *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Montant estim\u00e9 (\u20ac) *</label>
                   <input
                     type="number"
                     required
@@ -656,7 +656,7 @@ export default function PipelineCommercialPage() {
 
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    ProbabilitÃ© de succÃ¨s : {formData.probabilite}%
+                    Probabilit\u00e9 de succ\u00e8s : {formData.probabilite}%
                   </label>
                   <input
                     type="range"
@@ -683,7 +683,7 @@ export default function PipelineCommercialPage() {
                     onChange={(e) => setFormData({ ...formData, source: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
-                    <option value="">SÃ©lectionner une source</option>
+                    <option value="">S\u00e9lectionner une source</option>
                     {sources.map((source) => (
                       <option key={source} value={source}>
                         {source}
@@ -704,7 +704,7 @@ export default function PipelineCommercialPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Date de clÃ´ture prÃ©vue
+                    Date de cl\u00f4ture pr\u00e9vue
                   </label>
                   <input
                     type="date"
@@ -721,7 +721,7 @@ export default function PipelineCommercialPage() {
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     rows={4}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="DÃ©tails de l'affaire, besoins du client, etc."
+                    placeholder="D\u00e9tails de l'affaire, besoins du client, etc."
                   ></textarea>
                 </div>
               </div>
@@ -745,8 +745,8 @@ export default function PipelineCommercialPage() {
                   {createDealMutation.isPending || updateDealMutation.isPending
                     ? 'Enregistrement...'
                     : editingDeal
-                    ? 'Mettre Ã  jour'
-                    : 'CrÃ©er l\'affaire'}
+                    ? 'Mettre \u00e0 jour'
+                    : 'Cr\u00e9er l\'affaire'}
                 </button>
               </div>
             </form>

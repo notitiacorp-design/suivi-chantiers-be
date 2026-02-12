@@ -28,7 +28,7 @@ const FacturationGlobalePage: React.FC = () => {
  const navigate = useNavigate();
  const [selectedPeriod, setSelectedPeriod] = useState<number>(6);
 
- // RÃ©cupÃ©rer tous les chantiers
+ // R\u00e9cup\u00e9rer tous les chantiers
  const { data: chantiers = [] } = useQuery<Chantier[]>({
  queryKey: ['chantiers'],
  queryFn: async () => {
@@ -42,7 +42,7 @@ const FacturationGlobalePage: React.FC = () => {
  }
  });
 
- // RÃ©cupÃ©rer toutes les factures
+ // R\u00e9cup\u00e9rer toutes les factures
  const { data: factures = [], isLoading } = useQuery<Facture[]>({
  queryKey: ['factures-global'],
  queryFn: async () => {
@@ -61,7 +61,7 @@ const FacturationGlobalePage: React.FC = () => {
  const debutMois = startOfMonth(maintenant);
  const finMois = endOfMonth(maintenant);
 
- // Total facturÃ© ce mois
+ // Total factur\u00e9 ce mois
  const totalMois = factures
  .filter(f => {
  const date = parseISO(f.date_emission);
@@ -69,7 +69,7 @@ const FacturationGlobalePage: React.FC = () => {
  })
  .reduce((sum, f) => sum + f.montant_ht, 0);
 
- // ImpayÃ©s
+ // Impay\u00e9s
  const impayes = factures
  .filter(f => f.statut === 'emise' || (f.statut === 'emise' && isPast(parseISO(f.date_echeance))))
  .reduce((sum, f) => sum + f.montant_ttc, 0);
@@ -79,7 +79,7 @@ const FacturationGlobalePage: React.FC = () => {
  f.statut === 'emise' && isPast(parseISO(f.date_echeance))
  ).length;
 
- // TrÃ©sorerie prÃ©visionnelle (30 jours)
+ // Tr\u00e9sorerie pr\u00e9visionnelle (30 jours)
  const dans30Jours = new Date();
  dans30Jours.setDate(dans30Jours.getDate() + 30);
  
@@ -91,7 +91,7 @@ const FacturationGlobalePage: React.FC = () => {
  })
  .reduce((sum, f) => sum + f.montant_ttc, 0);
 
- // Total facturÃ© global
+ // Total factur\u00e9 global
  const totalFacture = factures
  .filter(f => f.statut !== 'avoir')
  .reduce((sum, f) => sum + f.montant_ht, 0);
@@ -157,7 +157,7 @@ const FacturationGlobalePage: React.FC = () => {
  .slice(0, 5);
  }, [factures, chantiers]);
 
- // RÃ©partition par statut
+ // R\u00e9partition par statut
  const repartitionStatut = useMemo(() => {
  const stats = {
  payee: 0,
@@ -178,8 +178,8 @@ const FacturationGlobalePage: React.FC = () => {
  });
 
  return [
- { name: 'PayÃ©es', value: stats.payee, color: '#10B981' },
- { name: 'Ãmises', value: stats.emise, color: '#3B82F6' },
+ { name: 'Pay\u00e9es', value: stats.payee, color: '#10B981' },
+ { name: '\u00c9mises', value: stats.emise, color: '#3B82F6' },
  { name: 'En retard', value: stats.en_retard, color: '#EF4444' }
  ].filter(s => s.value > 0);
  }, [factures]);
@@ -218,7 +218,7 @@ const FacturationGlobalePage: React.FC = () => {
  return (
  <div className="min-h-screen bg-gray-50 p-6">
  <div className="max-w-7xl mx-auto space-y-6">
- {/* En-tÃªte */}
+ {/* En-t\u00eate */}
  <div className="flex items-center justify-between">
  <div>
  <h1 className="text-3xl font-bold text-gray-900">Facturation Globale</h1>
@@ -235,14 +235,14 @@ const FacturationGlobalePage: React.FC = () => {
  {/* KPIs */}
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
  <KPICard
- title="FacturÃ© ce mois"
+ title="Factur\u00e9 ce mois"
  value={formatEuro(kpis.totalMois)}
  subtitle={format(new Date(), 'MMMM yyyy', { locale: fr })}
  icon={<DollarSign className="w-5 h-5 text-green-600" />}
  color="#10B981"
  />
  <KPICard
- title="ImpayÃ©s"
+ title="Impay\u00e9s"
  value={formatEuro(kpis.impayes)}
  subtitle={`${kpis.enRetard} facture(s) en retard`}
  icon={<AlertTriangle className="w-5 h-5 text-red-600" />}
@@ -250,14 +250,14 @@ const FacturationGlobalePage: React.FC = () => {
  alert={kpis.enRetard > 0}
  />
  <KPICard
- title="TrÃ©sorerie prÃ©visionnelle"
+ title="Tr\u00e9sorerie pr\u00e9visionnelle"
  value={formatEuro(kpis.tresoPrevisionnelle)}
- subtitle="Ã 30 jours"
+ subtitle="\u00c0 30 jours"
  icon={<TrendingUp className="w-5 h-5 text-blue-600" />}
  color="#3B82F6"
  />
  <KPICard
- title="Total facturÃ©"
+ title="Total factur\u00e9"
  value={formatEuro(kpis.totalFacture)}
  subtitle="Tous chantiers confondus"
  icon={<DollarSign className="w-5 h-5 text-purple-600" />}
@@ -265,15 +265,15 @@ const FacturationGlobalePage: React.FC = () => {
  />
  </div>
 
- {/* Alertes trÃ©sorerie */}
+ {/* Alertes tr\u00e9sorerie */}
  {kpis.enRetard > 0 && (
  <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
  <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
  <div>
- <h4 className="text-sm font-semibold text-red-900">Alerte TrÃ©sorerie</h4>
+ <h4 className="text-sm font-semibold text-red-900">Alerte Tr\u00e9sorerie</h4>
  <p className="text-sm text-red-700 mt-1">
  Vous avez {kpis.enRetard} facture(s) en retard pour un montant total de {formatEuro(kpis.impayes)}.
- Relancez vos clients pour amÃ©liorer votre trÃ©sorerie.
+ Relancez vos clients pour am\u00e9liorer votre tr\u00e9sorerie.
  </p>
  </div>
  </div>
@@ -301,15 +301,15 @@ const FacturationGlobalePage: React.FC = () => {
  <YAxis />
  <Tooltip formatter={(value: any) => formatEuro(Number(value))} />
  <Legend />
- <Bar dataKey="emis" fill="#3B82F6" name="Ãmis" />
- <Bar dataKey="payes" fill="#10B981" name="PayÃ©s" />
+ <Bar dataKey="emis" fill="#3B82F6" name="\u00c9mis" />
+ <Bar dataKey="payes" fill="#10B981" name="Pay\u00e9s" />
  </BarChart>
  </ResponsiveContainer>
  </div>
 
- {/* RÃ©partition par statut */}
+ {/* R\u00e9partition par statut */}
  <div className="bg-white rounded-xl shadow-sm p-6">
- <h3 className="text-lg font-semibold text-gray-900 mb-4">RÃ©partition par Statut</h3>
+ <h3 className="text-lg font-semibold text-gray-900 mb-4">R\u00e9partition par Statut</h3>
  <ResponsiveContainer width="100%" height={300}>
  <PieChart>
  <Pie
@@ -366,14 +366,14 @@ const FacturationGlobalePage: React.FC = () => {
  </div>
  ))}
  {facturationParChantier.length === 0 && (
- <p className="text-sm text-gray-500 text-center py-8">Aucune donnÃ©e disponible</p>
+ <p className="text-sm text-gray-500 text-center py-8">Aucune donn\u00e9e disponible</p>
  )}
  </div>
  </div>
 
- {/* Liste des factures rÃ©centes */}
+ {/* Liste des factures r\u00e9centes */}
  <div className="bg-white rounded-xl shadow-sm p-6">
- <h3 className="text-lg font-semibold text-gray-900 mb-4">Factures RÃ©centes</h3>
+ <h3 className="text-lg font-semibold text-gray-900 mb-4">Factures R\u00e9centes</h3>
  <div className="space-y-3">
  {factures.slice(0, 10).map((facture) => {
  const chantier = chantiers.find(c => c.id === facture.chantier_id);
@@ -406,14 +406,14 @@ const FacturationGlobalePage: React.FC = () => {
  isEnRetard ? 'bg-red-100 text-red-800' :
  'bg-blue-100 text-blue-800'
  }`}>
- {isEnRetard ? 'En retard' : facture.statut === 'payee' ? 'PayÃ©e' : 'Ãmise'}
+ {isEnRetard ? 'En retard' : facture.statut === 'payee' ? 'Pay\u00e9e' : '\u00c9mise'}
  </span>
  </div>
  </div>
  );
  })}
  {factures.length === 0 && (
- <p className="text-sm text-gray-500 text-center py-8">Aucune facture enregistrÃ©e</p>
+ <p className="text-sm text-gray-500 text-center py-8">Aucune facture enregistr\u00e9e</p>
  )}
  </div>
  </div>

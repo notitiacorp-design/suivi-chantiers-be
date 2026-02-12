@@ -111,9 +111,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       ],
     },
     {
-        title: "Bureau d'Ã©tudes",
+        title: "Bureau d'\u00e9tudes",
         items: [
-          { to: '/etudes-techniques', icon: Microscope, label: 'Ãtudes techniques', show: true },
+          { to: '/etudes-techniques', icon: Microscope, label: '\u00c9tudes techniques', show: true },
           { to: '/rapports-hebdo', icon: CalendarCheck, label: 'Rapports hebdo', show: true },
         ],
       },
@@ -229,7 +229,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-blue-100 hover:bg-white/10 hover:text-white rounded-lg transition-colors"
           >
             <LogOut className="w-5 h-5" />
-            <span>D\u00e9connexion</span>
+            <span>{'D\u00e9connexion'}</span>
           </button>
         </div>
       </aside>
