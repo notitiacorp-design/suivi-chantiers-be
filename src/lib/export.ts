@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { calculStatistiquesChantier } from './calculations';
 
-/
+/**
  * Exporte des données vers Excel
  */
 export function exportToExcel(data: any[], filename: string, sheetName: string = 'Données') {
@@ -35,7 +35,7 @@ export function exportToExcel(data: any[], filename: string, sheetName: string =
  }
 }
 
-/
+/**
  * Exporte un chantier complet vers Excel avec plusieurs onglets
  */
 export function exportChantierToExcel(chantierData: {
@@ -113,7 +113,7 @@ export function exportChantierToExcel(chantierData: {
  }
 }
 
-/
+/**
  * Exporte un chantier vers PDF
  */
 export function exportToPDF(chantierData: {
@@ -265,7 +265,7 @@ export function exportToPDF(chantierData: {
  }
 }
 
-/
+/**
  * Génère un rapport complet d'un chantier
  */
 export async function generateReport(chantier: any, taches: any[], factures: any[], avenants: any[]) {
@@ -291,7 +291,7 @@ export async function generateReport(chantier: any, taches: any[], factures: any
  }
 }
 
-/
+/**
  * Exporte le tableau de bord global vers Excel
  */
 export function exportDashboardToExcel(chantiers: any[], statistiquesGlobales: any) {
