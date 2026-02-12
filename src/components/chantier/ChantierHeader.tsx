@@ -6,7 +6,7 @@ interface Chantier {
  id: string;
  nom: string;
  client: string;
- phase_actuelle: string;
+ phase: string;
  statut: string;
  score_sante: number;
 }
@@ -17,6 +17,22 @@ interface ChantierHeaderProps {
  onExportPDF: () => void;
  onArchive: () => void;
 }
+
+const phaseLabels: Record<string, string> = {
+ 'etude': 'Ãtude',
+ 'preparation': 'PrÃ©paration',
+ 'execution': 'ExÃ©cution',
+ 'reception': 'RÃ©ception',
+ 'garantie': 'Garantie',
+};
+
+const statutLabels: Record<string, string> = {
+ 'en_attente': 'En attente',
+ 'en_cours': 'En cours',
+ 'termine': 'TerminÃ©',
+ 'suspendu': 'Suspendu',
+ 'annule': 'AnnulÃ©',
+};
 
 const ChantierHeader: React.FC<ChantierHeaderProps> = ({
  chantier,
@@ -52,11 +68,11 @@ const ChantierHeader: React.FC<ChantierHeaderProps> = ({
 
  const getStatutBadgeClass = (statut: string) => {
  const classes: Record<string, string> = {
- 'En cours': 'bg-blue-100 text-blue-800',
- 'En attente': 'bg-yellow-100 text-yellow-800',
- 'Terminé': 'bg-green-100 text-green-800',
- 'Bloqué': 'bg-red-100 text-red-800',
- 'Archivé': 'bg-gray-100 text-gray-800',
+ 'en_attente': 'bg-yellow-100 text-yellow-800',
+ 'en_cours': 'bg-blue-100 text-blue-800',
+ 'termine': 'bg-green-100 text-green-800',
+ 'suspendu': 'bg-orange-100 text-orange-800',
+ 'annule': 'bg-red-100 text-red-800',
  };
  return classes[statut] || 'bg-gray-100 text-gray-800';
  };
@@ -107,29 +123,29 @@ const ChantierHeader: React.FC<ChantierHeaderProps> = ({
  )}
  <div className="flex items-center space-x-4 mt-2">
  <p className="text-sm text-gray-600">
- <span className="font-medium">Client:</span> {chantier.client}
+ <span className="font-medium">Client :</span> {chantier.client}
  </p>
- <span className="text-gray-300">•</span>
+ <span className="text-gray-300">â¢</span>
  <p className="text-sm text-gray-600">
- <span className="font-medium">Phase:</span> {chantier.phase_actuelle}
+ <span className="font-medium">Phase :</span> {phaseLabels[chantier.phase] || chantier.phase}
  </p>
- <span className="text-gray-300">•</span>
+ <span className="text-gray-300">â¢</span>
  <span
  className={`px-3 py-1 rounded-full text-xs font-medium ${
  getStatutBadgeClass(chantier.statut)
  }`}
  >
- {chantier.statut}
+ {statutLabels[chantier.statut] || chantier.statut}
  </span>
  </div>
  </div>
  </div>
 
  <div className="flex items-center space-x-4">
- {/* Score santé mini gauge */}
+ {/* Score santÃ© mini gauge */}
  <div className="flex items-center space-x-3">
  <div className="text-right">
- <p className="text-xs text-gray-500">Score santé</p>
+ <p className="text-xs text-gray-500">Score santÃ©</p>
  <p className={`text-2xl font-bold ${getScoreColor(chantier.score_sante)}`}>
  {chantier.score_sante}%
  </p>
