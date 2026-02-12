@@ -236,7 +236,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
     } catch (error) {
-      console.error('Erreur d\\'inscription:', error)
+      console.error("Erreur d'inscription:", error)
       throw error
     }
   }, [])
