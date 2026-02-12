@@ -105,7 +105,7 @@ const ChargeChart: React.FC = () => {
  <span className="ml-4 font-semibold">Barres hachurÃ©es:</span> Heures rÃ©elles
  </p>
  <p className="text-sm text-red-600 font-semibold mt-2">
- â ï¸ Seuil de surcharge: 45h/semaine
+ Ã¢ÂÂ Ã¯Â¸Â Seuil de surcharge: 45h/semaine
  </p>
  </div>
 
