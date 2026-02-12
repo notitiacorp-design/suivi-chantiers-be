@@ -16,13 +16,32 @@ interface Chantier {
  nom: string;
  client: string;
  adresse: string;
- ca: number;
- commercial: string;
- type_etudes: string;
+ ville: string;
+ code_postal: string;
+ phase: string;
+ statut: string;
+ health_score: number;
+ avancement_physique: number;
  date_debut: string;
  date_fin_prevue: string;
  date_fin_reelle: string | null;
- score_sante: number;
+ budget_initial: number;
+ budget_actuel: number;
+ montant_marche: number;
+ depenses_actuelles: number;
+ montant_facture: number;
+ montant_avenants: number;
+ taux_facturation: number;
+ heures_prevues: number;
+ heures_realisees: number;
+ charge_affaires_id: string | null;
+ description: string | null;
+ lots: string[] | null;
+ notes: string | null;
+ priorite: string | null;
+ actif: boolean;
+ created_at: string;
+ updated_at: string;
 }
 
 interface ChantierOverviewProps {
@@ -48,9 +67,17 @@ interface JournalEntry {
 interface Alert {
  id: string;
  titre: string;
- priorite: string;
+ type: string;
  created_at: string;
 }
+
+const phaseLabels: { [key: string]: string } = {
+ etude: 'Ãtude',
+ preparation: 'PrÃ©paration',
+ execution: 'ExÃ©cution',
+ reception: 'RÃ©ception',
+ garantie: 'Garantie',
+};
 
 const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate }) => {
  const [editing, setEditing] = useState<string | null>(null);
@@ -75,10 +102,10 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
 
  if (error) throw error;
 
- const phases = ['Études', 'Exécution', 'OPR/Réception'];
+ const phases = ['etude', 'preparation', 'execution', 'reception', 'garantie'];
  const scores: PhaseScore[] = phases.map((phase) => {
  const tachesPhase = data?.filter((t: any) => t.phase === phase) || [];
- const terminees = tachesPhase.filter((t: any) => t.statut === 'Terminé');
+ const terminees = tachesPhase.filter((t: any) => t.statut === 'TerminÃ©');
  const score =
  tachesPhase.length > 0
  ? (terminees.reduce((sum: number, t: any) => sum + (t.poids || 0), 0) /
@@ -87,7 +114,7 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  : 0;
 
  return {
- phase,
+ phase: phaseLabels[phase] || phase,
  score: Math.round(score),
  total_taches: tachesPhase.length,
  taches_terminees: terminees.length,
@@ -119,10 +146,10 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  const loadActiveAlerts = async () => {
  try {
  const { data, error } = await supabase
- .from('alertes')
- .select('id, titre, priorite, created_at')
+ .from('notifications')
+ .select('id, titre, type, created_at')
  .eq('chantier_id', chantier.id)
- .eq('statut', 'Active')
+ .eq('lue', false)
  .order('created_at', { ascending: false });
 
  if (error) throw error;
@@ -144,7 +171,7 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  const totalPoids = data?.reduce((sum, t) => sum + (t.poids || 0), 0) || 0;
  const poidsTermines =
  data
- ?.filter((t) => t.statut === 'Terminé')
+ ?.filter((t) => t.statut === 'TerminÃ©')
  .reduce((sum, t) => sum + (t.poids || 0), 0) || 0;
 
  setAvancement(totalPoids > 0 ? Math.round((poidsTermines / totalPoids) * 100) : 0);
@@ -198,8 +225,8 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  className="text-sm font-semibold text-gray-900 cursor-pointer hover:text-blue-600"
  onClick={() => setEditing(field)}
  >
- {type === 'number' && field === 'ca'
- ? `${parseFloat(value || 0).toLocaleString('fr-FR')} €`
+ {type === 'number' && (field === 'budget_initial' || field === 'budget_actuel' || field === 'montant_marche')
+ ? `${parseFloat(value || 0).toLocaleString('fr-FR')} â¬`
  : value || '-'}
  </p>
  )}
@@ -219,54 +246,65 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  const getTypeIcon = (type: string) => {
  switch (type) {
  case 'Alerte':
- return '🚨';
+ case 'alerte':
+ return 'ð¨';
  case 'Note':
- return '📝';
+ case 'note':
+ return 'ð';
  case 'Modification':
- return '✏️';
+ case 'modification':
+ return 'âï¸';
  case 'Photo':
- return '📷';
+ case 'photo':
+ return 'ð·';
  default:
- return '📄';
+ return 'ð';
  }
+ };
+
+ const getPrioriteFromType = (type: string): 'Haute' | 'Moyenne' | 'Basse' => {
+ if (type === 'alerte' || type === 'Alerte') return 'Haute';
+ if (type === 'avertissement' || type === 'warning') return 'Moyenne';
+ return 'Basse';
  };
 
  return (
  <div className="space-y-6">
- {/* Infos générales */}
+ {/* Informations gÃ©nÃ©rales */}
  <div>
- <h2 className="text-lg font-semibold text-gray-900 mb-4">Informations générales</h2>
+ <h2 className="text-lg font-semibold text-gray-900 mb-4">Informations gÃ©nÃ©rales</h2>
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
  <InfoCard icon={MapPin} label="Adresse" value={chantier.adresse} field="adresse" />
  <InfoCard
  icon={DollarSign}
- label="Chiffre d'affaires"
- value={chantier.ca}
- field="ca"
+ label="Budget initial"
+ value={chantier.budget_initial}
+ field="budget_initial"
+ type="number"
+ />
+ <InfoCard
+ icon={DollarSign}
+ label="Montant marchÃ©"
+ value={chantier.montant_marche}
+ field="montant_marche"
  type="number"
  />
  <InfoCard
  icon={User}
- label="Commercial"
- value={chantier.commercial}
- field="commercial"
- />
- <InfoCard
- icon={FileText}
- label="Type d'études"
- value={chantier.type_etudes}
- field="type_etudes"
+ label="Client"
+ value={chantier.client}
+ field="client"
  />
  <InfoCard
  icon={Calendar}
- label="Date début"
+ label="Date dÃ©but"
  value={new Date(chantier.date_debut).toLocaleDateString('fr-FR')}
  field="date_debut"
  type="date"
  />
  <InfoCard
  icon={Calendar}
- label="Date fin prévue"
+ label="Date fin prÃ©vue"
  value={new Date(chantier.date_fin_prevue).toLocaleDateString('fr-FR')}
  field="date_fin_prevue"
  type="date"
@@ -291,16 +329,16 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  </div>
  </div>
 
- {/* Score santé par phase */}
+ {/* Score santÃ© par phase */}
  <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
- <h3 className="text-lg font-semibold text-gray-900 mb-4">Score santé par phase</h3>
+ <h3 className="text-lg font-semibold text-gray-900 mb-4">Score santÃ© par phase</h3>
  <div className="space-y-4">
  {phaseScores.map((phase) => (
  <div key={phase.phase}>
  <div className="flex items-center justify-between mb-2">
  <span className="text-sm font-medium text-gray-700">{phase.phase}</span>
  <span className="text-sm text-gray-600">
- {phase.taches_terminees}/{phase.total_taches} tâches • {phase.score}%
+ {phase.taches_terminees}/{phase.total_taches} tÃ¢ches â¢ {phase.score}%
  </span>
  </div>
  <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
@@ -314,10 +352,10 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  </div>
  </div>
 
- {/* Dernières entrées journal */}
+ {/* DerniÃ¨res entrÃ©es journal */}
  <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
  <h3 className="text-lg font-semibold text-gray-900 mb-4">
- Dernières entrées du journal
+ DerniÃ¨res entrÃ©es du journal
  </h3>
  {recentEntries.length > 0 ? (
  <div className="space-y-3">
@@ -330,7 +368,7 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  <div className="flex-1 min-w-0">
  <p className="text-sm text-gray-900 truncate">{entry.contenu}</p>
  <p className="text-xs text-gray-500 mt-1">
- {entry.auteur} •{' '}
+ {entry.auteur} â¢{' '}
  {new Date(entry.created_at).toLocaleDateString('fr-FR', {
  day: 'numeric',
  month: 'short',
@@ -343,7 +381,7 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  ))}
  </div>
  ) : (
- <p className="text-sm text-gray-500">Aucune entrée dans le journal</p>
+ <p className="text-sm text-gray-500">Aucune entrÃ©e dans le journal</p>
  )}
  </div>
 
@@ -360,13 +398,15 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  </div>
  {activeAlerts.length > 0 ? (
  <div className="space-y-2">
- {activeAlerts.map((alert) => (
+ {activeAlerts.map((alert) => {
+ const priorite = getPrioriteFromType(alert.type);
+ return (
  <div
  key={alert.id}
  className={`p-3 rounded-lg border-l-4 ${
- alert.priorite === 'Haute'
+ priorite === 'Haute'
  ? 'bg-red-50 border-red-500'
- : alert.priorite === 'Moyenne'
+ : priorite === 'Moyenne'
  ? 'bg-orange-50 border-orange-500'
  : 'bg-yellow-50 border-yellow-500'
  }`}
@@ -376,7 +416,8 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  {new Date(alert.created_at).toLocaleDateString('fr-FR')}
  </p>
  </div>
- ))}
+ );
+ })}
  </div>
  ) : (
  <p className="text-sm text-gray-500">Aucune alerte active</p>
