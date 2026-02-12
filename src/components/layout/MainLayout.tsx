@@ -4,13 +4,15 @@ import Sidebar from './Sidebar';
 import Header from './Header';
 
 const MainLayout: React.FC = () => {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Sidebar mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
-      <div className="lg:pl-72 flex flex-col min-h-screen">
-        <Header setMobileOpen={setMobileOpen} />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      
+      <div className="lg:ml-72 flex flex-col min-h-screen">
+        <Header onMenuClick={() => setSidebarOpen(true)} />
+        
         <main className="flex-1 p-4 lg:p-8">
           <Outlet />
         </main>
