@@ -18,14 +18,14 @@ const LoginPage: React.FC = () => {
 
     if (!email.trim()) {
       newErrors.email = "L'email est requis";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    } else if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
       newErrors.email = "Email invalide";
     }
 
     if (!password) {
       newErrors.password = 'Le mot de passe est requis';
     } else if (password.length < 6) {
-      newErrors.password = 'Le mot de passe doit contenir au moins 6 caract\u00e8res';
+      newErrors.password = 'Le mot de passe doit contenir au moins 6 caractÃ¨res';
     }
 
     setErrors(newErrors);
@@ -51,25 +51,44 @@ const LoginPage: React.FC = () => {
         setSession(data.session);
 
         // Charger le profil utilisateur
-        const { data: userData, error: userError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', data.user.id)
-          .single();
+        try {
+          const { data: userData, error: userError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', data.user.id)
+            .single();
 
-        if (userError) throw userError;
-
-        if (userData) {
+          if (!userError && userData) {
+            setUser({
+              id: data.user.id,
+              email: data.user.email || '',
+              full_name: userData.full_name || '',
+              role: userData.role || 'ingenieur',
+              avatar_url: userData.avatar_url,
+            });
+          } else {
+            // Profile not found - set basic user info from auth
+            setUser({
+              id: data.user.id,
+              email: data.user.email || '',
+              full_name: data.user.email || '',
+              role: 'charge_affaires',
+              avatar_url: null,
+            });
+          }
+        } catch (profileError) {
+          // Profile fetch failed - still allow login with basic info
+          console.warn('Profile fetch failed:', profileError);
           setUser({
             id: data.user.id,
             email: data.user.email || '',
-            full_name: userData.full_name || '',
-            role: userData.role || 'ingenieur',
-            avatar_url: userData.avatar_url,
+            full_name: data.user.email || '',
+            role: 'charge_affaires',
+            avatar_url: null,
           });
         }
 
-        toast.success('Connexion r\u00e9ussie !');
+        toast.success('Connexion rÃ©ussie !');
         navigate('/dashboard');
       }
     } catch (error: any) {
@@ -79,7 +98,7 @@ const LoginPage: React.FC = () => {
       } else {
         setErrors({ general: error.message || 'Erreur de connexion' });
       }
-      toast.error('\u00c9chec de la connexion');
+      toast.error('Ãchec de la connexion');
     } finally {
       setLoading(false);
     }
@@ -94,7 +113,7 @@ const LoginPage: React.FC = () => {
             <span className="text-white text-2xl font-bold">BE</span>
           </div>
           <h1 className="text-2xl font-bold text-slate-900">Suivi Chantiers BE</h1>
-          <p className="text-slate-500 mt-2">Connectez-vous \u00e0 votre espace</p>
+          <p className="text-slate-500 mt-2">Connectez-vous Ã  votre espace</p>
         </div>
 
         {/* Login Form */}
@@ -144,7 +163,7 @@ const LoginPage: React.FC = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
+                  placeholder="â¢â¢â¢â¢â¢â¢â¢â¢"
                   className={`w-full pl-10 pr-4 py-2.5 rounded-lg border ${
                     errors.password ? 'border-red-300 focus:ring-red-500' : 'border-slate-300 focus:ring-blue-500'
                   } focus:outline-none focus:ring-2 focus:border-transparent text-sm transition`}
@@ -162,7 +181,7 @@ const LoginPage: React.FC = () => {
                 to="/forgot-password"
                 className="text-sm text-blue-600 hover:text-blue-800 transition"
               >
-                Mot de passe oubli\u00e9 ?
+                Mot de passe oubliÃ© ?
               </Link>
             </div>
 
@@ -192,7 +211,7 @@ const LoginPage: React.FC = () => {
 
         {/* Footer */}
         <p className="text-center text-xs text-slate-400 mt-6">
-          \u00a9 2024 Notitia Corp \u2014 Bureau d'\u00e9tudes
+          Â© 2024 Notitia Corp â Bureau d'Ã©tudes
         </p>
       </div>
     </div>
