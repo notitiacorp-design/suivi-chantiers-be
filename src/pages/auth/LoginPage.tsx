@@ -25,7 +25,7 @@ const LoginPage: React.FC = () => {
     if (!password) {
       newErrors.password = 'Le mot de passe est requis';
     } else if (password.length < 6) {
-      newErrors.password = 'Le mot de passe doit contenir au moins 6 caractères';
+      newErrors.password = 'Le mot de passe doit contenir au moins 6 caractÃ¨res';
     }
 
     setErrors(newErrors);
@@ -54,7 +54,7 @@ const LoginPage: React.FC = () => {
       if (data.session) {
         setSession(data.session);
         setUser(data.session.user);
-        toast.success('Connexion réussie !');
+        toast.success('Connexion rÃ©ussie !');
         navigate('/dashboard');
       }
     } catch (error: any) {
@@ -75,10 +75,10 @@ const LoginPage: React.FC = () => {
           </div>
         </div>
         <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-          Connexion à votre compte
+          Connexion Ã  votre compte
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Accédez à votre tableau de bord de suivi de chantiers
+          AccÃ©dez Ã  votre tableau de bord de suivi de chantiers
         </p>
       </div>
 
@@ -155,7 +155,7 @@ const LoginPage: React.FC = () => {
 
               <div className="text-sm">
                 <Link to="/forgot-password" className="font-medium text-indigo-600 hover:text-indigo-500">
-                  Mot de passe oublié ?
+                  Mot de passe oubliÃ© ?
                 </Link>
               </div>
             </div>
