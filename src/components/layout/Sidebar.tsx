@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuthStore } from '../../stores/authStore';
+import { useAuth } from '../../contexts/AuthContext';
 import {
   HomeIcon,
   BuildingOffice2Icon,
@@ -21,7 +21,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, setMobileOpen }) => {
   const location = useLocation();
-  const { user } = useAuthStore();
+  const { profile } = useAuth();
   const [unreadNotifications, setUnreadNotifications] = useState(3); // TODO: Charger depuis Supabase
 
   const navigation = [
@@ -35,7 +35,7 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, setMobileOpen }) => {
   ];
 
   const filteredNavigation = navigation.filter((item) =>
-    item.roles.includes(user?.role || '')
+    item.roles.includes(profile?.role || '')
   );
 
   const SidebarContent = () => (
@@ -94,18 +94,18 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, setMobileOpen }) => {
       <div className="px-4 py-4 border-t border-slate-800">
         <div className="flex items-center space-x-3 px-4 py-3 rounded-lg bg-slate-800">
           <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center font-semibold text-sm">
-            {user?.nom?.charAt(0)}{user?.prenom?.charAt(0)}
+            {profile?.nom?.charAt(0)}{profile?.prenom?.charAt(0)}
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-white truncate">
-              {user?.prenom} {user?.nom}
+              {profile?.prenom} {profile?.nom}
             </p>
             <p className="text-xs text-slate-400 truncate">
-              {user?.role === 'directeur' ? 'Directeur' : "Chef d'Atelier"}
+              {profile?.role === 'directeur' ? 'Directeur' : "Chef d'Atelier"}
             </p>
           </div>
-          <Badge variant={user?.role === 'directeur' ? 'success' : 'primary'} size="sm">
-            {user?.role === 'directeur' ? 'DIR' : 'CA'}
+          <Badge variant={profile?.role === 'directeur' ? 'success' : 'primary'} size="sm">
+            {profile?.role === 'directeur' ? 'DIR' : 'CA'}
           </Badge>
         </div>
       </div>
