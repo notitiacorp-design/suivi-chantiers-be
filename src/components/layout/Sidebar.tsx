@@ -2,39 +2,31 @@ import React, { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
-import {
-  HomeIcon,
-  BuildingOfficeIcon,
-  BuildingOffice2Icon,
-  ChartBarIcon,
-  DocumentTextIcon,
-  FolderIcon,
-  BellIcon,
-  ArrowRightOnRectangleIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline';
+import { HomeIcon, BuildingOfficeIcon, BuildingOffice2Icon, ChartBarIcon, DocumentTextIcon, FolderIcon, BellIcon, ArrowRightOnRectangleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 interface SidebarProps {
-  mobileOpen: boolean;
-  setMobileOpen: (open: boolean) => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, setMobileOpen }) => {
-  const { profile, isDirecteur, signOut } = useAuth();
+export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const { user, profile, isDirecteur, signOut } = useAuth();
   const navigate = useNavigate();
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
+    if (!profile?.id) return;
+
     const fetchUnreadCount = async () => {
-      if (!profile) return;
-      
-      const { count } = await supabase
+      const { count, error } = await supabase
         .from('notifications')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', profile.id)
         .eq('lu', false);
-      
-      setUnreadCount(count || 0);
+
+      if (!error && count !== null) {
+        setUnreadCount(count);
+      }
     };
 
     fetchUnreadCount();
@@ -47,7 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, setMobileOpen }) => {
           event: '*',
           schema: 'public',
           table: 'notifications',
-          filter: `user_id=eq.${profile?.id}`,
+          filter: `user_id=eq.${profile.id}`
         },
         () => {
           fetchUnreadCount();
@@ -58,78 +50,83 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, setMobileOpen }) => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [profile]);
-
-  const navigationItems = [
-    { name: 'Tableau de bord', to: '/', icon: HomeIcon, show: true },
-    { name: 'Mes chantiers', to: '/mes-chantiers', icon: BuildingOfficeIcon, show: true },
-    { name: 'Tous les chantiers', to: '/chantiers', icon: BuildingOffice2Icon, show: isDirecteur },
-    { name: 'Tableau de charge', to: '/tableau-charge', icon: ChartBarIcon, show: true },
-    { name: 'Facturation', to: '/facturation', icon: DocumentTextIcon, show: true },
-    { name: 'Documents', to: '/documents', icon: FolderIcon, show: true },
-    { name: 'Notifications', to: '/notifications', icon: BellIcon, show: true, badge: unreadCount },
-    { name: 'Dashboard Financier', to: '/dashboard-financier', icon: ChartBarIcon, show: isDirecteur },
-  ];
+  }, [profile?.id]);
 
   const handleSignOut = async () => {
     await signOut();
     navigate('/login');
   };
 
+  const navItems = [
+    { to: '/dashboard', icon: HomeIcon, label: 'Tableau de bord', show: true },
+    { to: '/mes-chantiers', icon: BuildingOfficeIcon, label: 'Mes Chantiers', show: true },
+    { to: '/tous-chantiers', icon: BuildingOffice2Icon, label: 'Tous les Chantiers', show: isDirecteur },
+    { to: '/tableau-charge', icon: ChartBarIcon, label: 'Tableau de Charge', show: true },
+    { to: '/facturation', icon: DocumentTextIcon, label: 'Facturation', show: isDirecteur },
+    { to: '/documents', icon: FolderIcon, label: 'Documents', show: true },
+    { to: '/notifications', icon: BellIcon, label: 'Notifications', show: true, badge: unreadCount }
+  ];
+
   const sidebarContent = (
-    <div className="flex h-full flex-col bg-gray-900">
-      <div className="flex h-16 items-center justify-between px-4">
-        <h1 className="text-xl font-bold text-white">Suivi Chantiers BE</h1>
-        {mobileOpen && (
-          <button
-            onClick={() => setMobileOpen(false)}
-            className="text-gray-400 hover:text-white lg:hidden"
-          >
-            <XMarkIcon className="h-6 w-6" />
-          </button>
-        )}
+    <div className="flex h-full flex-col bg-gradient-to-b from-slate-900 to-slate-800">
+      <div className="flex items-center justify-between border-b border-slate-700 px-6 py-6">
+        <div>
+          <h1 className="text-2xl font-bold text-amber-500">NOTITIA</h1>
+          <p className="text-sm text-slate-400">Bureau d'Ãtudes</p>
+        </div>
+        <button
+          onClick={onClose}
+          className="lg:hidden rounded-lg p-2 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
+          aria-label="Fermer le menu"
+        >
+          <XMarkIcon className="h-6 w-6" />
+        </button>
       </div>
 
-      <nav className="flex-1 space-y-1 px-2 py-4">
-        {navigationItems
-          .filter((item) => item.show)
-          .map((item) => (
+      <nav className="flex-1 space-y-1 px-4 py-6">
+        {navItems.map((item) =>
+          item.show ? (
             <NavLink
               key={item.to}
               to={item.to}
-              onClick={() => setMobileOpen(false)}
+              onClick={() => onClose()}
               className={({ isActive }) =>
-                `group flex items-center px-3 py-2 text-sm font-medium rounded-md ${
+                `flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all ${
                   isActive
-                    ? 'bg-gray-800 text-white'
-                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                    ? 'border-l-4 border-amber-500 bg-amber-500/10 text-white'
+                    : 'border-l-4 border-transparent text-slate-300 hover:bg-slate-700/50 hover:text-white'
                 }`
               }
             >
-              <item.icon className="mr-3 h-6 w-6 flex-shrink-0" />
-              <span className="flex-1">{item.name}</span>
-              {item.badge !== undefined && item.badge > 0 && (
-                <span className="ml-auto inline-flex items-center justify-center rounded-full bg-red-600 px-2 py-1 text-xs font-bold text-white">
-                  {item.badge}
-                </span>
+              {({ isActive }) => (
+                <>
+                  <item.icon className={`h-5 w-5 ${isActive ? 'text-amber-500' : 'text-slate-400'}`} />
+                  <span className="flex-1">{item.label}</span>
+                  {item.badge !== undefined && item.badge > 0 && (
+                    <span className="flex h-6 min-w-[1.5rem] items-center justify-center rounded-full bg-amber-500 px-2 text-xs font-bold text-slate-900">
+                      {item.badge > 99 ? '99+' : item.badge}
+                    </span>
+                  )}
+                </>
               )}
             </NavLink>
-          ))}
+          ) : null
+        )}
       </nav>
 
-      <div className="border-t border-gray-700 p-4">
-        <div className="mb-3 text-sm text-gray-400">
-          <p className="font-medium text-white">
+      <div className="border-t border-slate-700 px-4 py-4">
+        <div className="mb-3 rounded-lg bg-slate-700/50 px-4 py-3">
+          <p className="text-sm font-semibold text-white">
             {profile?.prenom} {profile?.nom}
           </p>
-          <p className="text-xs">{profile?.role}</p>
+          <p className="text-xs text-slate-400">{profile?.role}</p>
         </div>
         <button
           onClick={handleSignOut}
-          className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+          className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-slate-300 transition-all hover:bg-slate-700/50 hover:text-white"
         >
-          <ArrowRightOnRectangleIcon className="mr-3 h-6 w-6" />
-          DÃ©connexion
+          <ArrowRightOnRectangleIcon className="h-5 w-5 text-slate-400" />
+          <span>DÃ©connexion</span>
         </button>
       </div>
     </div>
@@ -137,22 +134,25 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, setMobileOpen }) => {
 
   return (
     <>
-      {mobileOpen && (
+      <div className="fixed left-0 top-0 z-40 hidden h-screen w-72 lg:block">
+        {sidebarContent}
+      </div>
+
+      {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 lg:hidden"
-          onClick={() => setMobileOpen(false)}
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          onClick={onClose}
+          aria-hidden="true"
         />
       )}
 
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-72 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
-          mobileOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:static lg:z-auto`}
+        className={`fixed left-0 top-0 z-40 h-screen w-72 transform transition-transform duration-300 ease-in-out lg:hidden ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
         {sidebarContent}
       </div>
     </>
   );
-};
-
-export default Sidebar;
+}
