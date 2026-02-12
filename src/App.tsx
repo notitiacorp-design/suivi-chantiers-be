@@ -1,23 +1,23 @@
-import React, { Suspense, lazy, useEffect } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
-import { useAuthStore } from './stores/authStore';
-import { supabase } from './lib/supabase';
 import MainLayout from './components/layout/MainLayout';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import { AuthProvider } from './contexts/AuthContext';
-import toast from 'react-hot-toast';
 
 // Lazy loading des pages
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const DashboardFinancierPage = lazy(() => import('./pages/DashboardFinancierPage'));
 const MesChantiersPage = lazy(() => import('./pages/MesChantiersPage'));
 const TousChantiersPage = lazy(() => import('./pages/TousChantiersPage'));
+const ChantierDetailPage = lazy(() => import('./pages/ChantierDetailPage'));
 const TableauChargePage = lazy(() => import('./pages/TableauChargePage'));
 const FacturationPage = lazy(() => import('./pages/FacturationPage'));
+const FacturationGlobalePage = lazy(() => import('./pages/FacturationGlobalePage'));
 const DocumentsPage = lazy(() => import('./pages/DocumentsPage'));
 const NotificationsPage = lazy(() => import('./pages/NotificationsPage'));
 
@@ -32,51 +32,6 @@ const queryClient = new QueryClient({
 });
 
 const App: React.FC = () => {
-  const { setUser, setSession } = useAuthStore();
-
-  useEffect(() => {
-    // Safety timeout: if auth is not resolved within 3 seconds, force ready state
-    const timeout = setTimeout(() => {
-      const currentSession = useAuthStore.getState().session;
-      if (currentSession === undefined) {
-        console.warn('Auth timeout: forcing session to null after 3s');
-        setSession(null);
-      }
-    }, 3000);
-
-    return () => clearTimeout(timeout);
-  }, [setSession]);
-
-  useEffect(() => {
-    // Check for existing session on mount
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        setSession(session);
-        setUser(session.user);
-      } else {
-        setSession(null);
-        setUser(null);
-      }
-    };
-    checkSession();
-
-    // Listen for auth state changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        setSession(session);
-        setUser(session.user);
-      } else {
-        setSession(null);
-        setUser(null);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [setUser, setSession]);
-
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
@@ -103,7 +58,7 @@ const App: React.FC = () => {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               
-              {/* Routes protégies */}
+              {/* Routes protégées */}
               <Route path="/" element={
                 <ProtectedRoute>
                   <MainLayout />
@@ -111,18 +66,29 @@ const App: React.FC = () => {
               }>
                 <Route index element={<Navigate to="/dashboard" replace />} />
                 <Route path="dashboard" element={<DashboardPage />} />
+                <Route path="dashboard-financier" element={
+                  <ProtectedRoute requiredRole="directeur">
+                    <DashboardFinancierPage />
+                  </ProtectedRoute>
+                } />
                 <Route path="mes-chantiers" element={<MesChantiersPage />} />
                 <Route path="tous-chantiers" element={
                   <ProtectedRoute requiredRole="directeur">
                     <TousChantiersPage />
                   </ProtectedRoute>
                 } />
+                <Route path="chantiers/:id" element={<ChantierDetailPage />} />
                 <Route path="tableau-de-charge" element={
                   <ProtectedRoute requiredRole="directeur">
                     <TableauChargePage />
                   </ProtectedRoute>
                 } />
                 <Route path="facturation" element={<FacturationPage />} />
+                <Route path="facturation-globale" element={
+                  <ProtectedRoute requiredRole="directeur">
+                    <FacturationGlobalePage />
+                  </ProtectedRoute>
+                } />
                 <Route path="documents" element={
                   <ProtectedRoute requiredRole="directeur">
                     <DocumentsPage />
