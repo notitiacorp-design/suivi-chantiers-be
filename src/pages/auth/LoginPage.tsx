@@ -3,8 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuthStore } from '../../stores/authStore';
 import toast from 'react-hot-toast';
-import { EnvelopeIcon, LockClosedIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -60,13 +58,22 @@ const LoginPage: React.FC = () => {
 
         if (userError) throw userError;
 
-        setUser(userData);
-        toast.success(`Bienvenue ${userData.prenom} !`);
+        if (userData) {
+          setUser({
+            id: data.user.id,
+            email: data.user.email || '',
+            full_name: userData.full_name || '',
+            role: userData.role || 'ingenieur',
+            avatar_url: userData.avatar_url,
+          });
+        }
+
+        toast.success('Connexion rÃ©ussie !');
         navigate('/dashboard');
       }
     } catch (error: any) {
-      console.error('Erreur login:', error);
-      if (error.message.includes('Invalid login credentials')) {
+      console.error('Login error:', error);
+      if (error.message === 'Invalid login credentials') {
         setErrors({ general: 'Email ou mot de passe incorrect' });
       } else {
         setErrors({ general: error.message || 'Erreur de connexion' });
@@ -78,110 +85,104 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50 px-4">
       <div className="w-full max-w-md">
-        {/* Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8 animate-fade-in">
-          {/* Logo */}
-          <div className="flex justify-center mb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-3xl">BE</span>
-            </div>
+        {/* Logo / Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4 shadow-lg">
+            <span className="text-white text-2xl font-bold">BE</span>
           </div>
+          <h1 className="text-2xl font-bold text-slate-900">Suivi Chantiers BE</h1>
+          <p className="text-slate-500 mt-2">Connectez-vous Ã  votre espace</p>
+        </div>
 
-          {/* Title */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-slate-900 mb-2">Suivi BE</h1>
-            <p className="text-slate-600">Connectez-vous Ã  votre compte</p>
-          </div>
+        {/* Login Form */}
+        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* General Error */}
+            {errors.general && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                {errors.general}
+              </div>
+            )}
 
-          {/* Error gÃ©nÃ©ral */}
-          {errors.general && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-600">{errors.general}</p>
-            </div>
-          )}
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email */}
+            {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1.5">
                 Adresse email
               </label>
               <div className="relative">
-                <EnvelopeIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">â</span>
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="votre.email@exemple.fr"
-                  className={`
-                    w-full pl-10 pr-4 py-3 border rounded-lg text-sm
-                    focus:outline-none focus:ring-2 transition-all
-                    ${errors.email
-                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                      : 'border-slate-300 focus:ring-blue-500 focus:border-blue-500'
-                    }
-                  `}
+                  placeholder="votre@email.fr"
+                  className={`w-full pl-10 pr-4 py-2.5 rounded-lg border ${
+                    errors.email ? 'border-red-300 focus:ring-red-500' : 'border-slate-300 focus:ring-blue-500'
+                  } focus:outline-none focus:ring-2 focus:border-transparent text-sm transition`}
+                  autoComplete="email"
+                  autoFocus
                 />
               </div>
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                <p className="mt-1 text-xs text-red-600">{errors.email}</p>
               )}
             </div>
 
-            {/* Password */}
+            {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1.5">
                 Mot de passe
               </label>
               <div className="relative">
-                <LockClosedIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">ð</span>
                 <input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="â¢â¢â¢â¢â¢â¢â¢â¢"
-                  className={`
-                    w-full pl-10 pr-4 py-3 border rounded-lg text-sm
-                    focus:outline-none focus:ring-2 transition-all
-                    ${errors.password
-                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                      : 'border-slate-300 focus:ring-blue-500 focus:border-blue-500'
-                    }
-                  `}
+                  className={`w-full pl-10 pr-4 py-2.5 rounded-lg border ${
+                    errors.password ? 'border-red-300 focus:ring-red-500' : 'border-slate-300 focus:ring-blue-500'
+                  } focus:outline-none focus:ring-2 focus:border-transparent text-sm transition`}
+                  autoComplete="current-password"
                 />
               </div>
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+                <p className="mt-1 text-xs text-red-600">{errors.password}</p>
               )}
             </div>
 
-            {/* Forgot Password */}
+            {/* Forgot Password Link - FIXED: was /mot-de-passe-oublie, now /forgot-password */}
             <div className="flex justify-end">
               <Link
-                to="/mot-de-passe-oublie"
-                className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                to="/forgot-password"
+                className="text-sm text-blue-600 hover:text-blue-800 transition"
               >
                 Mot de passe oubliÃ© ?
               </Link>
             </div>
 
-            {/* Submit */}
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-2.5 px-4 rounded-lg transition duration-200 flex items-center justify-center gap-2 shadow-sm"
             >
               {loading ? (
-                <LoadingSpinner size="sm" />
+                <>
+                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Connexion en cours...</span>
+                </>
               ) : (
                 <>
                   <span>Se connecter</span>
-                  <ArrowRightIcon className="w-5 h-5" />
+                  <span>â</span>
                 </>
               )}
             </button>
@@ -189,11 +190,9 @@ const LoginPage: React.FC = () => {
         </div>
 
         {/* Footer */}
-        <div className="mt-6 text-center">
-          <p className="text-sm text-white/80">
-            Â© 2024 Suivi BE - Tous droits rÃ©servÃ©s
-          </p>
-        </div>
+        <p className="text-center text-xs text-slate-400 mt-6">
+          Â© 2024 Notitia Corp â Bureau d'Ã©tudes
+        </p>
       </div>
     </div>
   );
