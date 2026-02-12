@@ -21,24 +21,24 @@ import NewChantierForm from '../components/chantier/NewChantierForm';
 interface Chantier {
  id: string;
  nom: string;
- client_nom: string;
+ client: string;
  phase: string;
- score_sante: number;
- charge_affaire_nom: string;
- charge_affaire_prenom: string;
- avancement: number;
+ health_score: number;
+ charge_affaires_nom: string;
+ charge_affaires_prenom: string;
+ avancement_physique: number;
  statut: string;
  date_fin_prevue: string;
- budget_total: number;
- heures_estimees: number;
+ budget_initial: number;
+ heures_prevues: number;
 }
 
-type SortField = 'nom' | 'client_nom' | 'phase' | 'score_sante' | 'avancement' | 'date_fin_prevue';
+type SortField = 'nom' | 'client' | 'phase' | 'health_score' | 'avancement_physique' | 'date_fin_prevue';
 type SortOrder = 'asc' | 'desc';
 type ViewMode = 'table' | 'cards';
 
 interface ChantiersListPageProps {
-  filterMine?: boolean;
+ filterMine?: boolean;
 }
 
 const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = false }) => {
@@ -63,8 +63,7 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
  .from('chantiers')
  .select(`
  *,
- client:clients(nom),
- charge_affaire:users!charge_affaire_id(nom, prenom)
+ charge_affaires:profiles!charge_affaires_id(nom, prenom)
  `)
  .order('created_at', { ascending: false });
 
@@ -73,16 +72,16 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
  return (data || []).map((c: any) => ({
  id: c.id,
  nom: c.nom,
- client_nom: c.client?.nom || 'N/A',
+ client: c.client || 'N/A',
  phase: c.phase || 'N/A',
- score_sante: c.score_sante || 0,
- charge_affaire_nom: c.charge_affaire?.nom || '',
- charge_affaire_prenom: c.charge_affaire?.prenom || '',
- avancement: c.avancement || 0,
- statut: c.statut || 'actif',
+ health_score: c.health_score || 0,
+ charge_affaires_nom: c.charge_affaires?.nom || '',
+ charge_affaires_prenom: c.charge_affaires?.prenom || '',
+ avancement_physique: c.avancement_physique || 0,
+ statut: c.statut || 'en_cours',
  date_fin_prevue: c.date_fin_prevue || '',
- budget_total: c.budget_total || 0,
- heures_estimees: c.heures_estimees || 0,
+ budget_initial: c.budget_initial || 0,
+ heures_prevues: c.heures_prevues || 0,
  })) as Chantier[];
  },
  });
@@ -91,8 +90,8 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
  const chargesAffaires = useMemo(() => {
  const unique = new Set<string>();
  chantiers.forEach((c) => {
- if (c.charge_affaire_nom) {
- unique.add(`${c.charge_affaire_prenom} ${c.charge_affaire_nom}`);
+ if (c.charge_affaires_nom) {
+ unique.add(`${c.charge_affaires_prenom} ${c.charge_affaires_nom}`);
  }
  });
  return Array.from(unique).sort();
@@ -108,8 +107,8 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
  filtered = filtered.filter(
  (c) =>
  c.nom.toLowerCase().includes(search) ||
- c.client_nom.toLowerCase().includes(search) ||
- `${c.charge_affaire_prenom} ${c.charge_affaire_nom}`.toLowerCase().includes(search)
+ c.client.toLowerCase().includes(search) ||
+ `${c.charge_affaires_prenom} ${c.charge_affaires_nom}`.toLowerCase().includes(search)
  );
  }
 
@@ -122,11 +121,11 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
  }
  if (caFilter !== 'all') {
  filtered = filtered.filter(
- (c) => `${c.charge_affaire_prenom} ${c.charge_affaire_nom}` === caFilter
+ (c) => `${c.charge_affaires_prenom} ${c.charge_affaires_nom}` === caFilter
  );
  }
  filtered = filtered.filter(
- (c) => c.score_sante >= scoreRange[0] && c.score_sante <= scoreRange[1]
+ (c) => c.health_score >= scoreRange[0] && c.health_score <= scoreRange[1]
  );
 
  // Tri
@@ -171,15 +170,15 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
  const dataToExport = chantiersFiltered.map((c) => ({
  ID: c.id,
  Nom: c.nom,
- Client: c.client_nom,
+ Client: c.client,
  Phase: c.phase,
- 'Score Santé': c.score_sante,
- 'Chargé Affaires': `${c.charge_affaire_prenom} ${c.charge_affaire_nom}`,
- 'Avancement (%)': c.avancement,
+ 'Score Santé': c.health_score,
+ 'Chargé Affaires': `${c.charge_affaires_prenom} ${c.charge_affaires_nom}`,
+ 'Avancement (%)': c.avancement_physique,
  Statut: c.statut,
  'Date Fin Prévue': c.date_fin_prevue,
- 'Budget Total': c.budget_total,
- 'Heures Estimées': c.heures_estimees,
+ 'Budget Initial': c.budget_initial,
+ 'Heures Prévues': c.heures_prevues,
  }));
 
  const ws = XLSX.utils.json_to_sheet(dataToExport);
@@ -196,9 +195,10 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
 
  const getStatutBadge = (statut: string) => {
  const colors: Record<string, string> = {
- actif: 'bg-green-100 text-green-800',
- en_pause: 'bg-yellow-100 text-yellow-800',
+ en_cours: 'bg-green-100 text-green-800',
+ en_attente: 'bg-yellow-100 text-yellow-800',
  termine: 'bg-blue-100 text-blue-800',
+ suspendu: 'bg-orange-100 text-orange-800',
  annule: 'bg-red-100 text-red-800',
  };
  return colors[statut] || 'bg-gray-100 text-gray-800';
@@ -240,16 +240,16 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
  <p className="text-2xl font-bold text-blue-900">{chantiers.length}</p>
  </div>
  <div className="bg-green-50 rounded-lg p-4 border border-green-200">
- <p className="text-sm text-green-600 font-medium">Actifs</p>
+ <p className="text-sm text-green-600 font-medium">En cours</p>
  <p className="text-2xl font-bold text-green-900">
- {chantiers.filter((c) => c.statut === 'actif').length}
+ {chantiers.filter((c) => c.statut === 'en_cours').length}
  </p>
  </div>
  <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
  <p className="text-sm text-orange-600 font-medium">Score moyen</p>
  <p className="text-2xl font-bold text-orange-900">
  {Math.round(
- chantiers.reduce((sum, c) => sum + c.score_sante, 0) / chantiers.length || 0
+ chantiers.reduce((sum, c) => sum + c.health_score, 0) / chantiers.length || 0
  )}
  </p>
  </div>
@@ -257,7 +257,7 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
  <p className="text-sm text-purple-600 font-medium">Avancement moyen</p>
  <p className="text-2xl font-bold text-purple-900">
  {Math.round(
- chantiers.reduce((sum, c) => sum + c.avancement, 0) / chantiers.length || 0
+ chantiers.reduce((sum, c) => sum + c.avancement_physique, 0) / chantiers.length || 0
  )}%
  </p>
  </div>
@@ -300,14 +300,11 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
  className="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
  >
  <option value="all">Toutes les phases</option>
- <option value="APS">APS</option>
- <option value="APD">APD</option>
- <option value="PRO">PRO</option>
- <option value="DCE">DCE</option>
- <option value="ACT">ACT</option>
- <option value="VISA">VISA</option>
- <option value="DET">DET</option>
- <option value="AOR">AOR</option>
+ <option value="etude">Étude</option>
+ <option value="preparation">Préparation</option>
+ <option value="execution">Exécution</option>
+ <option value="reception">Réception</option>
+ <option value="garantie">Garantie</option>
  </select>
 
  <select
@@ -316,9 +313,10 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
  className="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
  >
  <option value="all">Tous les statuts</option>
- <option value="actif">Actif</option>
- <option value="en_pause">En pause</option>
+ <option value="en_attente">En attente</option>
+ <option value="en_cours">En cours</option>
  <option value="termine">Terminé</option>
+ <option value="suspendu">Suspendu</option>
  <option value="annule">Annulé</option>
  </select>
 
@@ -379,12 +377,12 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
  </div>
  </th>
  <th
- onClick={() => handleSort('client_nom')}
+ onClick={() => handleSort('client')}
  className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200"
  >
  <div className="flex items-center gap-2">
  Client
- {sortField === 'client_nom' &&
+ {sortField === 'client' &&
  (sortOrder === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />)}
  </div>
  </th>
@@ -399,12 +397,12 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
  </div>
  </th>
  <th
- onClick={() => handleSort('score_sante')}
+ onClick={() => handleSort('health_score')}
  className="px-6 py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200"
  >
  <div className="flex items-center justify-center gap-2">
  Score Santé
- {sortField === 'score_sante' &&
+ {sortField === 'health_score' &&
  (sortOrder === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />)}
  </div>
  </th>
@@ -412,12 +410,12 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
  Chargé d'Affaires
  </th>
  <th
- onClick={() => handleSort('avancement')}
+ onClick={() => handleSort('avancement_physique')}
  className="px-6 py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200"
  >
  <div className="flex items-center justify-center gap-2">
  Avancement
- {sortField === 'avancement' &&
+ {sortField === 'avancement_physique' &&
  (sortOrder === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />)}
  </div>
  </th>
@@ -447,7 +445,7 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
  <div className="text-sm font-medium text-gray-900">{chantier.nom}</div>
  <div className="text-xs text-gray-500">ID: {chantier.id.slice(0, 8)}</div>
  </td>
- <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{chantier.client_nom}</td>
+ <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{chantier.client}</td>
  <td className="px-6 py-4 whitespace-nowrap">
  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
  {chantier.phase}
@@ -458,32 +456,32 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
  <div className="w-16 bg-gray-200 rounded-full h-2">
  <div
  className={`h-2 rounded-full ${
- chantier.score_sante >= 80
+ chantier.health_score >= 80
  ? 'bg-green-500'
- : chantier.score_sante >= 50
+ : chantier.health_score >= 50
  ? 'bg-orange-500'
  : 'bg-red-500'
  }`}
- style={{ width: `${chantier.score_sante}%` }}
+ style={{ width: `${chantier.health_score}%` }}
  ></div>
  </div>
- <span className={`text-sm font-semibold ${getScoreColor(chantier.score_sante)}`}>
- {chantier.score_sante}
+ <span className={`text-sm font-semibold ${getScoreColor(chantier.health_score)}`}>
+ {chantier.health_score}
  </span>
  </div>
  </td>
  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
- {chantier.charge_affaire_prenom} {chantier.charge_affaire_nom}
+ {chantier.charge_affaires_prenom} {chantier.charge_affaires_nom}
  </td>
  <td className="px-6 py-4 whitespace-nowrap">
  <div className="flex items-center justify-center gap-2">
  <div className="w-20 bg-gray-200 rounded-full h-2">
  <div
  className="bg-blue-600 h-2 rounded-full"
- style={{ width: `${chantier.avancement}%` }}
+ style={{ width: `${chantier.avancement_physique}%` }}
  ></div>
  </div>
- <span className="text-sm font-medium text-gray-700">{chantier.avancement}%</span>
+ <span className="text-sm font-medium text-gray-700">{chantier.avancement_physique}%</span>
  </div>
  </td>
  <td className="px-6 py-4 whitespace-nowrap text-center">
@@ -570,7 +568,7 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
  >
  <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4">
  <h3 className="text-lg font-bold mb-1">{chantier.nom}</h3>
- <p className="text-blue-100 text-sm">{chantier.client_nom}</p>
+ <p className="text-blue-100 text-sm">{chantier.client}</p>
  </div>
  <div className="p-4 space-y-3">
  <div className="flex items-center justify-between">
@@ -585,17 +583,17 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
  <div className="w-20 bg-gray-200 rounded-full h-2">
  <div
  className={`h-2 rounded-full ${
- chantier.score_sante >= 80
+ chantier.health_score >= 80
  ? 'bg-green-500'
- : chantier.score_sante >= 50
+ : chantier.health_score >= 50
  ? 'bg-orange-500'
  : 'bg-red-500'
  }`}
- style={{ width: `${chantier.score_sante}%` }}
+ style={{ width: `${chantier.health_score}%` }}
  ></div>
  </div>
- <span className={`text-sm font-semibold ${getScoreColor(chantier.score_sante)}`}>
- {chantier.score_sante}
+ <span className={`text-sm font-semibold ${getScoreColor(chantier.health_score)}`}>
+ {chantier.health_score}
  </span>
  </div>
  </div>
@@ -605,16 +603,16 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
  <div className="w-20 bg-gray-200 rounded-full h-2">
  <div
  className="bg-blue-600 h-2 rounded-full"
- style={{ width: `${chantier.avancement}%` }}
+ style={{ width: `${chantier.avancement_physique}%` }}
  ></div>
  </div>
- <span className="text-sm font-medium text-gray-700">{chantier.avancement}%</span>
+ <span className="text-sm font-medium text-gray-700">{chantier.avancement_physique}%</span>
  </div>
  </div>
  <div className="flex items-center justify-between">
  <span className="text-sm text-gray-600">CA:</span>
  <span className="text-sm font-medium text-gray-900">
- {chantier.charge_affaire_prenom} {chantier.charge_affaire_nom}
+ {chantier.charge_affaires_prenom} {chantier.charge_affaires_nom}
  </span>
  </div>
  <div className="flex items-center justify-between">
