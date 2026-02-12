@@ -85,54 +85,74 @@ const DashboardPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-amber-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600"></div>
       </div>
     );
   }
 
+  const formatCurrency = (value: number): string => {
+    const safeValue = value || 0;
+    if (isNaN(safeValue)) return '0 â¬';
+    return safeValue.toLocaleString('fr-FR') + ' â¬';
+  };
+
+  const formatBudgetMillions = (value: number): string => {
+    const safeValue = value || 0;
+    if (isNaN(safeValue)) return '0Mâ¬';
+    return (safeValue / 1000000).toFixed(1) + 'Mâ¬';
+  };
+
+  const formatHealthScore = (value: number): string => {
+    const safeValue = value || 0;
+    if (isNaN(safeValue)) return '0%';
+    return Math.round(safeValue) + '%';
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50 to-slate-50 p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-slate-900">
             Bienvenue, {profile?.prenom} {profile?.nom}
           </h1>
-          <p className="text-gray-600 mt-2">Tableau de bord - Suivi Chantiers BE</p>
+          <p className="text-slate-600 mt-2">Tableau de bord - Suivi Chantiers BE</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <KPICard
             title="Chantiers actifs"
-            value={kpis.totalChantiers.toString()}
+            value={(kpis.totalChantiers || 0).toString()}
             icon={<ChartBarIcon className="w-6 h-6" />}
             color="blue"
           />
           <KPICard
             title="Score santÃ© moyen"
-            value={`${Math.round(kpis.avgHealthScore)}%`}
+            value={formatHealthScore(kpis.avgHealthScore)}
             icon={<CheckCircleIcon className="w-6 h-6" />}
             color="green"
           />
           <KPICard
             title="Budget total"
-            value={`${(kpis.totalBudget / 1000000).toFixed(1)}Mâ¬`}
+            value={formatBudgetMillions(kpis.totalBudget)}
             icon={<CurrencyEuroIcon className="w-6 h-6" />}
             color="purple"
           />
           <KPICard
             title="Alertes"
-            value={kpis.alertsCount.toString()}
+            value={(kpis.alertsCount || 0).toString()}
             icon={<ExclamationTriangleIcon className="w-6 h-6" />}
             color="red"
           />
         </div>
 
         <div className="mb-6">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-4">Chantiers en cours</h2>
+          <h2 className="text-2xl font-semibold text-slate-900 mb-4">Chantiers en cours</h2>
           {chantiers.length === 0 ? (
-            <div className="bg-white rounded-lg shadow p-8 text-center text-gray-500">
-              Aucun chantier actif pour le moment
+            <div className="bg-white rounded-xl shadow-sm p-12 text-center border border-slate-200">
+              <ChartBarIcon className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+              <p className="text-lg font-medium text-slate-600 mb-2">Aucun chantier actif</p>
+              <p className="text-sm text-slate-500">Les chantiers en cours apparaÃ®tront ici</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
