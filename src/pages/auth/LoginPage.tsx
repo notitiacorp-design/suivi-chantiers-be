@@ -17,7 +17,7 @@ const LoginPage: React.FC = () => {
     const newErrors: typeof errors = {};
 
     if (!email.trim()) {
-      newErrors.email = "L'email est requis";
+      newErrors.email = "Lemail est requis";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       newErrors.email = "Email invalide";
     }
@@ -25,7 +25,7 @@ const LoginPage: React.FC = () => {
     if (!password) {
       newErrors.password = 'Le mot de passe est requis';
     } else if (password.length < 6) {
-      newErrors.password = 'Le mot de passe doit contenir au moins 6 caract\u00e8res';
+      newErrors.password = 'Le mot de passe doit contenir au moins 6 caract√®res';
     }
 
     setErrors(newErrors);
@@ -45,48 +45,32 @@ const LoginPage: React.FC = () => {
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
-      if (data.session) {
+      if (data.session && data.user) {
+        // Mettre √† jour le store avec la session
         setSession(data.session);
-
-        // Load user profile from users table (matching App.tsx loadUserProfile)
-        try {
-          const { data: userData, error: userError } = await supabase
-            .from('users')
-            .select('*')
-            .eq('id', data.user.id)
-            .single();
-
-          if (!userError && userData) {
-            setUser(userData);
-          } else {
-            // Fallback: set minimal user matching authStore interface
-            setUser({
-              id: data.user.id,
-              email: data.user.email || '',
-              nom: 'Admin',
-              prenom: '',
-              role: 'directeur',
-              actif: true,
-              created_at: new Date().toISOString(),
-            } as any);
-          }
-        } catch (profileError) {
-          console.warn('Profile fetch failed:', profileError);
-          setUser({
-            id: data.user.id,
-            email: data.user.email || '',
-            nom: 'Admin',
-            prenom: '',
-            role: 'directeur',
-            actif: true,
-            created_at: new Date().toISOString(),
-          } as any);
-        }
-
-        toast.success('Connexion r\u00e9ussie !');
+        
+        // Cr√©er un utilisateur minimal √† partir des donn√©es auth
+        // NE PAS faire de requ√™te suppÈmentaire sur users/profiles
+        const minimalUser = {
+          id: data.user.id,
+          email: data.user.email || '',
+          nom: data.user.user_metadata?.nom || data.user.email?.split('@')[0] || 'Utilisateur',
+          prenom: data.user.user_metadata?.prenom || '',
+          role: data.user.user_metadata?.role || 'directeur',
+          actif: true,
+          created_at: data.user.created_at || new Date().toISOString(),
+        };
+        
+        setUser(minimalUser as any);
+        
+        toast.success('Connexion r√©ussie !');
         navigate('/dashboard');
+      } else {
+        throw new Error('Session non cr√©ee');
       }
     } catch (error: any) {
       console.error('Login error:', error);
@@ -95,116 +79,96 @@ const LoginPage: React.FC = () => {
       } else {
         setErrors({ general: error.message || 'Erreur de connexion' });
       }
-      toast.error('\u00c9chec de la connexion');
     } finally {
+      // TOUJOURS d√©sactiver le loading
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50 px-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4 shadow-lg">
-            <span className="text-white text-2xl font-bold">BE</span>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y8 bg-white p-8 rounded-2xl shadow-xl">
+        {/* Logo et titre */}
+        <div className="text-center">
+          <div className="mx-auto h-16 w-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center mb-4">
+            <svg className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
           </div>
-          <h1 className="text-2xl font-bold text-slate-900">Suivi Chantiers BE</h1>
-          <p className="text-slate-500 mt-2">{'Connectez-vous \u00e0 votre espace'}</p>
+          <h2 className="text-3xl font-bold text-gray-900">
+            Suivi Chantiers BE
+          </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Connectez-vous √† votre espace
+          </p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8">
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {errors.general && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                {errors.general}
-              </div>
-            )}
+        {/* Formulaire */}
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          {errors.general &&(
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+              {errors.general}
+            </div>
+          ))}
 
+          <div className="space-y-4">
+            {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                 Adresse email
               </label>
               <div className="relative">
-                <EnvelopeIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <EnvelopeIcon className="h-5 w-5 text-gray-400" />
+                </div>
                 <input
                   id="email"
+                  name="email"
                   type="email"
+                  autoComplete="email"
+                  required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="votre@email.fr"
-                  className={`w-full pl-10 pr-4 py-2.5 rounded-lg border ${
-                    errors.email ? 'border-red-300 focus:ring-red-500' : 'border-slate-300 focus:ring-blue-500'
-                  } focus:outline-none focus:ring-2 focus:border-transparent text-sm transition`}
-                  autoComplete="email"
-                  autoFocus
+                  className={`appearance-none block w-full pl-10 pr-3 py-3 border ${ 
+                    errors.email ? 'border-red-300' : 'border-gray-300'
+                  } rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all`}
+                  placeholder="votre@email.com"
                 />
               </div>
-              {errors.email && (
-                <p className="mt-1 text-xs text-red-600">{errors.email}</p>
+              {errors.email &&(
+                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
               )}
             </div>
 
+            {/* Mot de passe */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                 Mot de passe
               </label>
               <div className="relative">
-                <LockClosedIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <LockClosedIcon className="h-5 w-5 text-gray-400" />
+                </div>
                 <input
                   id="password"
+                  name="password"
                   type="password"
+                  autoComplete="current-password"
+                  required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="........"
-                  className={`w-full pl-10 pr-4 py-2.5 rounded-lg border ${
-                    errors.password ? 'border-red-300 focus:ring-red-500' : 'border-slate-300 focus:ring-blue-500'
-                  } focus:outline-none focus:ring-2 focus:border-transparent text-sm transition`}
-                  autoComplete="current-password"
-                />
-              </div>
-              {errors.password && (
-                <p className="mt-1 text-xs text-red-600">{errors.password}</p>
-              )}
-            </div>
-
-            <div className="flex justify-end">
-              <Link
-                to="/forgot-password"
-                className="text-sm text-blue-600 hover:text-blue-800 transition"
-              >
-                {'Mot de passe oubli\u00e9 ?'}
-              </Link>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-2.5 px-4 rounded-lg transition duration-200 flex items-center justify-center gap-2 shadow-sm"
+                  className={`appearance-none block w-full pl-10 pr-3 py-3 border ${ 
+                    errors.password ? 'border-red-300' : 'border-gray-300'
+                  } rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all`}
+                  placeholder="‚Ä¶‚Ä¶‚Ä¶‚Ä¶‚Ä¶‚Ä¶‚Ä¶‚Ä¶"Û‡¢¬ˆFóc‡¢∂W'&˜'2Á77v˜&BbbÄ¢«6∆74Ê÷S“&◊B”FWáB◊6“FWáB◊&VB”c#Á∂W'&˜'2Á77v˜&G”¬˜‡¢ó–¢¬ˆFóc‡¢¬ˆFóc‡†¢≤Ú¢&˜WFˆ‚FR6ˆÊÊWÜñˆ‚¢˜–¢∆'WGFˆ‡¢GóS“'7V&÷óB ¢Fó6&∆VC◊∂∆ˆFñÊw–¢6∆74Ê÷S“&w&˜W&V∆FófRr÷gV∆¬f∆WÇßW7Fñgí÷6VÁFW"í”2Ç”B&˜&FW"&˜&FW"◊G&Á7&VÁBFWáB◊6“fˆÁB÷÷VFóV“&˜VÊFVB÷∆rFWáB◊vÜóFR&r÷w&FñVÁB◊FÚ◊"g&ˆ“÷7ñ‚”SFÚ÷&«VR”cÜ˜fW#¶g&ˆ“÷7ñ‚”cÜ˜fW#ßFÚ÷&«VR”sfˆ7W3¶˜WF∆ñÊR÷ÊˆÊRfˆ7W3ß&ñÊr”"fˆ7W3ß&ñÊr÷ˆfg6WB”"fˆ7W3ß&ñÊr÷7ñ‚”SFó6&∆VC¶˜6óGí”SFó6&∆VC¶7W'6˜"÷Ê˜B÷∆∆˜vVBG&Á6óFñˆ‚÷∆¬6ÜF˜r÷∆rÜ˜fW#ß6ÜF˜r◊Ü∆ ¢‡¢∂∆ˆFñÊrÚÑ¢«7‚6∆74Ê÷S“&f∆WÇóFV◊2÷6VÁFW"#‡¢«7fr6∆74Ê÷S“&Êñ÷FR◊7ñ‚÷÷¬”◊"”2Ç”Rr”RFWáB◊vÜóFR"Ü÷∆Á3“&áGG¢Ú˜wwrÁs2Ê˜&rÛ#˜7fr"fñ∆√“&ÊˆÊR"fñWt&˜É“##B#B#‡¢∆6ó&6∆R6∆74Ê÷S“&˜6óGí”#R"7É“#""7ì“#""#“#"7G&ˆ∂S“&7W'&VÁD6ˆ∆˜""7G&ˆ∂UvñGFÉ“#B#„¬ˆ6ó&6∆S‡¢«FÇ6∆74Ê÷S“&˜6óGí”sR"fñ∆√“&7W'&VÁD6ˆ∆˜""C“$”B&ÇÇÇ”Öc3R„3s2R„3s2&ÉG¶”"R„#ìr„ìc"r„ìc"B$É32„C"„3RR„É#B2r„ì3Ü√2”"„cCw¢#„¬˜FÉ‡¢¬˜7fs‡¢6ˆÊÊWÜñˆ‚V‚6˜W'2‚‚‡¢¬˜7„‡¢í¢Ä¢«7‚6∆74Ê÷S“&f∆WÇóFV◊2÷6VÁFW"#‡¢6R6ˆÊÊV7FW ¢ƒ'&˜u&ñváDñ6ˆ‚6∆74Ê÷S“&÷¬”"Ç”Rr”Rw&˜W÷Ü˜fW#ßG&Á6∆FR◊Ç”G&Á6óFñˆ‚◊G&Á6f˜&“"Û‡¢¬˜7„‡¢ó–¢¬ˆ'WGFˆ„‡†¢≤Ú¢∆ñV‚÷˜BFR76R˜V&ÃYH
+ãﬂBà]à€\‹”ò[YOHù^XŸ[ù\àèÇà[ö¬àœHãŸõ‹ô€›\\‹›€‹ôÇà€\‹”ò[YOHù^\€H^XﬁX[ãMå›ô\éù^cyan-500 font-medium"
             >
-              {loading ? (
-                <>
-                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  <span>Connexion en cours...</span>
-                </>
-              ) : (
-                <>
-                  <span>Se connecter</span>
-                  <ArrowRightIcon className="w-5 h-5" />
-                </>
-              )}
-            </button>
-          </form>
-        </div>
-
-        <p className="text-center text-xs text-slate-400 mt-6">
-          {'\u00a9 2024 Notitia Corp \u2014 Bureau d\u0027\u00e9tudes'}
-        </p>
+              Mot de passe oublie ?
+            </Link>
+          </div>
+        </form>
       </div>
     </div>
   );
 };
 
-export default LoginPage;
