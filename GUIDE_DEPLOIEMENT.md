@@ -1,6 +1,6 @@
 /*
 📘 GUIDE DE DÉPLOIEMENT COMPLET
-Application de Suivi de Chantiers BE
+Application BE Pilot
 
 ---
 
@@ -592,7 +592,7 @@ Bon suivi de chantiers! 🏗️
 
 ---
 
-Auteur: Guide créé pour le déploiement de l'application Suivi de Chantiers BE
+Auteur: Guide créé pour le déploiement de l'application BE Pilot
 Version: 1.0
 Dernière mise à jour: 2024
 */
