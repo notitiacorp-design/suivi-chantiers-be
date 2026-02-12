@@ -65,7 +65,7 @@ const NotificationsPage: React.FC = () => {
       );
       toast.success('Notification marquÃ©e comme lue');
     } catch (error) {
-      toast.error('Erreur lors de la mise Ã  jour');
+      toast.error('Erreur lors de la mise ÃÂ  jour');
     }
   };
 
@@ -83,7 +83,7 @@ const NotificationsPage: React.FC = () => {
       );
       toast.success('Notification marquÃ©e comme non lue');
     } catch (error) {
-      toast.error('Erreur lors de la mise Ã  jour');
+      toast.error('Erreur lors de la mise ÃÂ  jour');
     }
   };
 
@@ -101,7 +101,7 @@ const NotificationsPage: React.FC = () => {
       setNotifications(prev => prev.map(n => ({ ...n, lue: true })));
       toast.success('Toutes les notifications marquÃ©es comme lues');
     } catch (error) {
-      toast.error('Erreur lors de la mise Ã  jour');
+      toast.error('Erreur lors de la mise ÃÂ  jour');
     }
   };
 
@@ -195,7 +195,7 @@ const NotificationsPage: React.FC = () => {
         <p className="text-gray-600">{unreadCount} notification{unreadCount !== 1 ? 's' : ''} non lue{unreadCount !== 1 ? 's' : ''}</p>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 p-4">
+      <div className="bg-white rounded-xl shadow-sm-sm border border-gray-200 mb-6 p-4">
         <div className="flex flex-wrap gap-4 items-center justify-between">
           <div className="flex gap-2">
             <button
@@ -231,14 +231,14 @@ const NotificationsPage: React.FC = () => {
       </div>
 
       {filteredNotifications.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+        <div className="bg-white rounded-xl shadow-sm-sm border border-gray-200 p-12 text-center">
           <BellIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-gray-900 mb-2">
             {filter === 'unread' ? 'Aucune notification non lue' : 'Aucune notification'}
           </h3>
           <p className="text-gray-500">
             {filter === 'unread'
-              ? 'Vous Ãªtes Ã  jour avec vos notifications'
+              ? 'Vous Ãªtes ÃÂ  jour avec vos notifications'
               : 'Vous n\'avez pas encore de notifications'}
           </p>
         </div>
@@ -253,7 +253,7 @@ const NotificationsPage: React.FC = () => {
                 {notifs.map(notification => (
                   <div
                     key={notification.id}
-                    className={`bg-white rounded-lg shadow-sm border transition-all ${
+                    className={`bg-white rounded-xl shadow-sm-sm border transition-all ${
                       notification.lue
                         ? 'border-gray-200'
                         : 'border-blue-300 bg-blue-50'
