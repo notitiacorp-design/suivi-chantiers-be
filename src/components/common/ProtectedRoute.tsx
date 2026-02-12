@@ -11,8 +11,8 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
   const { user, session, initialized } = useAuthStore();
 
-  // Attendre que l'ÃÂ©tat d'auth soit dÃÂ©terminÃÂ©
-  if (!initialized) {
+  // Si la session est undefined, on est encore en train d'initialiser
+  if (session === undefined) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-slate-50">
         <LoadingSpinner size="lg" />
@@ -25,15 +25,16 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole 
     return <Navigate to="/login" replace />;
   }
 
-  // VÃÂ©rifier le rÃÂ´le si requis
+  // Vérifier le role si requis
   if (requiredRole && user.role !== requiredRole) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-slate-50">
         <div className="text-center p-8 bg-white rounded-lg shadow-lg max-w-md">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">AccÃÂ¨s refusÃÂ©</h2>
-          <p className="text-slate-600">
-            Vous n'avez pas les permissions nÃÂ©cessaires pour accÃÂ©der ÃÂ  cette page.
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Accès refusé</h2>
+          <p className="text-gray-600 mb-4">
+            Vous n'avez pas les permissions nécessaires pour accèder à cette page.
           </p>
+          <Navigate to="/dashboard" replace />
         </div>
       </div>
     );
