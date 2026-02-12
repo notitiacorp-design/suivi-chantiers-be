@@ -465,7 +465,7 @@ export default function PipelineCommercialPage() {
                               </button>
                               <button
                                 onClick={() => {
-                                  if (window.confirm('Ãtes-vous sûr de vouloir supprimer cette affaire ?')) {
+                                  if (window.confirm('Êtes-vous sûr de vouloir supprimer cette affaire ?')) {
                                     deleteDealMutation.mutate(deal.id);
                                   }
                                 }}
@@ -626,7 +626,7 @@ export default function PipelineCommercialPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Montant estimé (â¬) *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Montant estimé (€) *</label>
                   <input
                     type="number"
                     required

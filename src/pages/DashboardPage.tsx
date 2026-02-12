@@ -93,14 +93,14 @@ const DashboardPage: React.FC = () => {
 
   const formatCurrency = (value: number): string => {
     const safeValue = value || 0;
-    if (isNaN(safeValue)) return '0 âÂÂ¬';
-    return safeValue.toLocaleString('fr-FR') + ' âÂÂ¬';
+    if (isNaN(safeValue)) return '0 â¬';
+    return safeValue.toLocaleString('fr-FR') + ' â¬';
   };
 
   const formatBudgetMillions = (value: number): string => {
     const safeValue = value || 0;
-    if (isNaN(safeValue)) return '0MâÂÂ¬';
-    return (safeValue / 1000000).toFixed(1) + 'MâÂÂ¬';
+    if (isNaN(safeValue)) return '0Mâ¬';
+    return (safeValue / 1000000).toFixed(1) + 'Mâ¬';
   };
 
   const formatHealthScore = (value: number): string => {

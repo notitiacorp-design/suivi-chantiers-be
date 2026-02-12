@@ -344,9 +344,9 @@ const JournalChantierPage: React.FC = () => {
                           <div className="flex items-center gap-2">
                             <Thermometer className="w-5 h-5 text-[#f59e0b]" />
                             <span className="text-sm text-[#64748b]">
-                              {entry.temperature_min !== null && entry.temperature_min !== undefined ? `${entry.temperature_min}Â°` : '--'}
+                              {entry.temperature_min !== null && entry.temperature_min !== undefined ? `${entry.temperature_min}°` : '--'}
                               {' / '}
-                              {entry.temperature_max !== null && entry.temperature_max !== undefined ? `${entry.temperature_max}Â°` : '--'}
+                              {entry.temperature_max !== null && entry.temperature_max !== undefined ? `${entry.temperature_max}°` : '--'}
                             </span>
                           </div>
                         )}
@@ -576,7 +576,7 @@ const JournalChantierPage: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-[#1e293b] mb-2">
-                    Température min (Â°C)
+                    Température min (°C)
                   </label>
                   <input
                     type="number"
@@ -590,7 +590,7 @@ const JournalChantierPage: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-[#1e293b] mb-2">
-                    Température max (Â°C)
+                    Température max (°C)
                   </label>
                   <input
                     type="number"
