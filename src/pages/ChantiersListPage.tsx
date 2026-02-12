@@ -27,18 +27,18 @@ interface Chantier {
 
 const phaseLabels: Record<string, string> = {
   etude: 'Ãtude',
-  preparation: 'Préparation',
-  execution: 'Exécution',
-  reception: 'Réception',
+  preparation: 'PrÃ©paration',
+  execution: 'ExÃ©cution',
+  reception: 'RÃ©ception',
   garantie: 'Garantie'
 };
 
 const statutLabels: Record<string, string> = {
   en_attente: 'En attente',
   en_cours: 'En cours',
-  termine: 'Terminé',
+  termine: 'TerminÃ©',
   suspendu: 'Suspendu',
-  annule: 'Annulé'
+  annule: 'AnnulÃ©'
 };
 
 const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = false }) => {
@@ -130,7 +130,7 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
           </div>
           <input
             type="text"
-            placeholder="Rechercher par nom, numéro, client, ville..."
+            placeholder="Rechercher par nom, numÃ©ro, client, ville..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -146,9 +146,9 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
           >
             <option value="all">Toutes les phases</option>
             <option value="etude">Ãtude</option>
-            <option value="preparation">Préparation</option>
-            <option value="execution">Exécution</option>
-            <option value="reception">Réception</option>
+            <option value="preparation">PrÃ©paration</option>
+            <option value="execution">ExÃ©cution</option>
+            <option value="reception">RÃ©ception</option>
             <option value="garantie">Garantie</option>
           </select>
         </div>
@@ -156,7 +156,7 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
 
       {filteredChantiers.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-xl shadow-sm">
-          <p className="text-gray-500 text-lg">Aucun chantier trouvé</p>
+          <p className="text-gray-500 text-lg">Aucun chantier trouvÃ©</p>
         </div>
       ) : (
         <div className="bg-white shadow overflow-hidden sm:rounded-xl">
@@ -165,7 +165,7 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
               <thead className="bg-gray-50">
                 <tr>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Numéro
+                    NumÃ©ro
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Nom
@@ -186,7 +186,7 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
                     Avancement
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Santé
+                    SantÃ©
                   </th>
                 </tr>
               </thead>

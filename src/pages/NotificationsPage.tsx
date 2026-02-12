@@ -63,9 +63,9 @@ const NotificationsPage: React.FC = () => {
       setNotifications(prev =>
         prev.map(n => n.id === id ? { ...n, lue: true } : n)
       );
-      toast.success('Notification marquée comme lue');
+      toast.success('Notification marquÃ©e comme lue');
     } catch (error) {
-      toast.error('Erreur lors de la mise à jour');
+      toast.error('Erreur lors de la mise Ã  jour');
     }
   };
 
@@ -81,9 +81,9 @@ const NotificationsPage: React.FC = () => {
       setNotifications(prev =>
         prev.map(n => n.id === id ? { ...n, lue: false } : n)
       );
-      toast.success('Notification marquée comme non lue');
+      toast.success('Notification marquÃ©e comme non lue');
     } catch (error) {
-      toast.error('Erreur lors de la mise à jour');
+      toast.error('Erreur lors de la mise Ã  jour');
     }
   };
 
@@ -99,9 +99,9 @@ const NotificationsPage: React.FC = () => {
       if (error) throw error;
 
       setNotifications(prev => prev.map(n => ({ ...n, lue: true })));
-      toast.success('Toutes les notifications marquées comme lues');
+      toast.success('Toutes les notifications marquÃ©es comme lues');
     } catch (error) {
-      toast.error('Erreur lors de la mise à jour');
+      toast.error('Erreur lors de la mise Ã  jour');
     }
   };
 
@@ -123,7 +123,7 @@ const NotificationsPage: React.FC = () => {
       case 'information':
         return <InformationCircleIcon className="h-5 w-5 text-blue-500" />;
       case 'success':
-      case 'succès':
+      case 'succÃ¨s':
         return <CheckIcon className="h-5 w-5 text-green-500" />;
       default:
         return <BellIcon className="h-5 w-5 text-gray-500" />;
@@ -139,7 +139,7 @@ const NotificationsPage: React.FC = () => {
       case 'information':
         return 'bg-blue-100 text-blue-800';
       case 'success':
-      case 'succès':
+      case 'succÃ¨s':
         return 'bg-green-100 text-green-800';
       default:
         return 'bg-gray-100 text-gray-800';
@@ -238,7 +238,7 @@ const NotificationsPage: React.FC = () => {
           </h3>
           <p className="text-gray-500">
             {filter === 'unread'
-              ? 'Vous êtes à jour avec vos notifications'
+              ? 'Vous Ãªtes Ã  jour avec vos notifications'
               : 'Vous n\'avez pas encore de notifications'}
           </p>
         </div>

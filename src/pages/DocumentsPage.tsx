@@ -53,9 +53,9 @@ const DocumentsPage: React.FC = () => {
           onChange={(e) => setFilterType(e.target.value)}
         >
           <option value="tous">Tous les types</option>
-          <option value="plan_reservation">Plans de réservation</option>
+          <option value="plan_reservation">Plans de rÃ©servation</option>
           <option value="plan_implantation">Plans d\'implantation</option>
-          <option value="pv_reception">PV de réception</option>
+          <option value="pv_reception">PV de rÃ©ception</option>
           <option value="doe">DOE</option>
           <option value="dgd">DGD</option>
         </select>
@@ -69,7 +69,7 @@ const DocumentsPage: React.FC = () => {
       ) : filteredDocs.length === 0 ? (
         <div className="text-center py-12">
           <FileText className="w-12 h-12 text-gray-400 mx-auto" />
-          <p className="mt-4 text-gray-500">Aucun document trouvé</p>
+          <p className="mt-4 text-gray-500">Aucun document trouvÃ©</p>
         </div>
       ) : (
         <div className="bg-white rounded-lg shadow overflow-hidden">

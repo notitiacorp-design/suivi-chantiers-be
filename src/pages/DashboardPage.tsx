@@ -73,8 +73,8 @@ const DashboardPage: React.FC = () => {
           alertsCount
         });
       } catch (error) {
-        console.error('Erreur lors du chargement des données:', error);
-        toast.error('Erreur lors du chargement des données');
+        console.error('Erreur lors du chargement des donnÃ©es:', error);
+        toast.error('Erreur lors du chargement des donnÃ©es');
       } finally {
         setLoading(false);
       }
@@ -93,14 +93,14 @@ const DashboardPage: React.FC = () => {
 
   const formatCurrency = (value: number): string => {
     const safeValue = value || 0;
-    if (isNaN(safeValue)) return '0 âÂÂ¬';
-    return safeValue.toLocaleString('fr-FR') + ' âÂÂ¬';
+    if (isNaN(safeValue)) return '0 Ã¢ÂÂ¬';
+    return safeValue.toLocaleString('fr-FR') + ' Ã¢ÂÂ¬';
   };
 
   const formatBudgetMillions = (value: number): string => {
     const safeValue = value || 0;
-    if (isNaN(safeValue)) return '0MâÂÂ¬';
-    return (safeValue / 1000000).toFixed(1) + 'MâÂÂ¬';
+    if (isNaN(safeValue)) return '0MÃ¢ÂÂ¬';
+    return (safeValue / 1000000).toFixed(1) + 'MÃ¢ÂÂ¬';
   };
 
   const formatHealthScore = (value: number): string => {
@@ -127,7 +127,7 @@ const DashboardPage: React.FC = () => {
             color="blue"
           />
           <KPICard
-            title="Score santé moyen"
+            title="Score santÃ© moyen"
             value={formatHealthScore(kpis.avgHealthScore)}
             icon={<CheckCircleIcon className="w-6 h-6" />}
             color="green"
@@ -152,7 +152,7 @@ const DashboardPage: React.FC = () => {
             <div className="bg-white rounded-xl shadow-sm p-12 text-center border border-slate-200">
               <ChartBarIcon className="w-16 h-16 text-slate-300 mx-auto mb-4" />
               <p className="text-lg font-medium text-slate-600 mb-2">Aucun chantier actif</p>
-              <p className="text-sm text-slate-500">Les chantiers en cours apparaîtront ici</p>
+              <p className="text-sm text-slate-500">Les chantiers en cours apparaÃ®tront ici</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

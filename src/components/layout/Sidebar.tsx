@@ -111,9 +111,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       ],
     },
     {
-        title: "Bureau d'études",
+        title: "Bureau d'Ã©tudes",
         items: [
-          { to: '/etudes-techniques', icon: Microscope, label: 'Études techniques', show: true },
+          { to: '/etudes-techniques', icon: Microscope, label: 'Ãtudes techniques', show: true },
           { to: '/rapports-hebdo', icon: CalendarCheck, label: 'Rapports hebdo', show: true },
         ],
       },
