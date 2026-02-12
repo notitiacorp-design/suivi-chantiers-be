@@ -41,8 +41,8 @@ export function calculScoreSante(taches: Tache[]): number {
  // Calculer la pénalité pour cette tâche
  if (tache.statut === 'en_retard') {
  const dateFinPrevue = parseISO(tache.date_fin_prevue);
- const aujourd'hui = new Date();
- const joursRetard = differenceInDays(aujourd'hui, dateFinPrevue);
+ const aujourdHui = new Date();
+ const joursRetard = differenceInDays(aujourdHui, dateFinPrevue);
 
  if (joursRetard > 30) {
  penalite = 100; // Pénalité maximale
@@ -55,20 +55,20 @@ export function calculScoreSante(taches: Tache[]): number {
  }
  } else if (tache.statut === 'en_cours') {
  const dateFinPrevue = parseISO(tache.date_fin_prevue);
- const aujourd'hui = new Date();
+ const aujourdHui = new Date();
  
  // Si la date de fin prévue est dépassée mais statut encore "en_cours"
- if (isAfter(aujourd'hui, dateFinPrevue)) {
- const joursRetard = differenceInDays(aujourd'hui, dateFinPrevue);
+ if (isAfter(aujourdHui, dateFinPrevue)) {
+ const joursRetard = differenceInDays(aujourdHui, dateFinPrevue);
  penalite = Math.min(joursRetard * 2, 80);
  } else if (tache.pourcentage_completion < 50) {
  // Tâche en cours mais faible avancement
- const joursRestants = differenceInDays(dateFinPrevue, aujourd'hui);
+ const joursRestants = differenceInDays(dateFinPrevue, aujourdHui);
  const dateDebut = tache.date_debut_reelle 
  ? parseISO(tache.date_debut_reelle) 
  : parseISO(tache.date_debut_prevue);
  const dureeTotal = differenceInDays(dateFinPrevue, dateDebut);
- const tempsEcoule = differenceInDays(aujourd'hui, dateDebut);
+ const tempsEcoule = differenceInDays(aujourdHui, dateDebut);
  const avancementAttendu = dureeTotal > 0 ? (tempsEcoule / dureeTotal) * 100 : 0;
 
  if (tache.pourcentage_completion < avancementAttendu - 20) {
@@ -77,11 +77,11 @@ export function calculScoreSante(taches: Tache[]): number {
  }
  } else if (tache.statut === 'non_commence') {
  const dateDebutPrevue = parseISO(tache.date_debut_prevue);
- const aujourd'hui = new Date();
+ const aujourdHui = new Date();
 
  // Si la tâche aurait dû commencer
- if (isAfter(aujourd'hui, dateDebutPrevue)) {
- const joursRetard = differenceInDays(aujourd'hui, dateDebutPrevue);
+ if (isAfter(aujourdHui, dateDebutPrevue)) {
+ const joursRetard = differenceInDays(aujourdHui, dateDebutPrevue);
  penalite = Math.min(joursRetard * 3, 90);
  }
  }
@@ -116,8 +116,8 @@ export function predictionRetard(
  let velocite = 1;
  if (tachesTerminees.length > 0) {
  const debut = parseISO(dateDebut);
- const aujourd'hui = new Date();
- const joursEcoules = differenceInDays(aujourd'hui, debut);
+ const aujourdHui = new Date();
+ const joursEcoules = differenceInDays(aujourdHui, debut);
  
  if (joursEcoules > 0) {
  velocite = tachesTerminees.length / joursEcoules;
@@ -163,10 +163,10 @@ export function calculChargeCA(
  if (!chantier) continue;
 
  // Ne compter que les chantiers en cours (non terminés)
- const aujourd'hui = new Date();
+ const aujourdHui = new Date();
  const dateFin = parseISO(chantier.date_fin_prevue);
  
- if (isAfter(aujourd'hui, dateFin)) continue; // Chantier terminé
+ if (isAfter(aujourdHui, dateFin)) continue; // Chantier terminé
 
  const caId = affectation.chef_chantier_id;
 
@@ -198,11 +198,11 @@ export function calculAlerteTresorerie(
  let budgetTotalPondere = 0;
 
  for (const chantier of chantiers) {
- const aujourd'hui = new Date();
+ const aujourdHui = new Date();
  const dateFin = parseISO(chantier.date_fin_prevue);
 
  // Ne considérer que les chantiers en cours
- if (isAfter(aujourd'hui, dateFin)) continue;
+ if (isAfter(aujourdHui, dateFin)) continue;
 
  budgetTotalPrevu += chantier.budget_initial;
  montantTotalFacture += chantier.montant_facture;
@@ -306,11 +306,11 @@ export function calculStatistiquesChantier(chantier: Chantier, taches: Tache[]) 
  const tachesEnRetard = taches.filter(t => t.statut === 'en_retard').length;
  const tachesNonCommencees = taches.filter(t => t.statut === 'non_commence').length;
 
- const aujourd'hui = new Date();
+ const aujourdHui = new Date();
  const dateDebut = parseISO(chantier.date_debut);
  const dateFinPrevue = parseISO(chantier.date_fin_prevue);
  const dureeTotal = differenceInDays(dateFinPrevue, dateDebut);
- const tempsEcoule = differenceInDays(aujourd'hui, dateDebut);
+ const tempsEcoule = differenceInDays(aujourdHui, dateDebut);
  const pourcentageTempsEcoule = dureeTotal > 0 ? (tempsEcoule / dureeTotal) * 100 : 0;
 
  const ecartAvancement = chantier.pourcentage_avancement - pourcentageTempsEcoule;
