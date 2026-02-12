@@ -17,9 +17,9 @@ const LoginPage: React.FC = () => {
     const newErrors: typeof errors = {};
 
     if (!email.trim()) {
-      newErrors.email = "Lemail est requis";
+      newErrors.email = 'L\'email est requis';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = "Email invalide";
+      newErrors.email = 'Email invalide';
     }
 
     if (!password) {
@@ -34,174 +34,156 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (!validateForm()) return;
-
+    
     setLoading(true);
     setErrors({});
 
     try {
+      // Authentification simple avec Supabase
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
-        password,
+        password: password
       });
 
       if (error) {
         throw error;
       }
 
-      if (data.session && data.user) {
-        // 1. Mettre à jour le store IMMÉDIATEMENT
+      if (data.session) {
         setSession(data.session);
-        
-        // 2. Créer un utilisateur minimal à partir des données auth
-        // NE PAS faire de requête suppémentaire sur users/profiles
-        const minimalUser = {
-          id: data.user.id,
-          email: data.user.email || '',
-          nom: data.user.user_metadata?.nom || data.user.email?.split('@')[0] || 'Utilisateur',
-          prenom: data.user.user_metadata?.prenom || '',
-          role: data.user.user_metadata?.role || 'directeur',
-          actif: true,
-          created_at: data.user.created_at || new Date().toISOString(),
-        };
-        
-        setUser(minimalUser as any);
-        
-        // 3. Afficher le succès
-        toast.success('Connexion rêssie !');
-        
-        // 4. RÉDIRECTION IMMÉDIATE - ne pas attendre le chargement du profil
-        navigate('/dashboard', { replace: true });
-        
-      } else {
-        throw new Error('Session non créee');
+        setUser(data.session.user);
+        toast.success('Connexion réussie !');
+        navigate('/dashboard');
       }
     } catch (error: any) {
-      console.error('Login error:', error);
-      if (error.message === 'Invalid login credentials') {
-        setErrors({ general: 'Email ou mot de passe incorrect' });
-      } else {
-        setErrors({ general: error.message || 'Erreur de connexion' });
-      }
+      console.error('Erreur de connexion:', error);
+      setErrors({ general: error.message || 'Email ou mot de passe incorrect' });
+      toast.error(error.message || 'Erreur de connexion');
     } finally {
-      // TOUJOURS désactiver le loading
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="max-wd-md w-full">
-        {/* Logo et titre *}}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4 shadow-lg">
-            <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-            </svg>
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="flex justify-center">
+          <div className="bg-indigo-600 p-3 rounded-lg">
+            <EnvelopeIcon className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Suivi Chantiers BE
-          </h1>
-          <p className="text-gray-600">
-            Connectez-vous pour accéder à votre espace
-          </p>
         </div>
+        <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+          Connexion à votre compte
+        </h2>
+        <p className="mt-2 text-center text-sm text-gray-600">
+          Accédez à votre tableau de bord de suivi de chantiers
+        </p>
+      </div>
 
-        {/* Formulaire *}}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          {errors.general && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-600">{errors.general}</p>
-            </div>
-          )}
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            {errors.general && (
+              <div className="rounded-md bg-red-50 p-4">
+                <div className="flex">
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-red-800">{errors.general}</h3>
+                  </div>
+                </div>
+              </div>
+            )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Adresse email
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <EnvelopeIcon className="h-5 w-5 text-gray-400" />
+              <div className="relative mt-1 rounded-md shadow-sm">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <EnvelopeIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                 </div>
                 <input
-                  id="email"
                   type="email"
+                  name="email"
+                  id="email"
+                  autoComplete="email"
+                  required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className={`block w-full pl-10 pr3 py-3 border ${errors.email ? 'border-red-300' : 'border-gray-300'} rounded-lg hover:ring-2 hover:ring-blue-500 hover:border-blue-500 transition-colors`}
-                  placeholder="votre@email.com"
-                  disabled={loading}
+                  className={`block w-full rounded-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${errors.email ? 'border-red-300' : ''}`}
+                  placeholder="vous@exemple.com"
                 />
               </div>
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-              )}
+              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
             </div>
 
-            {/* Mot de passe */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Mot de passe
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <LockClosedIcon className="h-5 w-5 text-gray-400" />
+              <div className="relative mt-1 rounded-md shadow-sm">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <LockClosedIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                 </div>
                 <input
-                  id="password"
                   type="password"
+                  name="password"
+                  id="password"
+                  autoComplete="current-password"
+                  required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className={`block w-full pl-10 pr3 py-3 border ${errors.password ? 'border-red-300' : 'border-gray-300'} rounded-lg hover:ring-2 hover:ring-blue-500 hover:border-blue-500 transition-colors`}
-                  placeholder="®ë»»»»»»»»"
-                  disabled={loading}
+                  className={`block w-full rounded-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${errors.password ? 'border-red-300' : ''}`}
                 />
               </div>
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
-              )}
+              {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
             </div>
 
-            {/* Bouton de connexion */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {loading ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth={4} />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                  </svg>
-                  Connexion en cours...
-                </>
-              ) : (
-                <>
-                  Se connecter
-                  <ArrowRightIcon className="ml-2h-5 w-5" />
-                </>
-              )}
-            </button>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <input
+                  id="remember-me"
+                  name="remember-me"
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                />
+                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                  Se souvenir de moi
+                </label>
+              </div>
+
+              <div className="text-sm">
+                <Link to="/forgot-password" className="font-medium text-indigo-600 hover:text-indigo-500">
+                  Mot de passe oublié ?
+                </Link>
+              </div>
+            </div>
+
+            <div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex w-full justify-center items-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 4.418 3.582 8 8 8v-4c-2.133 0-4.067-.832-5.464-2.209l2.464-2.5z"></path>
+                    </svg>
+                    Connexion en cours...
+                  </>
+                ) : (
+                  <>
+                    Se connecter
+                    <ArrowRightIcon className="ml-2 -mr-1 h-5 w-5" aria-hidden="true" />
+                  </>
+                )}
+              </button>
+            </div>
           </form>
-
-          {/* Lien mot de passe oublié */}
-          <div className="mt-6 text-center">
-            <Link
-              to="/forgot-password"
-              className="text-sm text-blue-600 hover:text-blue-500 font-medium"
-            >
-              Mot de passe oublie ?
-            </Link>
-          </div>
         </div>
-
-        {/* Footer *}}
-        <p className="mt-8 text-center text-sm text-gray-500">
-          © 2026 Notitia Corp. Tous droits réservés.
-        </p>
       </div>
     </div>
   );
