@@ -68,15 +68,15 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   ];
 
   const sidebarContent = (
-    <div className="flex h-full flex-col bg-gradient-to-b from-slate-900 to-slate-800">
-      <div className="flex items-center justify-between border-b border-slate-700 px-6 py-6">
+    <div className="flex h-full flex-col bg-[#0f172a]">
+      <div className="flex items-center justify-between border-b border-white/10 px-6 py-6">
         <div>
-          <h1 className="text-2xl font-bold text-amber-500">BE Pilot</h1>
-          <p className="text-sm text-slate-400">Suivi de Projets</p>
+          <h1 className="text-2xl font-bold text-white">BE Pilot</h1>
+          <p className="text-sm text-gray-400 mt-1">Suivi de Chantiers</p>
         </div>
         <button
           onClick={onClose}
-          className="lg:hidden rounded-lg p-2 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
+          className="lg:hidden rounded-lg p-2 text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
           aria-label="Fermer le menu"
         >
           <XMarkIcon className="h-6 w-6" />
@@ -91,19 +91,15 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               to={item.to}
               onClick={() => onClose()}
               className={({ isActive }) =>
-                `flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all ${
-                  isActive
-                    ? 'border-l-4 border-amber-500 bg-amber-500/10 text-white'
-                    : 'border-l-4 border-transparent text-slate-300 hover:bg-slate-700/50 hover:text-white'
-                }`
+                `flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all ${isActive ? 'bg-white/10 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`
               }
             >
               {({ isActive }) => (
                 <>
-                  <item.icon className={`h-5 w-5 ${isActive ? 'text-amber-500' : 'text-slate-400'}`} />
+                  <item.icon className="h-5 w-5" />
                   <span className="flex-1">{item.label}</span>
                   {item.badge !== undefined && item.badge > 0 && (
-                    <span className="flex h-6 min-w-[1.5rem] items-center justify-center rounded-full bg-amber-500 px-2 text-xs font-bold text-slate-900">
+                    <span className="flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-blue-500 px-2 text-xs font-semibold text-white">
                       {item.badge > 99 ? '99+' : item.badge}
                     </span>
                   )}
@@ -114,18 +110,22 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         )}
       </nav>
 
-      <div className="border-t border-slate-700 px-4 py-4">
-        <div className="mb-3 rounded-lg bg-slate-700/50 px-4 py-3">
+      <div className="border-t border-white/10 px-4 py-4">
+        <div className="mb-3 rounded-lg bg-white/5 px-4 py-3">
           <p className="text-sm font-semibold text-white">
             {profile?.prenom} {profile?.nom}
           </p>
-          <p className="text-xs text-slate-400">{profile?.role}</p>
+          <p className="text-xs text-gray-400 mt-1">
+            <span className="inline-block rounded-md bg-blue-500/20 px-2 py-0.5 text-blue-300 font-medium">
+              {profile?.role}
+            </span>
+          </p>
         </div>
         <button
           onClick={handleSignOut}
-          className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-slate-300 transition-all hover:bg-slate-700/50 hover:text-white"
+          className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-gray-400 transition-all hover:bg-white/5 hover:text-white"
         >
-          <ArrowRightOnRectangleIcon className="h-5 w-5 text-slate-400" />
+          <ArrowRightOnRectangleIcon className="h-5 w-5" />
           <span>DÃ©connexion</span>
         </button>
       </div>
@@ -147,9 +147,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       )}
 
       <div
-        className={`fixed left-0 top-0 z-40 h-screen w-72 transform transition-transform duration-300 ease-in-out lg:hidden ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed left-0 top-0 z-40 h-screen w-72 transform transition-transform duration-300 ease-in-out lg:hidden ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         {sidebarContent}
       </div>
