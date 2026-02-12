@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuthStore } from '../../stores/authStore';
-import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../contexts/AuthContext';
 import {
   MagnifyingGlassIcon,
   BellIcon,
@@ -19,7 +18,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ setMobileOpen }) => {
   const location = useLocation();
-  const { user, setSession, setUser } = useAuthStore();
+  const { profile, signOut } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(3); // TODO: Charger depuis Supabase
@@ -60,9 +59,7 @@ const Header: React.FC<HeaderProps> = ({ setMobileOpen }) => {
 
   const handleLogout = async () => {
     try {
-      await supabase.auth.signOut();
-      setSession(null);
-      setUser(null);
+      await signOut();
       toast.success('Déconnexion réussie');
     } catch (error) {
       console.error('Erreur déconnexion:', error);
@@ -149,14 +146,14 @@ const Header: React.FC<HeaderProps> = ({ setMobileOpen }) => {
               className="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-100 transition-all"
             >
               <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                {user?.nom?.charAt(0)}{user?.prenom?.charAt(0)}
+                {profile?.nom?.charAt(0)}{profile?.prenom?.charAt(0)}
               </div>
               <div className="hidden md:block text-left">
                 <p className="text-sm font-medium text-slate-900">
-                  {user?.prenom} {user?.nom}
+                  {profile?.prenom} {profile?.nom}
                 </p>
                 <p className="text-xs text-slate-500">
-                  {user?.role === 'directeur' ? 'Directeur' : "Chef d'Atelier"}
+                  {profile?.role === 'directeur' ? 'Directeur' : "Chef d'Atelier"}
                 </p>
               </div>
             </button>
@@ -166,9 +163,9 @@ const Header: React.FC<HeaderProps> = ({ setMobileOpen }) => {
               <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-slate-200 py-2 animate-fade-in">
                 <div className="px-4 py-3 border-b border-slate-200">
                   <p className="text-sm font-medium text-slate-900">
-                    {user?.prenom} {user?.nom}
+                    {profile?.prenom} {profile?.nom}
                   </p>
-                  <p className="text-xs text-slate-500 truncate">{user?.email}</p>
+                  <p className="text-xs text-slate-500 truncate">{profile?.email}</p>
                 </div>
                 <Link
                   to="/profil"
