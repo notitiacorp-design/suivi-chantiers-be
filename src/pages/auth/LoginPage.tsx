@@ -75,10 +75,10 @@ const LoginPage: React.FC = () => {
           </div>
         </div>
         <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-          Connexion Ã  votre compte
+          Connexion ÃÂ  votre compte
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          AccÃ©dez Ã  votre tableau de bord de suivi de chantiers
+          AccÃ©dez ÃÂ  votre tableau de bord de suivi de chantiers
         </p>
       </div>
 
