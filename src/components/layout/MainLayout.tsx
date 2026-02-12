@@ -10,7 +10,7 @@ const MainLayout: React.FC = () => {
     <div className="min-h-screen bg-slate-50">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       
-      <div className="lg:ml-72 flex flex-col min-h-screen">
+      <div className="lg:ml-64 flex flex-col min-h-screen">
         <Header onMenuClick={() => setSidebarOpen(true)} />
         
         <main className="flex-1 p-4 lg:p-8">

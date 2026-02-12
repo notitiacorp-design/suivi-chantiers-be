@@ -110,9 +110,9 @@ const ChantierDetailPage: React.FC = () => {
         .eq('id', id);
 
       if (error) throw error;
-      toast.success('Chantier mis Ã  jour');
+      toast.success('Chantier mis à jour');
     } catch (error: any) {
-      toast.error('Erreur lors de la mise Ã  jour');
+      toast.error('Erreur lors de la mise à jour');
       console.error(error);
     }
   };
@@ -122,12 +122,12 @@ const ChantierDetailPage: React.FC = () => {
     // TODO: Implement PDF export logic
     setTimeout(() => {
       toast.dismiss();
-      toast.success('PDF exportÃ© avec succÃ¨s');
+      toast.success('PDF exporté avec succès');
     }, 1500);
   };
 
   const handleArchive = async () => {
-    if (!window.confirm('Ãtes-vous sÃ»r de vouloir archiver ce chantier ?')) return;
+    if (!window.confirm('Êtes-vous sûr de vouloir archiver ce chantier ?')) return;
 
     try {
       const { error } = await supabase
@@ -136,7 +136,7 @@ const ChantierDetailPage: React.FC = () => {
         .eq('id', id);
 
       if (error) throw error;
-      toast.success('Chantier archivÃ©');
+      toast.success('Chantier archivé');
       navigate('/chantiers');
     } catch (error: any) {
       toast.error('Erreur lors de l\'archivage');
@@ -158,7 +158,7 @@ const ChantierDetailPage: React.FC = () => {
   if (!chantier) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <p className="text-gray-600 mb-4">Chantier non trouvÃ©</p>
+        <p className="text-gray-600 mb-4">Chantier non trouvé</p>
         <button
           onClick={() => navigate('/chantiers')}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
@@ -228,22 +228,22 @@ const ChantierDetailPage: React.FC = () => {
         {activeTab === 'journal' && <JournalChantier chantierId={chantier.id} />}
         {activeTab === 'documents' && (
           <div className="bg-white rounded-lg shadow p-6">
-            <p className="text-gray-500">Module Documents Ã  venir</p>
+            <p className="text-gray-500">Module Documents à venir</p>
           </div>
         )}
         {activeTab === 'financier' && (
           <div className="bg-white rounded-lg shadow p-6">
-            <p className="text-gray-500">Module Financier Ã  venir</p>
+            <p className="text-gray-500">Module Financier à venir</p>
           </div>
         )}
         {activeTab === 'avenants' && (
           <div className="bg-white rounded-lg shadow p-6">
-            <p className="text-gray-500">Module Avenants Ã  venir</p>
+            <p className="text-gray-500">Module Avenants à venir</p>
           </div>
         )}
         {activeTab === 'commandes' && (
           <div className="bg-white rounded-lg shadow p-6">
-            <p className="text-gray-500">Module Commandes Ã  venir</p>
+            <p className="text-gray-500">Module Commandes à venir</p>
           </div>
         )}
       </div>

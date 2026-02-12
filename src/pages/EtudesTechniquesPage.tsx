@@ -38,18 +38,18 @@ interface Profile {
 const TYPE_ETUDE_LABELS: Record<TypeEtude, string> = {
   bilan_puissances: 'Bilan de puissances',
   plan_implantation: "Plan d'implantation",
-  plan_reservations: 'Plan de rÃ©servations',
+  plan_reservations: 'Plan de réservations',
   dessin_bim: 'Dessin BIM',
   fiche_technique: 'Fiche technique',
   devis_x: 'Devis X'
 };
 
 const STATUT_LABELS: Record<Statut, string> = {
-  a_produire: 'Ã produire',
+  a_produire: 'À produire',
   en_cours: 'En cours',
   transmis: 'Transmis',
-  valide: 'ValidÃ©',
-  refuse: 'RefusÃ©'
+  valide: 'Validé',
+  refuse: 'Refusé'
 };
 
 const PRIORITE_LABELS: Record<Priorite, string> = {
@@ -261,7 +261,7 @@ export default function EtudesTechniquesPage() {
   };
 
   const handleDelete = (id: string) => {
-    if (window.confirm('Ãtes-vous sÃ»r de vouloir supprimer cette Ã©tude technique ?')) {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer cette étude technique ?')) {
       deleteMutation.mutate(id);
     }
   };
@@ -272,7 +272,7 @@ export default function EtudesTechniquesPage() {
   };
 
   const getResponsableNom = (responsableId: string | null) => {
-    if (!responsableId) return 'Non assignÃ©';
+    if (!responsableId) return 'Non assigné';
     const profile = profiles.find(p => p.id === responsableId);
     return profile ? profile.nom_complet : 'N/A';
   };
@@ -281,15 +281,15 @@ export default function EtudesTechniquesPage() {
     <div className="min-h-screen bg-[#f5f7fa] p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#1e3a5f] mb-2">Ãtudes Techniques</h1>
-          <p className="text-gray-600">Gestion des Ã©tudes techniques pour vos chantiers</p>
+          <h1 className="text-3xl font-bold text-[#1e3a5f] mb-2">Études Techniques</h1>
+          <p className="text-gray-600">Gestion des études techniques pour vos chantiers</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-gray-400">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 mb-1">Ã produire</p>
+                <p className="text-sm text-gray-600 mb-1">À produire</p>
                 <p className="text-2xl font-bold text-[#1e3a5f]">{stats.a_produire}</p>
               </div>
               <AlertCircle className="w-8 h-8 text-gray-400" />
@@ -316,7 +316,7 @@ export default function EtudesTechniquesPage() {
           <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-green-400">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 mb-1">ValidÃ©</p>
+                <p className="text-sm text-gray-600 mb-1">Validé</p>
                 <p className="text-2xl font-bold text-[#1e3a5f]">{stats.valide}</p>
               </div>
               <CheckCircle className="w-8 h-8 text-green-400" />
@@ -371,7 +371,7 @@ export default function EtudesTechniquesPage() {
               className="flex items-center gap-2 px-6 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#2563eb] transition-colors whitespace-nowrap"
             >
               <Plus className="w-5 h-5" />
-              Nouvelle Ã©tude
+              Nouvelle étude
             </button>
           </div>
         </div>
@@ -382,7 +382,7 @@ export default function EtudesTechniquesPage() {
           ) : filteredEtudes.length === 0 ? (
             <div className="p-12 text-center text-gray-500">
               <FileText className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-              <p>Aucune Ã©tude technique trouvÃ©e</p>
+              <p>Aucune étude technique trouvée</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -393,7 +393,7 @@ export default function EtudesTechniquesPage() {
                     <th className="px-6 py-3 text-left text-sm font-semibold">Type</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold">Chantier</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold">Statut</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold">PrioritÃ©</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold">Priorité</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold">Responsable</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold">Date de remise</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold">Actions</th>
@@ -433,7 +433,7 @@ export default function EtudesTechniquesPage() {
                       </td>
                       <td className="px-6 py-4">
                         <span className="text-sm text-gray-700">
-                          {etude.date_remise ? new Date(etude.date_remise).toLocaleDateString('fr-FR') : 'Non dÃ©finie'}
+                          {etude.date_remise ? new Date(etude.date_remise).toLocaleDateString('fr-FR') : 'Non définie'}
                         </span>
                       </td>
                       <td className="px-6 py-4">
@@ -468,7 +468,7 @@ export default function EtudesTechniquesPage() {
           <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
               <h2 className="text-xl font-bold text-[#1e3a5f]">
-                {editingEtude ? 'Modifier l\'Ã©tude technique' : 'Nouvelle Ã©tude technique'}
+                {editingEtude ? 'Modifier l\'étude technique' : 'Nouvelle étude technique'}
               </h2>
               <button
                 onClick={() => {
@@ -498,7 +498,7 @@ export default function EtudesTechniquesPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Type d'Ã©tude <span className="text-red-500">*</span>
+                    Type d'étude <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={formData.type_etude}
@@ -522,7 +522,7 @@ export default function EtudesTechniquesPage() {
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6]"
                     required
                   >
-                    <option value="">SÃ©lectionner un chantier</option>
+                    <option value="">Sélectionner un chantier</option>
                     {chantiers.map((chantier) => (
                       <option key={chantier.id} value={chantier.id}>{chantier.nom}</option>
                     ))}
@@ -547,7 +547,7 @@ export default function EtudesTechniquesPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    PrioritÃ© <span className="text-red-500">*</span>
+                    Priorité <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={formData.priorite}
@@ -570,7 +570,7 @@ export default function EtudesTechniquesPage() {
                     onChange={(e) => setFormData({ ...formData, responsable_id: e.target.value || null })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6]"
                   >
-                    <option value="">Non assignÃ©</option>
+                    <option value="">Non assigné</option>
                     {profiles.map((profile) => (
                       <option key={profile.id} value={profile.id}>{profile.nom_complet}</option>
                     ))}
@@ -659,8 +659,8 @@ export default function EtudesTechniquesPage() {
                   {createMutation.isPending || updateMutation.isPending
                     ? 'Enregistrement...'
                     : editingEtude
-                    ? 'Mettre Ã  jour'
-                    : 'CrÃ©er'}
+                    ? 'Mettre à jour'
+                    : 'Créer'}
                 </button>
               </div>
             </form>

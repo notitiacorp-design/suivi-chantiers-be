@@ -111,9 +111,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       ],
     },
     {
-        title: "Bureau d'Ã©tudes",
+        title: "Bureau d'études",
         items: [
-          { to: '/etudes-techniques', icon: Microscope, label: 'Ãtudes techniques', show: true },
+          { to: '/etudes-techniques', icon: Microscope, label: 'Études techniques', show: true },
           { to: '/rapports-hebdo', icon: CalendarCheck, label: 'Rapports hebdo', show: true },
         ],
       },
@@ -152,9 +152,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-[#1e3a5f] z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 h-screen w-64 bg-[#1e3a5f] z-50 transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 lg:static lg:z-auto flex flex-col`}
+        } lg:translate-x-0 flex flex-col`}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-5 border-b border-white/10">
