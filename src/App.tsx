@@ -58,7 +58,7 @@ const App: React.FC = () => {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               
-              {/* Routes protégées */}
+              {/* Routes protÃ©gÃ©es */}
               <Route path="/" element={
                 <ProtectedRoute>
                   <MainLayout />
