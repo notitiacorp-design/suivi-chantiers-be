@@ -57,7 +57,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchValue.trim()) {
-      toast.success(`Recherche: ${searchValue}`);
+      toast.success(`Recherche : ${searchValue}`);
     }
   };
 
@@ -74,16 +74,16 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
         <div className="flex items-center space-x-4 flex-1 min-w-0">
           <button
             onClick={() => onMenuClick()}
-            className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-slate-100 text-slate-700 transition-colors"
+            className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-slate-50 text-slate-600 transition-colors"
             aria-label="Ouvrir le menu"
           >
             <Bars3Icon className="h-6 w-6" />
           </button>
 
-          <nav className="hidden sm:flex items-center space-x-2 text-sm min-w-0" aria-label="Breadcrumb">
+          <nav className="hidden sm:flex items-center space-x-2 text-sm min-w-0" aria-label="Fil d'ariane">
             <Link
               to="/dashboard"
-              className="text-slate-600 hover:text-amber-500 transition-colors whitespace-nowrap"
+              className="text-slate-600 hover:text-slate-900 transition-colors whitespace-nowrap"
             >
               Accueil
             </Link>
@@ -91,11 +91,11 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
               <React.Fragment key={crumb.path}>
                 <ChevronRightIcon className="h-4 w-4 text-slate-400 flex-shrink-0" />
                 {crumb.isLast ? (
-                  <span className="font-medium text-amber-500 truncate">{crumb.label}</span>
+                  <span className="font-medium text-slate-900 truncate">{crumb.label}</span>
                 ) : (
                   <Link
                     to={crumb.path}
-                    className="text-slate-600 hover:text-amber-500 transition-colors truncate"
+                    className="text-slate-600 hover:text-slate-900 transition-colors truncate"
                   >
                     {crumb.label}
                   </Link>
@@ -104,7 +104,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
             ))}
           </nav>
 
-          <div className="sm:hidden text-sm font-medium text-slate-700 truncate">
+          <div className="sm:hidden text-sm font-medium text-slate-900 truncate">
             {breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1].label : 'Tableau de bord'}
           </div>
         </div>
@@ -120,7 +120,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
                 placeholder="Rechercher un chantier, numÃ©ro..."
-                className="w-64 pl-10 pr-4 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                className="w-64 pl-10 pr-4 py-2 text-sm bg-slate-100 border-0 rounded-full focus:outline-none focus:ring-2 focus:ring-slate-300 focus:bg-white transition-all placeholder:text-slate-500"
               />
             </div>
           </form>
@@ -128,7 +128,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
           {/* Notifications */}
           <Link
             to="/notifications"
-            className="relative p-2 rounded-lg hover:bg-slate-100 text-slate-700 transition-colors"
+            className="relative p-2 rounded-lg hover:bg-slate-50 text-slate-600 transition-colors"
             aria-label="Notifications"
           >
             <BellIcon className="h-6 w-6" />
@@ -145,7 +145,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
           <div className="relative" ref={userMenuRef}>
             <button
               onClick={() => setUserMenuOpen(!userMenuOpen)}
-              className="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-100 transition-colors"
+              className="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-50 transition-colors"
               aria-expanded={userMenuOpen}
               aria-haspopup="true"
             >
@@ -161,7 +161,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                 </div>
               )}
               <div className="hidden lg:block text-left">
-                <div className="text-sm font-medium text-slate-700">
+                <div className="text-sm font-medium text-slate-900">
                   {profile?.full_name || 'Utilisateur'}
                 </div>
                 <div className="text-xs text-slate-500">{getRoleLabel()}</div>
@@ -170,8 +170,8 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
 
             {/* Dropdown Menu */}
             {userMenuOpen && (
-              <div className="absolute right-0 mt-2 w-72 bg-white rounded-lg shadow-lg border border-slate-200 py-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="px-4 py-3 border-b border-slate-200">
+              <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg border border-slate-200 py-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="px-4 py-3 border-b border-slate-100">
                   <div className="flex items-center space-x-3">
                     {profile?.avatar_url ? (
                       <img
@@ -201,7 +201,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                 <div className="py-2">
                   <Link
                     to="/profil"
-                    className="flex items-center space-x-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                    className="flex items-center space-x-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
                     onClick={() => setUserMenuOpen(false)}
                   >
                     <UserCircleIcon className="h-5 w-5 text-slate-400" />
@@ -209,10 +209,10 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                   </Link>
                 </div>
 
-                <div className="border-t border-slate-200 pt-2">
+                <div className="border-t border-slate-100 pt-2">
                   <button
                     onClick={handleSignOut}
-                    className="flex items-center space-x-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors w-full text-left"
+                    className="flex items-center space-x-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors w-full text-left"
                   >
                     <ArrowRightOnRectangleIcon className="h-5 w-5" />
                     <span>Se DÃ©connecter</span>
