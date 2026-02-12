@@ -125,11 +125,11 @@ const ChantierHeader: React.FC<ChantierHeaderProps> = ({
  <p className="text-sm text-gray-600">
  <span className="font-medium">Client :</span> {chantier.client}
  </p>
- <span className="text-gray-300">â¢</span>
+ <span className="text-gray-300">Ã¢ÂÂ¢</span>
  <p className="text-sm text-gray-600">
  <span className="font-medium">Phase :</span> {phaseLabels[chantier.phase] || chantier.phase}
  </p>
- <span className="text-gray-300">â¢</span>
+ <span className="text-gray-300">Ã¢ÂÂ¢</span>
  <span
  className={`px-3 py-1 rounded-full text-xs font-medium ${
  getStatutBadgeClass(chantier.statut)
