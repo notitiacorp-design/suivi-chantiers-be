@@ -145,7 +145,7 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
             className="block w-full sm:w-48 pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
           >
             <option value="all">Toutes les phases</option>
-            <option value="etude">ÃÂtude</option>
+            <option value="etude">Ãtude</option>
             <option value="preparation">PrÃ©paration</option>
             <option value="execution">ExÃ©cution</option>
             <option value="reception">RÃ©ception</option>
