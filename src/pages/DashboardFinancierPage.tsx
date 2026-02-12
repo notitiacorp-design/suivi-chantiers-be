@@ -102,7 +102,7 @@ const DashboardFinancierPage: React.FC = () => {
  .reduce((sum, f) => sum + f.montant_ht, 0);
 
  // Budget total initial
- const budgetTotalInitial = chantiers.reduce((sum, c) => sum + (c.(budget_initial || 0)), 0);
+ const budgetTotalInitial = chantiers.reduce((sum, c) => sum + (c.budget_initial || 0), 0);
 
  // Budget total avec avenants
  const totalAvenants = avenants.reduce((sum, a) => sum + (a.montant || 0), 0);
@@ -148,7 +148,7 @@ const DashboardFinancierPage: React.FC = () => {
  .filter(a => a.chantier_id === chantier.id)
  .reduce((sum, a) => sum + a.montant, 0);
  
- const budgetActuel = (chantier.(budget_initial || 0)) + avenantChantier;
+ const budgetActuel = (chantier.budget_initial || 0) + avenantChantier;
 
  const facturesChantier = factures.filter(
  f => f.chantier_id === chantier.id && f.statut !== 'avoir'
@@ -283,7 +283,7 @@ const DashboardFinancierPage: React.FC = () => {
  <KPICard
  title="CA Total"
  value={formatEuro(kpisGlobaux.caTotal)}
- subtitle={`${kpisGlobaux.(Number(tauxFacturation) || 0).toFixed(1)}% du budget`}
+ subtitle={`${(Number(kpisGlobaux.tauxFacturation) || 0).toFixed(1)}% du budget`}
  icon={<DollarSign className="w-5 h-5 text-green-600" />}
  color="#10B981"
  trend="up"
@@ -291,7 +291,7 @@ const DashboardFinancierPage: React.FC = () => {
  <KPICard
  title="Marge Globale"
  value={formatEuro(kpisGlobaux.margeGlobale)}
- subtitle={`${kpisGlobaux.(Number(margePourcentage) || 0).toFixed(1)}%`}
+ subtitle={`${(Number(kpisGlobaux.margePourcentage) || 0).toFixed(1)}%`}
  icon={<Percent className="w-5 h-5 text-blue-600" />}
  color="#3B82F6"
  trend={kpisGlobaux.margePourcentage > 15 ? 'up' : kpisGlobaux.margePourcentage < 5 ? 'down' : 'neutral'}
@@ -416,12 +416,12 @@ const DashboardFinancierPage: React.FC = () => {
  }`}>
  {formatEuro(chantier.marge)}
  </span>
- <span className="text-xs text-gray-500">{chantier.(Number(margePourcentage) || 0).toFixed(1)}%</span>
+ <span className="text-xs text-gray-500">{(Number(chantier.margePourcentage) || 0).toFixed(1)}%</span>
  </div>
  </td>
  <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
  <div className="flex items-center justify-end gap-2">
- <span className="text-gray-900 font-medium">{chantier.(Number(avancement) || 0).toFixed(0)}%</span>
+ <span className="text-gray-900 font-medium">{(Number(chantier.avancement) || 0).toFixed(0)}%</span>
  <div className="w-20 bg-gray-200 rounded-full h-2">
  <div
  className={`h-2 rounded-full ${
@@ -481,7 +481,7 @@ const DashboardFinancierPage: React.FC = () => {
  <div>
  <p className="text-sm font-medium text-red-900">Marge globale faible</p>
  <p className="text-sm text-red-700 mt-1">
- La marge globale est de {kpisGlobaux.(Number(margePourcentage) || 0).toFixed(1)}%. Il est recommandÃ© de rÃ©viser les coÃ»ts et d'optimiser les budgets.
+ La marge globale est de {(Number(kpisGlobaux.margePourcentage) || 0).toFixed(1)}%. Il est recommandÃ© de rÃ©viser les coÃ»ts et d'optimiser les budgets.
  </p>
  </div>
  </div>
@@ -507,7 +507,7 @@ const DashboardFinancierPage: React.FC = () => {
  <div>
  <p className="text-sm font-medium text-yellow-900">Taux de facturation Ã  amÃ©liorer</p>
  <p className="text-sm text-yellow-700 mt-1">
- Seulement {kpisGlobaux.(Number(tauxFacturation) || 0).toFixed(1)}% du budget est facturÃ©. Ãmettez des factures d'acompte.
+ Seulement {(Number(kpisGlobaux.tauxFacturation) || 0).toFixed(1)}% du budget est facturÃ©. Ãmettez des factures d'acompte.
  </p>
  </div>
  </div>
