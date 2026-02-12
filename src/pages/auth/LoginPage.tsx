@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuthStore } from '../../stores/authStore';
 import toast from 'react-hot-toast';
+import { EnvelopeIcon, LockClosedIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const LoginPage: React.FC = () => {
     if (!password) {
       newErrors.password = 'Le mot de passe est requis';
     } else if (password.length < 6) {
-      newErrors.password = 'Le mot de passe doit contenir au moins 6 caractÃ¨res';
+      newErrors.password = 'Le mot de passe doit contenir au moins 6 caract\u00e8res';
     }
 
     setErrors(newErrors);
@@ -68,7 +69,7 @@ const LoginPage: React.FC = () => {
           });
         }
 
-        toast.success('Connexion rÃ©ussie !');
+        toast.success('Connexion r\u00e9ussie !');
         navigate('/dashboard');
       }
     } catch (error: any) {
@@ -78,7 +79,7 @@ const LoginPage: React.FC = () => {
       } else {
         setErrors({ general: error.message || 'Erreur de connexion' });
       }
-      toast.error('Ãchec de la connexion');
+      toast.error('\u00c9chec de la connexion');
     } finally {
       setLoading(false);
     }
@@ -93,7 +94,7 @@ const LoginPage: React.FC = () => {
             <span className="text-white text-2xl font-bold">BE</span>
           </div>
           <h1 className="text-2xl font-bold text-slate-900">Suivi Chantiers BE</h1>
-          <p className="text-slate-500 mt-2">Connectez-vous Ã  votre espace</p>
+          <p className="text-slate-500 mt-2">Connectez-vous \u00e0 votre espace</p>
         </div>
 
         {/* Login Form */}
@@ -112,7 +113,7 @@ const LoginPage: React.FC = () => {
                 Adresse email
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">â</span>
+                <EnvelopeIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
                   id="email"
                   type="email"
@@ -137,13 +138,13 @@ const LoginPage: React.FC = () => {
                 Mot de passe
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">ð</span>
+                <LockClosedIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="â¢â¢â¢â¢â¢â¢â¢â¢"
+                  placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
                   className={`w-full pl-10 pr-4 py-2.5 rounded-lg border ${
                     errors.password ? 'border-red-300 focus:ring-red-500' : 'border-slate-300 focus:ring-blue-500'
                   } focus:outline-none focus:ring-2 focus:border-transparent text-sm transition`}
@@ -155,13 +156,13 @@ const LoginPage: React.FC = () => {
               )}
             </div>
 
-            {/* Forgot Password Link - FIXED: was /mot-de-passe-oublie, now /forgot-password */}
+            {/* Forgot Password Link */}
             <div className="flex justify-end">
               <Link
                 to="/forgot-password"
                 className="text-sm text-blue-600 hover:text-blue-800 transition"
               >
-                Mot de passe oubliÃ© ?
+                Mot de passe oubli\u00e9 ?
               </Link>
             </div>
 
@@ -182,7 +183,7 @@ const LoginPage: React.FC = () => {
               ) : (
                 <>
                   <span>Se connecter</span>
-                  <span>â</span>
+                  <ArrowRightIcon className="w-5 h-5" />
                 </>
               )}
             </button>
@@ -191,7 +192,7 @@ const LoginPage: React.FC = () => {
 
         {/* Footer */}
         <p className="text-center text-xs text-slate-400 mt-6">
-          Â© 2024 Notitia Corp â Bureau d'Ã©tudes
+          \u00a9 2024 Notitia Corp \u2014 Bureau d'\u00e9tudes
         </p>
       </div>
     </div>
