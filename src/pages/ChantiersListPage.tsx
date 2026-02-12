@@ -145,7 +145,7 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
             className="block w-full sm:w-48 pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
           >
             <option value="all">Toutes les phases</option>
-            <option value="etude">Ãtude</option>
+            <option value="etude">ÃÂtude</option>
             <option value="preparation">PrÃ©paration</option>
             <option value="execution">ExÃ©cution</option>
             <option value="reception">RÃ©ception</option>
@@ -155,11 +155,11 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
       </div>
 
       {filteredChantiers.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-lg shadow">
+        <div className="text-center py-12 bg-white rounded-xl shadow-sm">
           <p className="text-gray-500 text-lg">Aucun chantier trouvÃ©</p>
         </div>
       ) : (
-        <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+        <div className="bg-white shadow overflow-hidden sm:rounded-xl">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
