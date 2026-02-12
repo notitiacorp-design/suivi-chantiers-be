@@ -20,6 +20,8 @@ const FacturationPage = lazy(() => import('./pages/FacturationPage'));
 const FacturationGlobalePage = lazy(() => import('./pages/FacturationGlobalePage'));
 const DocumentsPage = lazy(() => import('./pages/DocumentsPage'));
 const NotificationsPage = lazy(() => import('./pages/NotificationsPage'));
+const EtudesTechniquesPage = lazy(() => import('./pages/EtudesTechniquesPage'));
+const RapportsHebdoPage = lazy(() => import('./pages/RapportsHebdoPage'));
 const JournalChantierPage = lazy(() => import('./pages/JournalChantierPage'));
 const PipelineCommercialPage = lazy(() => import('./pages/PipelineCommercialPage'));
 const AchatsPage = lazy(() => import('./pages/AchatsPage'));
@@ -81,7 +83,9 @@ const App: React.FC = () => {
                 <Route path="facturation" element={<FacturationPage />} />
                 <Route path="facturation-globale" element={<FacturationGlobalePage />} />
                 <Route path="documents" element={<DocumentsPage />} />
-                <Route path="notifications" element={<NotificationsPage />} />
+                <Route path="etudes-techniques" element={<EtudesTechniquesPage />} />
+                  <Route path="rapports-hebdo" element={<RapportsHebdoPage />} />
+                  <Route path="notifications" element={<NotificationsPage />} />
                 <Route path="journal-chantier" element={<JournalChantierPage />} />
                 <Route path="pipeline" element={<PipelineCommercialPage />} />
                 <Route path="achats" element={<AchatsPage />} />
