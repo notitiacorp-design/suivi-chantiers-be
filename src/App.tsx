@@ -32,39 +32,44 @@ const queryClient = new QueryClient({
 });
 
 const App: React.FC = () => {
-  const { user, setUser, setSession } = useAuthStore();
+  const { setUser, setSession } = useAuthStore();
 
   useEffect(() => {
-    // Safety timeout: if auth is not resolved within 5 seconds, force session to null
+    // Safety timeout: if auth is not resolved within 3 seconds, force ready state
     const timeout = setTimeout(() => {
       const currentSession = useAuthStore.getState().session;
       if (currentSession === undefined) {
-        console.warn('Auth timeout: forcing session to null after 5s');
+        console.warn('Auth timeout: forcing session to null after 3s');
         setSession(null);
       }
-    }, 5000);
+    }, 3000);
 
-    // VÃÂ©rifier la session au chargement
-    supabase.auth.getSession()
-      .then(({ data: { session } }) => {
-        setSession(session);
-        if (session?.user) {
-          loadUserProfile(session.user.id);
-        }
-      })
-      .catch((error) => {
-        console.error('Error getting session:', error);
+    // Get initial session - lightweight, no profile loading
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      clearTimeout(timeout);
+      
+      if (error) {
+        console.error('Auth session error:', error);
         setSession(null);
-      });
-
-    // ÃÂcouter les changements d'auth
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      if (session?.user) {
-        loadUserProfile(session.user.id);
+        return;
+      }
+      
+      if (session) {
+        setSession(session);
+        // User will be set by AuthContext, don't duplicate here
       } else {
+        setSession(null);
+      }
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('App.tsx auth event:', event);
+      
+      if (session) {
+        setSession(session);
+      } else {
+        setSession(null);
         setUser(null);
       }
     });
@@ -75,110 +80,53 @@ const App: React.FC = () => {
     };
   }, [setSession, setUser]);
 
-  useEffect(() => {
-    // VÃÂ©rifier les alertes ÃÂ  la connexion de l'utilisateur
-    if (user?.id) {
-      checkUserAlerts();
-    }
-  }, [user?.id]);
-
-  const loadUserProfile = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', userId)
-        .single();
-
-      if (error) throw error;
-      setUser(data);
-    } catch (error) {
-      console.error('Erreur chargement profil:', error);
-      toast.error('Erreur lors du chargement du profil');
-    }
-  };
-
-  const checkUserAlerts = async () => {
-    try {
-      const { data: alerts, error } = await supabase
-        .from('alertes')
-        .select('*, chantiers(nom)')
-        .eq('user_id', user?.id)
-        .eq('resolue', false)
-        .order('created_at', { ascending: false })
-        .limit(3);
-
-      if (error) throw error;
-
-      if (alerts && alerts.length > 0) {
-        alerts.forEach((alert: any) => {
-          const severity = alert.severite === 'critique' ? 'Ã°ÂÂÂ´' : alert.severite === 'importante' ? 'Ã°ÂÂÂ ' : 'Ã°ÂÂÂ¡';
-          toast(
-            `${severity} ${alert.chantiers?.nom || 'Chantier'}: ${alert.message}`,
-            {
-              duration: 6000,
-              icon: 'Ã¢ÂÂ Ã¯Â¸Â',
-            }
-          );
-        });
-      }
-    } catch (error) {
-      console.error('Erreur vÃÂ©rification alertes:', error);
-    }
-  };
-
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
       <AuthProvider>
-        <Suspense
-          fallback={
+        <BrowserRouter>
+          <Toaster 
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: '#363636',
+                color: '#fff',
+              },
+            }}
+          />
+          <Suspense fallback={
             <div className="flex items-center justify-center min-h-screen bg-slate-50">
               <LoadingSpinner size="lg" />
             </div>
-          }
-        >
-          <Routes>
-            {/* Routes publiques */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-
-            {/* Routes protÃÂ©gÃÂ©es */}
-            <Route
-              path="/"
-              element={
+          }>
+            <Routes>
+              {/* Routes publiques *}
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              
+              {/* Routes protégees *}
+              <Route path="/" element={
                 <ProtectedRoute>
                   <MainLayout />
                 </ProtectedRoute>
-              }
-            >
-              <Route index element={<Navigate to="/dashboard" replace />} />
-              <Route path="dashboard" element={<DashboardPage />} />
-              <Route path="mes-chantiers" element={<MesChantiersPage />} />
-              <Route path="tous-chantiers" element={<TousChantiersPage />} />
-              <Route path="tableau-charge" element={<TableauChargePage />} />
-              <Route path="facturation" element={<FacturationPage />} />
-              <Route path="documents" element={<DocumentsPage />} />
-              <Route path="notifications" element={<NotificationsPage />} />
-            </Route>
-
-            {/* Fallback */}
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </Routes>
-        </Suspense>
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: '#1e293b',
-              color: '#f8fafc',
-              borderRadius: '8px',
-            },
-          }}
-        />
+              }>
+                <Route index element={<Navigate to="/dashboard" replace />} />
+                <Route path="dashboard" element={<DashboardPage />} />
+                <Route path="mes-chantiers" element={<MesChantiersPage />} />
+                <Route path="tous-chantiers" element={
+                  <ProtectedRoute requiredRole="directeur">
+                    <TousChantiersPage />
+                  </ProtectedRoute>
+                } />
+                <Route path="tableau-charge" element={<TableauChargePage />} />
+                <Route path="facturation" element={<FacturationPage />} />
+                <Route path="documents" element={<DocumentsPage />} />
+                <Route path="notifications" element={<NotificationsPage />} />
+              </Route>
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
       </AuthProvider>
-      </BrowserRouter>
     </QueryClientProvider>
   );
 };
