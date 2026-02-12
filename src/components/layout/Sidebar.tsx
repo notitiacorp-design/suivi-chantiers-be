@@ -17,6 +17,8 @@ import {
   X,
   DollarSign,
   ChevronRight,
+  Microscope,
+  CalendarCheck,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -109,6 +111,13 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       ],
     },
     {
+        title: "Bureau d'Ã©tudes",
+        items: [
+          { to: '/etudes-techniques', icon: Microscope, label: 'Ãtudes techniques', show: true },
+          { to: '/rapports-hebdo', icon: CalendarCheck, label: 'Rapports hebdo', show: true },
+        ],
+      },
+      {
       title: 'Gestion',
       items: [
         { to: '/achats', icon: ShoppingCart, label: 'Gestion Achats', show: true },
