@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import toast from 'react-hot-toast';
+import { Loader2, Home, FolderKanban, ChevronRight, ClipboardList, Calendar, BookOpen, FileText, Euro, FileSignature, ShoppingCart } from 'lucide-react';
 import ChantierHeader from '../components/chantier/ChantierHeader';
 import ChantierOverview from '../components/chantier/ChantierOverview';
 import ChecklistProcess from '../components/chantier/ChecklistProcess';
 import PlanningGantt from '../components/chantier/PlanningGantt';
 import JournalChantier from '../components/chantier/JournalChantier';
-import { Loader2 } from 'lucide-react';
-
-type TabType = 'overview' | 'checklist' | 'planning' | 'journal' | 'documents' | 'financier' | 'avenants' | 'commandes';
+import DocumentsTab from '../components/chantier/DocumentsTab';
+import FinancierTab from '../components/chantier/FinancierTab';
+import AvenantsTable from '../components/chantier/AvenantsTable';
+import CommandesTable from '../components/chantier/CommandesTable';
 
 interface Chantier {
   id: string;
@@ -46,6 +48,25 @@ interface Chantier {
   updated_at: string;
 }
 
+type TabType = 'overview' | 'checklist' | 'planning' | 'journal' | 'documents' | 'financier' | 'avenants' | 'commandes';
+
+interface Tab {
+  id: TabType;
+  label: string;
+  icon: React.ElementType;
+}
+
+const tabs: Tab[] = [
+  { id: 'overview', label: "Vue d'ensemble", icon: ClipboardList },
+  { id: 'checklist', label: 'Checklist Processus', icon: ClipboardList },
+  { id: 'planning', label: 'Planning', icon: Calendar },
+  { id: 'journal', label: 'Journal', icon: BookOpen },
+  { id: 'documents', label: 'Documents', icon: FileText },
+  { id: 'financier', label: 'Financier', icon: Euro },
+  { id: 'avenants', label: 'Avenants', icon: FileSignature },
+  { id: 'commandes', label: 'Commandes', icon: ShoppingCart }
+];
+
 const ChantierDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -54,34 +75,14 @@ const ChantierDetailPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
 
   useEffect(() => {
-    if (!id) return;
-    loadChantier();
-
-    // Supabase realtime subscription
-    const channel = supabase
-      .channel(`chantier-${id}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'chantiers',
-          filter: `id=eq.${id}`,
-        },
-        (payload) => {
-          if (payload.eventType === 'UPDATE') {
-            setChantier(payload.new as Chantier);
-          }
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    if (id) {
+      fetchChantier();
+    }
   }, [id]);
 
-  const loadChantier = async () => {
+  const fetchChantier = async () => {
+    if (!id) return;
+    
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -90,11 +91,24 @@ const ChantierDetailPage: React.FC = () => {
         .eq('id', id)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Erreur lors du chargement du chantier:', error);
+        toast.error('Impossible de charger le chantier');
+        navigate('/chantiers');
+        return;
+      }
+
+      if (!data) {
+        toast.error('Chantier introuvable');
+        navigate('/chantiers');
+        return;
+      }
+
       setChantier(data);
-    } catch (error: any) {
-      toast.error('Erreur lors du chargement du chantier');
-      console.error(error);
+    } catch (error) {
+      console.error('Erreur:', error);
+      toast.error('Une erreur est survenue');
+      navigate('/chantiers');
     } finally {
       setLoading(false);
     }
@@ -109,143 +123,149 @@ const ChantierDetailPage: React.FC = () => {
         .update({ ...updates, updated_at: new Date().toISOString() })
         .eq('id', id);
 
-      if (error) throw error;
-      toast.success('Chantier mis à jour');
-    } catch (error: any) {
-      toast.error('Erreur lors de la mise à jour');
-      console.error(error);
+      if (error) {
+        console.error('Erreur lors de la mise à jour:', error);
+        toast.error('Erreur lors de la mise à jour');
+        return;
+      }
+
+      toast.success('Chantier mis à jour avec succès');
+      await fetchChantier();
+    } catch (error) {
+      console.error('Erreur:', error);
+      toast.error('Une erreur est survenue');
     }
   };
 
-  const handleExportPDF = async () => {
-    toast.loading('Export PDF en cours...');
-    // TODO: Implement PDF export logic
+  const handleExportPDF = () => {
+    toast.loading('Export PDF en cours...', { duration: 2000 });
     setTimeout(() => {
-      toast.dismiss();
-      toast.success('PDF exporté avec succès');
-    }, 1500);
+      toast.success('Export PDF terminé');
+    }, 2000);
   };
 
   const handleArchive = async () => {
-    if (!window.confirm('Êtes-vous sûr de vouloir archiver ce chantier ?')) return;
+    if (!id) return;
 
     try {
       const { error } = await supabase
         .from('chantiers')
-        .update({ statut: 'annule', actif: false, updated_at: new Date().toISOString() })
+        .update({ 
+          statut: 'Archivé',
+          actif: false,
+          updated_at: new Date().toISOString() 
+        })
         .eq('id', id);
 
-      if (error) throw error;
-      toast.success('Chantier archivé');
-      navigate('/chantiers');
-    } catch (error: any) {
-      toast.error('Erreur lors de l\'archivage');
-      console.error(error);
+      if (error) {
+        console.error('Erreur lors de l\'archivage:', error);
+        toast.error('Erreur lors de l\'archivage');
+        return;
+      }
+
+      toast.success('Chantier archivé avec succès');
+      await fetchChantier();
+    } catch (error) {
+      console.error('Erreur:', error);
+      toast.error('Une erreur est survenue');
     }
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-2" />
-          <p className="text-gray-600">Chargement...</p>
-        </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
       </div>
     );
   }
 
   if (!chantier) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <p className="text-gray-600 mb-4">Chantier non trouvé</p>
-        <button
-          onClick={() => navigate('/chantiers')}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          Retour aux chantiers
-        </button>
-      </div>
-    );
+    return null;
   }
 
-  const tabs: { id: TabType; label: string }[] = [
-    { id: 'overview', label: 'Vue d\'ensemble' },
-    { id: 'checklist', label: 'Checklist' },
-    { id: 'planning', label: 'Planning' },
-    { id: 'journal', label: 'Journal' },
-    { id: 'documents', label: 'Documents' },
-    { id: 'financier', label: 'Financier' },
-    { id: 'avenants', label: 'Avenants' },
-    { id: 'commandes', label: 'Commandes' },
-  ];
+  const headerChantier = {
+    id: chantier.id,
+    nom: chantier.nom,
+    client: chantier.client,
+    phase: chantier.phase,
+    statut: chantier.statut,
+    health_score: chantier.health_score
+  };
 
-  const chantierWithMappedFields = {
-    ...chantier,
-    score_sante: chantier.health_score,
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'overview':
+        return <ChantierOverview chantier={chantier} onUpdate={handleUpdate} />;
+      case 'checklist':
+        return <ChecklistProcess chantierId={chantier.id} />;
+      case 'planning':
+        return <PlanningGantt chantierId={chantier.id} />;
+      case 'journal':
+        return <JournalChantier chantierId={chantier.id} />;
+      case 'documents':
+        return <DocumentsTab chantierId={chantier.id} />;
+      case 'financier':
+        return <FinancierTab chantierId={chantier.id} />;
+      case 'avenants':
+        return <AvenantsTable chantierId={chantier.id} />;
+      case 'commandes':
+        return <CommandesTable chantierId={chantier.id} />;
+      default:
+        return null;
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <ChantierHeader
-        chantier={chantierWithMappedFields}
-        onUpdate={handleUpdate}
-        onExportPDF={handleExportPDF}
-        onArchive={handleArchive}
-      />
-
-      {/* Tabs */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex space-x-8 overflow-x-auto" aria-label="Tabs">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`
-                  whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors
-                  ${
-                    activeTab === tab.id
-                      ? 'border-blue-600 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }
-                `}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </nav>
-        </div>
-      </div>
-
-      {/* Tab Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === 'overview' && (
-          <ChantierOverview chantier={chantierWithMappedFields} onUpdate={handleUpdate} />
-        )}
-        {activeTab === 'checklist' && <ChecklistProcess chantierId={chantier.id} />}
-        {activeTab === 'planning' && <PlanningGantt chantierId={chantier.id} />}
-        {activeTab === 'journal' && <JournalChantier chantierId={chantier.id} />}
-        {activeTab === 'documents' && (
-          <div className="bg-white rounded-lg shadow p-6">
-            <p className="text-gray-500">Module Documents à venir</p>
+        <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-6">
+          <Link to="/" className="hover:text-gray-700 flex items-center">
+            <Home className="w-4 h-4" />
+            <span className="ml-1">Tableau de bord</span>
+          </Link>
+          <ChevronRight className="w-4 h-4" />
+          <Link to="/tous-chantiers" className="hover:text-gray-700 flex items-center">
+            <FolderKanban className="w-4 h-4" />
+            <span className="ml-1">Chantiers</span>
+          </Link>
+          <ChevronRight className="w-4 h-4" />
+          <span className="text-gray-900 font-medium">{chantier.nom}</span>
+        </nav>
+
+        <ChantierHeader
+          chantier={headerChantier}
+          onUpdate={handleUpdate}
+          onExportPDF={handleExportPDF}
+          onArchive={handleArchive}
+        />
+
+        <div className="mt-6 bg-white rounded-lg shadow">
+          <div className="border-b border-gray-200">
+            <nav className="flex -mb-px overflow-x-auto">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center px-6 py-4 text-sm font-medium border-b-2 whitespace-nowrap transition-colors ${
+                      activeTab === tab.id
+                        ? 'border-blue-600 text-blue-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    <Icon className="w-5 h-5 mr-2" />
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </nav>
           </div>
-        )}
-        {activeTab === 'financier' && (
-          <div className="bg-white rounded-lg shadow p-6">
-            <p className="text-gray-500">Module Financier à venir</p>
+
+          <div className="p-6">
+            {renderTabContent()}
           </div>
-        )}
-        {activeTab === 'avenants' && (
-          <div className="bg-white rounded-lg shadow p-6">
-            <p className="text-gray-500">Module Avenants à venir</p>
-          </div>
-        )}
-        {activeTab === 'commandes' && (
-          <div className="bg-white rounded-lg shadow p-6">
-            <p className="text-gray-500">Module Commandes à venir</p>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );

@@ -78,7 +78,7 @@ const App: React.FC = () => {
                 <Route path="dashboard-financier" element={<DashboardFinancierPage />} />
                 <Route path="mes-chantiers" element={<MesChantiersPage />} />
                 <Route path="tous-chantiers" element={<TousChantiersPage />} />
-                <Route path="chantier/:id" element={<ChantierDetailPage />} />
+                <Route path="chantiers/:id" element={<ChantierDetailPage />} />
                 <Route path="tableau-charge" element={<TableauChargePage />} />
                 <Route path="facturation" element={<FacturationPage />} />
                 <Route path="facturation-globale" element={<FacturationGlobalePage />} />

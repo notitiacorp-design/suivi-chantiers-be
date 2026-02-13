@@ -8,7 +8,7 @@ interface Chantier {
  client: string;
  phase: string;
  statut: string;
- score_sante: number;
+ health_score: number;
 }
 
 interface ChantierHeaderProps {
@@ -146,8 +146,8 @@ const ChantierHeader: React.FC<ChantierHeaderProps> = ({
  <div className="flex items-center space-x-3">
  <div className="text-right">
  <p className="text-xs text-gray-500">Score santé</p>
- <p className={`text-2xl font-bold ${getScoreColor(chantier.score_sante)}`}>
- {chantier.score_sante}%
+ <p className={`text-2xl font-bold ${getScoreColor(chantier.health_score)}`}>
+ {chantier.health_score}%
  </p>
  </div>
  <div className="relative w-16 h-16">
@@ -169,8 +169,8 @@ const ChantierHeader: React.FC<ChantierHeaderProps> = ({
  strokeWidth="6"
  fill="none"
  strokeDasharray={`${2 * Math.PI * 28}`}
- strokeDashoffset={`${2 * Math.PI * 28 * (1 - chantier.score_sante / 100)}`}
- className={getScoreColor(chantier.score_sante)}
+ strokeDashoffset={`${2 * Math.PI * 28 * (1 - chantier.health_score / 100)}`}
+ className={getScoreColor(chantier.health_score)}
  strokeLinecap="round"
  />
  </svg>
