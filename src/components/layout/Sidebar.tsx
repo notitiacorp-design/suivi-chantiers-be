@@ -89,7 +89,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   const navSections: NavSection[] = [
     {
-      title: 'G\u00e9n\u00e9ral',
+      title: 'Général',
       items: [
         { to: '/dashboard', icon: LayoutDashboard, label: 'Tableau de bord', show: true },
       ],
@@ -111,9 +111,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       ],
     },
     {
-        title: "Bureau d'\u00e9tudes",
+        title: "Bureau d'études",
         items: [
-          { to: '/etudes-techniques', icon: Microscope, label: '\u00c9tudes techniques', show: true },
+          { to: '/etudes-techniques', icon: Microscope, label: 'Études techniques', show: true },
           { to: '/rapports-hebdo', icon: CalendarCheck, label: 'Rapports hebdo', show: true },
         ],
       },
@@ -126,7 +126,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       ],
     },
     {
-      title: 'Syst\u00e8me',
+      title: 'Système',
       items: [
         { to: '/notifications', icon: Bell, label: 'Notifications', show: true, badge: unreadCount },
       ],
@@ -229,7 +229,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-blue-100 hover:bg-white/10 hover:text-white rounded-lg transition-colors"
           >
             <LogOut className="w-5 h-5" />
-            <span>{'D\u00e9connexion'}</span>
+            <span>{'Déconnexion'}</span>
           </button>
         </div>
       </aside>

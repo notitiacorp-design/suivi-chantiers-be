@@ -135,7 +135,7 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
  setHasMore(false);
  }
  } catch (error: any) {
- console.error('Erreur chargement plus d\'entr\u00e9es:', error);
+ console.error('Erreur chargement plus d\'entrées:', error);
  }
  };
 
@@ -181,13 +181,13 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
 
  if (error) throw error;
 
- toast.success('Entr\u00e9e ajout\u00e9e au journal');
+ toast.success('Entrée ajoutée au journal');
  setNewEntry({ type: 'Note', contenu: '' });
  setUploadedFile(null);
  setShowForm(false);
  } catch (error: any) {
- console.error('Erreur ajout entr\u00e9e:', error);
- toast.error('Erreur lors de l\'ajout de l\'entr\u00e9e');
+ console.error('Erreur ajout entrée:', error);
+ toast.error('Erreur lors de l\'ajout de l\'entrée');
  }
  };
 
@@ -229,7 +229,7 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
  const diffHours = Math.floor(diffMs / 3600000);
  const diffDays = Math.floor(diffMs / 86400000);
 
- if (diffMins < 1) return '\u00c0 l\'instant';
+ if (diffMins < 1) return 'À l\'instant';
  if (diffMins < 60) return `Il y a ${diffMins} min`;
  if (diffHours < 24) return `Il y a ${diffHours}h`;
  if (diffDays < 7) return `Il y a ${diffDays}j`;
@@ -252,7 +252,7 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
  className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
  >
  <Plus className="w-4 h-4" />
- <span>Nouvelle entr\u00e9e</span>
+ <span>Nouvelle entrée</span>
  </button>
  </div>
 
@@ -275,13 +275,13 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
  </div>
  </div>
 
- {/* Formulaire nouvelle entr\u00e9e */}
+ {/* Formulaire nouvelle entrée */}
  {showForm && (
  <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
  <form onSubmit={handleSubmit} className="space-y-4">
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-2">
- Type d'entr\u00e9e
+ Type d'entrée
  </label>
  <div className="grid grid-cols-4 gap-2">
  {['Note', 'Alerte', 'Modification', 'Photo'].map((type) => (
@@ -308,7 +308,7 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
  <textarea
  value={newEntry.contenu}
  onChange={(e) => setNewEntry({ ...newEntry, contenu: e.target.value })}
- placeholder="D\u00e9crivez l'\u00e9v\u00e9nement, la note, ou l'alerte..."
+ placeholder="Décrivez l'événement, la note, ou l'alerte..."
  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
  rows={4}
  required
@@ -317,7 +317,7 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
 
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-2">
- Pi\u00e8ce jointe (optionnel)
+ Pièce jointe (optionnel)
  </label>
  <div className="flex items-center space-x-2">
  <label className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 cursor-pointer transition-colors">
@@ -350,7 +350,7 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
  type="submit"
  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
  >
- Ajouter l'entr\u00e9e
+ Ajouter l'entrée
  </button>
  <button
  type="button"
@@ -398,7 +398,7 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
  <div>
  <p className="text-sm font-medium text-gray-900">{entry.type}</p>
  <p className="text-xs text-gray-500">
- {entry.auteur} \u2022 {formatDate(entry.created_at)}
+ {entry.auteur} • {formatDate(entry.created_at)}
  </p>
  </div>
  </div>
@@ -416,7 +416,7 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
  className="inline-flex items-center space-x-2 mt-3 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
  >
  <Upload className="w-4 h-4" />
- <span>{entry.piece_jointe_nom || 'Pi\u00e8ce jointe'}</span>
+ <span>{entry.piece_jointe_nom || 'Pièce jointe'}</span>
  </a>
  )}
  </div>
@@ -434,7 +434,7 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
  ) : (
  <div className="text-center py-12">
  <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-4" />
- <p className="text-gray-500">Aucune entr\u00e9e dans le journal</p>
+ <p className="text-gray-500">Aucune entrée dans le journal</p>
  <p className="text-sm text-gray-400 mt-1">
  Commencez par ajouter une note ou une alerte
  </p>

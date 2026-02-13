@@ -64,16 +64,16 @@ interface AchatFormData {
 const statusConfig = {
   brouillon: { label: 'Brouillon', color: 'bg-gray-100 text-gray-700 border-gray-200' },
   en_attente_validation: { label: 'En attente', color: 'bg-amber-100 text-amber-700 border-amber-200' },
-  validee: { label: 'Valid\u00e9e', color: 'bg-blue-100 text-blue-700 border-blue-200' },
-  commandee: { label: 'Command\u00e9e', color: 'bg-indigo-100 text-indigo-700 border-indigo-200' },
-  livree: { label: 'Livr\u00e9e', color: 'bg-green-100 text-green-700 border-green-200' },
-  recue: { label: 'Re\u00e7ue', color: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
-  annulee: { label: 'Annul\u00e9e', color: 'bg-red-100 text-red-700 border-red-200' },
+  validee: { label: 'Validée', color: 'bg-blue-100 text-blue-700 border-blue-200' },
+  commandee: { label: 'Commandée', color: 'bg-indigo-100 text-indigo-700 border-indigo-200' },
+  livree: { label: 'Livrée', color: 'bg-green-100 text-green-700 border-green-200' },
+  recue: { label: 'Reçue', color: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
+  annulee: { label: 'Annulée', color: 'bg-red-100 text-red-700 border-red-200' },
 };
 
 const categorieLabels = {
-  materiel: 'Mat\u00e9riel',
-  equipement: '\u00c9quipement',
+  materiel: 'Matériel',
+  equipement: 'Équipement',
   sous_traitance: 'Sous-traitance',
   divers: 'Divers',
 };
@@ -291,7 +291,7 @@ const AchatsPage: React.FC = () => {
   };
 
   const handleDelete = () => {
-    if (editingAchat && window.confirm('\u00cates-vous s\u00fbr de vouloir supprimer ce bon de commande ?')) {
+    if (editingAchat && window.confirm('Êtes-vous sûr de vouloir supprimer ce bon de commande ?')) {
       deleteAchatMutation.mutate(editingAchat.id);
     }
   };
@@ -346,7 +346,7 @@ const AchatsPage: React.FC = () => {
                 <Euro className="w-6 h-6 text-indigo-600" />
               </div>
             </div>
-            <h3 className="text-sm font-medium text-slate-600 mb-1">Budget engag\u00e9</h3>
+            <h3 className="text-sm font-medium text-slate-600 mb-1">Budget engagé</h3>
             <p className="text-2xl font-bold text-slate-900">{formatCurrency(kpis.budgetEngage)}</p>
           </div>
 
@@ -429,14 +429,14 @@ const AchatsPage: React.FC = () => {
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">
                 <Tag className="w-4 h-4 inline mr-1" />
-                Cat\u00e9gorie
+                Catégorie
               </label>
               <select
                 value={selectedCategorie}
                 onChange={(e) => setSelectedCategorie(e.target.value)}
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
-                <option value="all">Toutes les cat\u00e9gories</option>
+                <option value="all">Toutes les catégories</option>
                 {Object.entries(categorieLabels).map(([key, label]) => (
                   <option key={key} value={key}>
                     {label}
@@ -473,7 +473,7 @@ const AchatsPage: React.FC = () => {
               <thead className="bg-slate-50 border-b border-slate-200">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    N\u00b0 Bon
+                    N° Bon
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
                     Fournisseur
@@ -485,7 +485,7 @@ const AchatsPage: React.FC = () => {
                     Chantier
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    Cat\u00e9gorie
+                    Catégorie
                   </th>
                   <th className="px-4 py-3 text-right text-xs font-semibold text-slate-700 uppercase tracking-wider">
                     Montant HT
@@ -500,10 +500,10 @@ const AchatsPage: React.FC = () => {
                     Date commande
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    Livraison pr\u00e9vue
+                    Livraison prévue
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    Livraison r\u00e9elle
+                    Livraison réelle
                   </th>
                 </tr>
               </thead>
@@ -517,7 +517,7 @@ const AchatsPage: React.FC = () => {
                 ) : filteredAchats.length === 0 ? (
                   <tr>
                     <td colSpan={11} className="px-4 py-8 text-center text-slate-500">
-                      Aucun achat trouv\u00e9
+                      Aucun achat trouvé
                     </td>
                   </tr>
                 ) : (
@@ -594,7 +594,7 @@ const AchatsPage: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2">
                   <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Num\u00e9ro de bon
+                    Numéro de bon
                   </label>
                   <input
                     type="text"
@@ -615,7 +615,7 @@ const AchatsPage: React.FC = () => {
                     className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     required
                   >
-                    <option value="">S\u00e9lectionner un chantier</option>
+                    <option value="">Sélectionner un chantier</option>
                     {chantiers.map((chantier) => (
                       <option key={chantier.id} value={chantier.id}>
                         {chantier.nom}
@@ -652,7 +652,7 @@ const AchatsPage: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Cat\u00e9gorie *
+                    Catégorie *
                   </label>
                   <select
                     value={formData.categorie}
@@ -698,7 +698,7 @@ const AchatsPage: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Montant HT (\u20ac) *
+                    Montant HT (€) *
                   </label>
                   <input
                     type="number"
@@ -714,7 +714,7 @@ const AchatsPage: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Montant TTC (\u20ac)
+                    Montant TTC (€)
                   </label>
                   <input
                     type="text"
@@ -726,7 +726,7 @@ const AchatsPage: React.FC = () => {
 
                 <div className="col-span-2">
                   <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Date de livraison pr\u00e9vue
+                    Date de livraison prévue
                   </label>
                   <input
                     type="date"
@@ -756,7 +756,7 @@ const AchatsPage: React.FC = () => {
                   className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Save className="w-4 h-4" />
-                  {editingAchat ? 'Modifier' : 'Cr\u00e9er'}
+                  {editingAchat ? 'Modifier' : 'Créer'}
                 </button>
               </div>
             </form>
@@ -769,7 +769,7 @@ const AchatsPage: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-900">D\u00e9tails du bon de commande</h2>
+              <h2 className="text-xl font-bold text-slate-900">Détails du bon de commande</h2>
               <button
                 onClick={() => {
                   setShowDetailModal(false);
@@ -784,7 +784,7 @@ const AchatsPage: React.FC = () => {
             <div className="p-6 space-y-6">
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="text-sm font-medium text-slate-500">Num\u00e9ro de bon</label>
+                  <label className="text-sm font-medium text-slate-500">Numéro de bon</label>
                   <p className="text-lg font-semibold text-slate-900 mt-1">
                     {editingAchat.numero_bon}
                   </p>
@@ -819,7 +819,7 @@ const AchatsPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-slate-500">Cat\u00e9gorie</label>
+                  <label className="text-sm font-medium text-slate-500">Catégorie</label>
                   <p className="text-base text-slate-900 mt-1">
                     {categorieLabels[editingAchat.categorie]}
                   </p>
@@ -856,21 +856,21 @@ const AchatsPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-slate-500">Livraison pr\u00e9vue</label>
+                  <label className="text-sm font-medium text-slate-500">Livraison prévue</label>
                   <p className="text-base text-slate-900 mt-1">
                     {formatDate(editingAchat.date_livraison_prevue)}
                   </p>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-slate-500">Livraison r\u00e9elle</label>
+                  <label className="text-sm font-medium text-slate-500">Livraison réelle</label>
                   <p className="text-base text-slate-900 mt-1">
                     {formatDate(editingAchat.date_livraison_reelle)}
                   </p>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-slate-500">Date de cr\u00e9ation</label>
+                  <label className="text-sm font-medium text-slate-500">Date de création</label>
                   <p className="text-base text-slate-900 mt-1">
                     {formatDate(editingAchat.created_at)}
                   </p>

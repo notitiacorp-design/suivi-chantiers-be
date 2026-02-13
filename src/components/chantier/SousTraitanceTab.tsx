@@ -85,9 +85,9 @@ export default function SousTraitanceTab({ chantierId }: SousTraitanceTabProps) 
  suspendu: 'bg-red-100 text-red-800',
  };
  const labels = {
- prevu: 'Pr\u00e9vu',
+ prevu: 'Prévu',
  en_cours: 'En cours',
- termine: 'Termin\u00e9',
+ termine: 'Terminé',
  suspendu: 'Suspendu',
  };
  return (
@@ -103,7 +103,7 @@ export default function SousTraitanceTab({ chantierId }: SousTraitanceTabProps) 
  };
 
  const handleDelete = (id: string) => {
- if (confirm('\u00cates-vous s\u00fbr de vouloir supprimer ce sous-traitant ?')) {
+ if (confirm('Êtes-vous sûr de vouloir supprimer ce sous-traitant ?')) {
  deleteMutation.mutate(id);
  }
  };
@@ -121,7 +121,7 @@ export default function SousTraitanceTab({ chantierId }: SousTraitanceTabProps) 
  <div className="bg-white rounded-lg shadow p-6">
  <div className="text-sm text-gray-600 mb-1">Montant Total Contrats</div>
  <div className="text-2xl font-bold text-blue-600">
- {totalMontant.toLocaleString('fr-FR')} \u20ac
+ {totalMontant.toLocaleString('fr-FR')} €
  </div>
  </div>
  <div className="bg-white rounded-lg shadow p-6">
@@ -134,7 +134,7 @@ export default function SousTraitanceTab({ chantierId }: SousTraitanceTabProps) 
  </div>
  </div>
  <div className="bg-white rounded-lg shadow p-6">
- <div className="text-sm text-gray-600 mb-1">Sans D\u00e9claration ST</div>
+ <div className="text-sm text-gray-600 mb-1">Sans Déclaration ST</div>
  <div className={`text-2xl font-bold flex items-center gap-2 ${
  sansDeclaration.length > 0 ? 'text-red-600' : 'text-green-600'
  }`}>
@@ -154,12 +154,12 @@ export default function SousTraitanceTab({ chantierId }: SousTraitanceTabProps) 
  <div className="flex items-center gap-2 mb-2">
  <AlertCircle className="h-5 w-5 text-orange-600" />
  <h3 className="font-semibold text-orange-900">
- {sansDeclaration.length} sous-traitant(s) sans d\u00e9claration ST
+ {sansDeclaration.length} sous-traitant(s) sans déclaration ST
  </h3>
  </div>
  <ul className="space-y-1 text-sm text-orange-800">
  {sansDeclaration.map(st => (
- <li key={st.id}>\u2022 {st.nom} - {st.metier}</li>
+ <li key={st.id}>• {st.nom} - {st.metier}</li>
  ))}
  </ul>
  </div>
@@ -189,7 +189,7 @@ export default function SousTraitanceTab({ chantierId }: SousTraitanceTabProps) 
  ) : sousTraitants.length === 0 ? (
  <div className="text-center py-12">
  <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
- <p className="text-gray-600">Aucun sous-traitant enregistr\u00e9</p>
+ <p className="text-gray-600">Aucun sous-traitant enregistré</p>
  </div>
  ) : (
  <div className="overflow-x-auto">
@@ -200,13 +200,13 @@ export default function SousTraitanceTab({ chantierId }: SousTraitanceTabProps) 
  Nom / Contact
  </th>
  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
- M\u00e9tier
+ Métier
  </th>
  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
  Contrat
  </th>
  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
- D\u00e9claration ST
+ Déclaration ST
  </th>
  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
  Montant
@@ -272,7 +272,7 @@ export default function SousTraitanceTab({ chantierId }: SousTraitanceTabProps) 
  )}
  </td>
  <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
- {st.montant_contrat.toLocaleString('fr-FR')} \u20ac
+ {st.montant_contrat.toLocaleString('fr-FR')} €
  </td>
  <td className="px-6 py-4 whitespace-nowrap">
  <div className="flex items-center gap-2">
@@ -424,9 +424,9 @@ function SousTraitantForm({ chantierId, sousTraitant, onClose, onSuccess }: Sous
  </h3>
 
  <form onSubmit={handleSubmit} className="space-y-6">
- {/* Informations g\u00e9n\u00e9rales */}
+ {/* Informations générales */}
  <div>
- <h4 className="text-sm font-semibold text-gray-900 mb-3">Informations g\u00e9n\u00e9rales</h4>
+ <h4 className="text-sm font-semibold text-gray-900 mb-3">Informations générales</h4>
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -444,7 +444,7 @@ function SousTraitantForm({ chantierId, sousTraitant, onClose, onSuccess }: Sous
 
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- M\u00e9tier *
+ Métier *
  </label>
  <input
  type="text"
@@ -452,7 +452,7 @@ function SousTraitantForm({ chantierId, sousTraitant, onClose, onSuccess }: Sous
  value={formData.metier}
  onChange={(e) => setFormData({ ...formData, metier: e.target.value })}
  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
- placeholder="Ex: Plomberie, \u00c9lectricit\u00e9..."
+ placeholder="Ex: Plomberie, Électricité..."
  />
  </div>
  </div>
@@ -464,7 +464,7 @@ function SousTraitantForm({ chantierId, sousTraitant, onClose, onSuccess }: Sous
  <div className="grid grid-cols-3 gap-4">
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- N\u00b0 Contrat *
+ N° Contrat *
  </label>
  <input
  type="text"
@@ -478,7 +478,7 @@ function SousTraitantForm({ chantierId, sousTraitant, onClose, onSuccess }: Sous
 
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Montant Contrat (\u20ac) *
+ Montant Contrat (€) *
  </label>
  <input
  type="number"
@@ -500,18 +500,18 @@ function SousTraitantForm({ chantierId, sousTraitant, onClose, onSuccess }: Sous
  onChange={(e) => setFormData({ ...formData, statut: e.target.value as SousTraitantStatut })}
  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
  >
- <option value="prevu">Pr\u00e9vu</option>
+ <option value="prevu">Prévu</option>
  <option value="en_cours">En cours</option>
- <option value="termine">Termin\u00e9</option>
+ <option value="termine">Terminé</option>
  <option value="suspendu">Suspendu</option>
  </select>
  </div>
  </div>
  </div>
 
- {/* D\u00e9claration ST */}
+ {/* Déclaration ST */}
  <div>
- <h4 className="text-sm font-semibold text-gray-900 mb-3">D\u00e9claration Sous-Traitance</h4>
+ <h4 className="text-sm font-semibold text-gray-900 mb-3">Déclaration Sous-Traitance</h4>
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label className="flex items-center gap-2">
@@ -522,7 +522,7 @@ function SousTraitantForm({ chantierId, sousTraitant, onClose, onSuccess }: Sous
  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
  />
  <span className="text-sm font-medium text-gray-700">
- D\u00e9claration ST effectu\u00e9e
+ Déclaration ST effectuée
  </span>
  </label>
  </div>
@@ -530,7 +530,7 @@ function SousTraitantForm({ chantierId, sousTraitant, onClose, onSuccess }: Sous
  {formData.declaration_st && (
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Date D\u00e9claration
+ Date Déclaration
  </label>
  <input
  type="date"
@@ -549,7 +549,7 @@ function SousTraitantForm({ chantierId, sousTraitant, onClose, onSuccess }: Sous
  <div className="grid grid-cols-3 gap-4">
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Date D\u00e9but *
+ Date Début *
  </label>
  <input
  type="date"
@@ -562,7 +562,7 @@ function SousTraitantForm({ chantierId, sousTraitant, onClose, onSuccess }: Sous
 
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Date Fin Pr\u00e9vue *
+ Date Fin Prévue *
  </label>
  <input
  type="date"
@@ -575,7 +575,7 @@ function SousTraitantForm({ chantierId, sousTraitant, onClose, onSuccess }: Sous
 
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Date Fin R\u00e9elle
+ Date Fin Réelle
  </label>
  <input
  type="date"
@@ -608,7 +608,7 @@ function SousTraitantForm({ chantierId, sousTraitant, onClose, onSuccess }: Sous
 
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Heures Insertion Pr\u00e9vues *
+ Heures Insertion Prévues *
  </label>
  <input
  type="number"
@@ -622,7 +622,7 @@ function SousTraitantForm({ chantierId, sousTraitant, onClose, onSuccess }: Sous
 
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Heures Insertion R\u00e9alis\u00e9es *
+ Heures Insertion Réalisées *
  </label>
  <input
  type="number"
@@ -668,7 +668,7 @@ function SousTraitantForm({ chantierId, sousTraitant, onClose, onSuccess }: Sous
 
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- T\u00e9l\u00e9phone
+ Téléphone
  </label>
  <input
  type="tel"
@@ -708,7 +708,7 @@ function SousTraitantForm({ chantierId, sousTraitant, onClose, onSuccess }: Sous
  disabled={mutation.isPending}
  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
  >
- {mutation.isPending ? 'Enregistrement...' : sousTraitant ? 'Modifier' : 'Cr\u00e9er'}
+ {mutation.isPending ? 'Enregistrement...' : sousTraitant ? 'Modifier' : 'Créer'}
  </button>
  </div>
  </form>

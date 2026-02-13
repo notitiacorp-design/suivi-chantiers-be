@@ -7,7 +7,7 @@ interface Chantier {
  id: string;
  nom: string;
  client: string;
- phase: '\u00c9tudes' | 'Ex\u00e9cution' | 'OPR';
+ phase: 'Études' | 'Exécution' | 'OPR';
  score_sante: number;
  taux_avancement: number;
  ca_responsable: string;
@@ -31,9 +31,9 @@ const ChantierMiniCard: React.FC<ChantierMiniCardProps> = ({ chantier }) => {
 
  const getPhaseColor = (phase: string): string => {
  switch (phase) {
- case '\u00c9tudes':
+ case 'Études':
  return 'bg-blue-100 text-blue-800';
- case 'Ex\u00e9cution':
+ case 'Exécution':
  return 'bg-purple-100 text-purple-800';
  case 'OPR':
  return 'bg-green-100 text-green-800';

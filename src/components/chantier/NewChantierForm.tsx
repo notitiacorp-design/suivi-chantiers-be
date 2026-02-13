@@ -9,7 +9,7 @@ interface NewChantierFormProps {
 }
 
 interface FormData {
- // \u00c9tape 1: Infos g\u00e9n\u00e9rales
+ // Étape 1: Infos générales
  nom: string;
  client_id: string;
  adresse: string;
@@ -19,54 +19,54 @@ interface FormData {
  phase: string;
  statut: string;
 
- // \u00c9tape 2: \u00c9tudes
+ // Étape 2: Études
  type_etude: string;
  surface_shon: number;
  nombre_logements: number;
  heures_estimees: number;
 
- // \u00c9tape 3: Admin
+ // Étape 3: Admin
  charge_affaire_id: string;
  nb_plans_estimes: number;
  delai_global_jours: number;
 
- // \u00c9tape 4: Budget
+ // Étape 4: Budget
  budget_total: number;
  honoraires_be: number;
  taux_marge: number;
 }
 
 const TACHES_PROCESS = [
- { ordre: 1, nom: 'R\u00e9ception commande client', phase: 'APS', duree_estimee: 1, obligatoire: true },
+ { ordre: 1, nom: 'Réception commande client', phase: 'APS', duree_estimee: 1, obligatoire: true },
  { ordre: 2, nom: 'Analyse cahier des charges', phase: 'APS', duree_estimee: 2, obligatoire: true },
  { ordre: 3, nom: 'Visite site', phase: 'APS', duree_estimee: 0.5, obligatoire: true },
- { ordre: 4, nom: 'Collecte donn\u00e9es techniques', phase: 'APS', duree_estimee: 3, obligatoire: true },
+ { ordre: 4, nom: 'Collecte données techniques', phase: 'APS', duree_estimee: 3, obligatoire: true },
  { ordre: 5, nom: 'Esquisse structure', phase: 'APS', duree_estimee: 5, obligatoire: true },
- { ordre: 6, nom: 'Pr\u00e9dimensionnement', phase: 'APS', duree_estimee: 4, obligatoire: true },
- { ordre: 7, nom: 'Note de calcul pr\u00e9liminaire', phase: 'APS', duree_estimee: 6, obligatoire: true },
+ { ordre: 6, nom: 'Prédimensionnement', phase: 'APS', duree_estimee: 4, obligatoire: true },
+ { ordre: 7, nom: 'Note de calcul préliminaire', phase: 'APS', duree_estimee: 6, obligatoire: true },
  { ordre: 8, nom: 'Validation APS client', phase: 'APS', duree_estimee: 1, obligatoire: true },
  { ordre: 9, nom: 'Plans structure APD', phase: 'APD', duree_estimee: 10, obligatoire: true },
- { ordre: 10, nom: 'Calculs d\u00e9taill\u00e9s fondations', phase: 'APD', duree_estimee: 8, obligatoire: true },
+ { ordre: 10, nom: 'Calculs détaillés fondations', phase: 'APD', duree_estimee: 8, obligatoire: true },
  { ordre: 11, nom: 'Calculs poteaux/poutres', phase: 'APD', duree_estimee: 8, obligatoire: true },
  { ordre: 12, nom: 'Dimensionnement planchers', phase: 'APD', duree_estimee: 6, obligatoire: true },
- { ordre: 13, nom: 'Note hypoth\u00e8ses sismiques', phase: 'APD', duree_estimee: 4, obligatoire: true },
+ { ordre: 13, nom: 'Note hypothèses sismiques', phase: 'APD', duree_estimee: 4, obligatoire: true },
  { ordre: 14, nom: 'Validation APD client', phase: 'APD', duree_estimee: 1, obligatoire: true },
  { ordre: 15, nom: 'Plans coffrage', phase: 'PRO', duree_estimee: 12, obligatoire: true },
  { ordre: 16, nom: 'Plans ferraillage', phase: 'PRO', duree_estimee: 15, obligatoire: true },
  { ordre: 17, nom: 'Nomenclature aciers', phase: 'PRO', duree_estimee: 5, obligatoire: true },
  { ordre: 18, nom: 'CCTP structure', phase: 'PRO', duree_estimee: 6, obligatoire: true },
- { ordre: 19, nom: 'M\u00e9tr\u00e9s quantitatifs', phase: 'PRO', duree_estimee: 4, obligatoire: true },
+ { ordre: 19, nom: 'Métrés quantitatifs', phase: 'PRO', duree_estimee: 4, obligatoire: true },
  { ordre: 20, nom: 'Validation PRO architecte', phase: 'PRO', duree_estimee: 1, obligatoire: true },
- { ordre: 21, nom: 'R\u00e9ponses questions entreprises', phase: 'DCE', duree_estimee: 3, obligatoire: false },
+ { ordre: 21, nom: 'Réponses questions entreprises', phase: 'DCE', duree_estimee: 3, obligatoire: false },
  { ordre: 22, nom: 'Analyse variantes', phase: 'DCE', duree_estimee: 4, obligatoire: false },
  { ordre: 23, nom: 'Visa plans architecte', phase: 'VISA', duree_estimee: 2, obligatoire: false },
- { ordre: 24, nom: 'Visa plans \u00e9lectricit\u00e9', phase: 'VISA', duree_estimee: 1, obligatoire: false },
+ { ordre: 24, nom: 'Visa plans électricité', phase: 'VISA', duree_estimee: 1, obligatoire: false },
  { ordre: 25, nom: 'Visa plans plomberie', phase: 'VISA', duree_estimee: 1, obligatoire: false },
- { ordre: 26, nom: 'Plans d\'ex\u00e9cution ouvrages', phase: 'DET', duree_estimee: 10, obligatoire: false },
+ { ordre: 26, nom: 'Plans d\'exécution ouvrages', phase: 'DET', duree_estimee: 10, obligatoire: false },
  { ordre: 27, nom: 'Visite chantier fondations', phase: 'AOR', duree_estimee: 0.5, obligatoire: false },
  { ordre: 28, nom: 'Visite chantier structure', phase: 'AOR', duree_estimee: 0.5, obligatoire: false },
- { ordre: 29, nom: 'Validation r\u00e9ception travaux', phase: 'AOR', duree_estimee: 1, obligatoire: false },
- { ordre: 30, nom: 'DOE - Dossier Ouvrages Ex\u00e9cut\u00e9s', phase: 'AOR', duree_estimee: 4, obligatoire: true },
+ { ordre: 29, nom: 'Validation réception travaux', phase: 'AOR', duree_estimee: 1, obligatoire: false },
+ { ordre: 30, nom: 'DOE - Dossier Ouvrages Exécutés', phase: 'AOR', duree_estimee: 4, obligatoire: true },
 ];
 
 const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
@@ -94,7 +94,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
 
  const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
 
- // R\u00e9cup\u00e9ration des clients
+ // Récupération des clients
  const { data: clients = [] } = useQuery({
  queryKey: ['clients'],
  queryFn: async () => {
@@ -104,7 +104,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  },
  });
 
- // R\u00e9cup\u00e9ration des charg\u00e9s d'affaires
+ // Récupération des chargés d'affaires
  const { data: chargesAffaires = [] } = useQuery({
  queryKey: ['charges-affaires-form'],
  queryFn: async () => {
@@ -118,12 +118,12 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  },
  });
 
- // Mutation de cr\u00e9ation
+ // Mutation de création
  const createChantierMutation = useMutation({
  mutationFn: async (data: FormData) => {
  const chantierId = uuidv4();
 
- // 1. Cr\u00e9er le chantier
+ // 1. Créer le chantier
  const { error: chantierError } = await supabase.from('chantiers').insert({
  id: chantierId,
  nom: data.nom,
@@ -152,7 +152,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
 
  if (chantierError) throw chantierError;
 
- // 2. Cr\u00e9er les 30 t\u00e2ches process
+ // 2. Créer les 30 tâches process
  const taches = TACHES_PROCESS.map((t) => ({
  id: uuidv4(),
  chantier_id: chantierId,
@@ -168,13 +168,13 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  const { error: tachesError } = await supabase.from('taches').insert(taches);
  if (tachesError) throw tachesError;
 
- // 3. Cr\u00e9er \u00e9v\u00e9nement timeline
+ // 3. Créer événement timeline
  const { error: timelineError } = await supabase.from('timeline_events').insert({
  id: uuidv4(),
  chantier_id: chantierId,
  type: 'creation',
- titre: 'Chantier cr\u00e9\u00e9',
- description: `Le chantier ${data.nom} a \u00e9t\u00e9 cr\u00e9\u00e9 avec succ\u00e8s`,
+ titre: 'Chantier créé',
+ description: `Le chantier ${data.nom} a été créé avec succès`,
  date: new Date().toISOString(),
  user_id: data.charge_affaire_id,
  });
@@ -184,12 +184,12 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  return chantierId;
  },
  onSuccess: () => {
- alert('Chantier cr\u00e9\u00e9 avec succ\u00e8s !');
+ alert('Chantier créé avec succès !');
  onClose();
  },
  onError: (error) => {
- console.error('Erreur cr\u00e9ation chantier:', error);
- alert('Erreur lors de la cr\u00e9ation du chantier');
+ console.error('Erreur création chantier:', error);
+ alert('Erreur lors de la création du chantier');
  },
  });
 
@@ -199,24 +199,24 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  if (step === 1) {
  if (!formData.nom.trim()) newErrors.nom = 'Le nom est requis';
  if (!formData.client_id) newErrors.client_id = 'Le client est requis';
- if (!formData.date_debut) newErrors.date_debut = 'La date de d\u00e9but est requise';
- if (!formData.date_fin_prevue) newErrors.date_fin_prevue = 'La date de fin pr\u00e9vue est requise';
+ if (!formData.date_debut) newErrors.date_debut = 'La date de début est requise';
+ if (!formData.date_fin_prevue) newErrors.date_fin_prevue = 'La date de fin prévue est requise';
  }
 
  if (step === 2) {
- if (formData.surface_shon <= 0) newErrors.surface_shon = 'La surface doit \u00eatre positive';
- if (formData.heures_estimees <= 0) newErrors.heures_estimees = 'Les heures estim\u00e9es doivent \u00eatre positives';
+ if (formData.surface_shon <= 0) newErrors.surface_shon = 'La surface doit être positive';
+ if (formData.heures_estimees <= 0) newErrors.heures_estimees = 'Les heures estimées doivent être positives';
  }
 
  if (step === 3) {
- if (!formData.charge_affaire_id) newErrors.charge_affaire_id = 'Le charg\u00e9 d\'affaires est requis';
- if (formData.nb_plans_estimes <= 0) newErrors.nb_plans_estimes = 'Le nombre de plans doit \u00eatre positif';
- if (formData.delai_global_jours <= 0) newErrors.delai_global_jours = 'Le d\u00e9lai doit \u00eatre positif';
+ if (!formData.charge_affaire_id) newErrors.charge_affaire_id = 'Le chargé d\'affaires est requis';
+ if (formData.nb_plans_estimes <= 0) newErrors.nb_plans_estimes = 'Le nombre de plans doit être positif';
+ if (formData.delai_global_jours <= 0) newErrors.delai_global_jours = 'Le délai doit être positif';
  }
 
  if (step === 4) {
- if (formData.budget_total <= 0) newErrors.budget_total = 'Le budget doit \u00eatre positif';
- if (formData.honoraires_be <= 0) newErrors.honoraires_be = 'Les honoraires doivent \u00eatre positifs';
+ if (formData.budget_total <= 0) newErrors.budget_total = 'Le budget doit être positif';
+ if (formData.honoraires_be <= 0) newErrors.honoraires_be = 'Les honoraires doivent être positifs';
  }
 
  setErrors(newErrors);
@@ -247,8 +247,8 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  };
 
  const steps = [
- { number: 1, title: 'Infos g\u00e9n\u00e9rales', icon: Building },
- { number: 2, title: '\u00c9tudes', icon: FileText },
+ { number: 1, title: 'Infos générales', icon: Building },
+ { number: 2, title: 'Études', icon: FileText },
  { number: 3, title: 'Administration', icon: Users },
  { number: 4, title: 'Budget', icon: DollarSign },
  ];
@@ -256,7 +256,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  return (
  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
  <div className="bg-white rounded-lg shadow-2xl max-w-4xl w-full my-8">
- {/* En-t\u00eate */}
+ {/* En-tête */}
  <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-4 flex items-center justify-between rounded-t-lg">
  <h2 className="text-2xl font-bold">Nouveau Chantier</h2>
  <button
@@ -267,7 +267,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  </button>
  </div>
 
- {/* Indicateur d'\u00e9tapes */}
+ {/* Indicateur d'étapes */}
  <div className="px-6 py-4 bg-gray-50 border-b">
  <div className="flex items-center justify-between">
  {steps.map((step, idx) => (
@@ -308,7 +308,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
 
  {/* Contenu du formulaire */}
  <div className="px-6 py-6 max-h-[60vh] overflow-y-auto">
- {/* \u00c9tape 1: Infos g\u00e9n\u00e9rales */}
+ {/* Étape 1: Infos générales */}
  {currentStep === 1 && (
  <div className="space-y-4">
  <div>
@@ -322,7 +322,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  className={`w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
  errors.nom ? 'border-red-500' : 'border-gray-300'
  }`}
- placeholder="Ex: R\u00e9sidence Les Jardins"
+ placeholder="Ex: Résidence Les Jardins"
  />
  {errors.nom && <p className="text-red-500 text-xs mt-1">{errors.nom}</p>}
  </div>
@@ -336,7 +336,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  errors.client_id ? 'border-red-500' : 'border-gray-300'
  }`}
  >
- <option value="">S\u00e9lectionner un client</option>
+ <option value="">Sélectionner un client</option>
  {clients.map((client) => (
  <option key={client.id} value={client.id}>
  {client.nom}
@@ -353,7 +353,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  value={formData.adresse}
  onChange={(e) => updateFormData('adresse', e.target.value)}
  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
- placeholder="Adresse compl\u00e8te du chantier"
+ placeholder="Adresse complète du chantier"
  />
  </div>
 
@@ -364,14 +364,14 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  onChange={(e) => updateFormData('description', e.target.value)}
  rows={4}
  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
- placeholder="Description d\u00e9taill\u00e9e du projet"
+ placeholder="Description détaillée du projet"
  />
  </div>
 
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Date de d\u00e9but *
+ Date de début *
  </label>
  <input
  type="date"
@@ -386,7 +386,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
 
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Date de fin pr\u00e9vue *
+ Date de fin prévue *
  </label>
  <input
  type="date"
@@ -430,25 +430,25 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  >
  <option value="actif">Actif</option>
  <option value="en_pause">En pause</option>
- <option value="termine">Termin\u00e9</option>
+ <option value="termine">Terminé</option>
  </select>
  </div>
  </div>
  </div>
  )}
 
- {/* \u00c9tape 2: \u00c9tudes */}
+ {/* Étape 2: Études */}
  {currentStep === 2 && (
  <div className="space-y-4">
  <div>
- <label className="block text-sm font-medium text-gray-700 mb-1">Type d'\u00e9tude</label>
+ <label className="block text-sm font-medium text-gray-700 mb-1">Type d'étude</label>
  <select
  value={formData.type_etude}
  onChange={(e) => updateFormData('type_etude', e.target.value)}
  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
  >
  <option value="neuf">Neuf</option>
- <option value="renovation">R\u00e9novation</option>
+ <option value="renovation">Rénovation</option>
  <option value="restructuration">Restructuration</option>
  <option value="extension">Extension</option>
  </select>
@@ -457,7 +457,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Surface SHON (m\u00b2) *
+ Surface SHON (m²) *
  </label>
  <input
  type="number"
@@ -490,7 +490,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
 
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Heures estim\u00e9es totales *
+ Heures estimées totales *
  </label>
  <input
  type="number"
@@ -511,15 +511,15 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  </div>
 
  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
- <h4 className="text-sm font-semibold text-blue-900 mb-2">Informations calcul\u00e9es</h4>
+ <h4 className="text-sm font-semibold text-blue-900 mb-2">Informations calculées</h4>
  <div className="space-y-1 text-sm text-blue-800">
  <p>
- Ratio heures/m\u00b2:{' '}
+ Ratio heures/m²:{' '}
  <span className="font-bold">
  {formData.surface_shon > 0
  ? (formData.heures_estimees / formData.surface_shon).toFixed(2)
  : '0.00'}
- h/m\u00b2
+ h/m²
  </span>
  </p>
  {formData.nombre_logements > 0 && (
@@ -535,12 +535,12 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  </div>
  )}
 
- {/* \u00c9tape 3: Administration */}
+ {/* Étape 3: Administration */}
  {currentStep === 3 && (
  <div className="space-y-4">
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Charg\u00e9 d'affaires responsable *
+ Chargé d'affaires responsable *
  </label>
  <select
  value={formData.charge_affaire_id}
@@ -549,7 +549,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  errors.charge_affaire_id ? 'border-red-500' : 'border-gray-300'
  }`}
  >
- <option value="">S\u00e9lectionner un charg\u00e9 d'affaires</option>
+ <option value="">Sélectionner un chargé d'affaires</option>
  {chargesAffaires.map((ca) => (
  <option key={ca.id} value={ca.id}>
  {ca.prenom} {ca.nom}
@@ -564,7 +564,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Nombre de plans estim\u00e9s *
+ Nombre de plans estimés *
  </label>
  <input
  type="number"
@@ -582,7 +582,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
 
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- D\u00e9lai global (jours) *
+ Délai global (jours) *
  </label>
  <input
  type="number"
@@ -601,10 +601,10 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
 
  <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
  <h4 className="text-sm font-semibold text-purple-900 mb-2">
- T\u00e2ches qui seront cr\u00e9\u00e9es automatiquement
+ Tâches qui seront créées automatiquement
  </h4>
  <p className="text-sm text-purple-800 mb-2">
- {TACHES_PROCESS.length} t\u00e2ches process seront cr\u00e9\u00e9es pour ce chantier
+ {TACHES_PROCESS.length} tâches process seront créées pour ce chantier
  </p>
  <div className="grid grid-cols-2 gap-2 text-xs text-purple-700">
  {['APS', 'APD', 'PRO', 'DCE', 'VISA', 'DET', 'AOR'].map((phase) => {
@@ -612,7 +612,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  return (
  <div key={phase} className="flex justify-between">
  <span className="font-medium">{phase}:</span>
- <span>{count} t\u00e2ches</span>
+ <span>{count} tâches</span>
  </div>
  );
  })}
@@ -621,13 +621,13 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  </div>
  )}
 
- {/* \u00c9tape 4: Budget */}
+ {/* Étape 4: Budget */}
  {currentStep === 4 && (
  <div className="space-y-4">
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Budget total (\u20ac) *
+ Budget total (€) *
  </label>
  <input
  type="number"
@@ -646,7 +646,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
 
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Honoraires BE (\u20ac) *
+ Honoraires BE (€) *
  </label>
  <input
  type="number"
@@ -680,7 +680,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  </div>
 
  <div className="bg-green-50 border border-green-200 rounded-lg p-4 space-y-3">
- <h4 className="text-sm font-semibold text-green-900">R\u00e9sum\u00e9 financier</h4>
+ <h4 className="text-sm font-semibold text-green-900">Résumé financier</h4>
  <div className="grid grid-cols-2 gap-4">
  <div className="bg-white rounded p-3 border border-green-300">
  <p className="text-xs text-green-600 mb-1">Budget total</p>
@@ -701,7 +701,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  </p>
  </div>
  <div className="bg-white rounded p-3 border border-green-300">
- <p className="text-xs text-green-600 mb-1">Marge pr\u00e9vue</p>
+ <p className="text-xs text-green-600 mb-1">Marge prévue</p>
  <p className="text-xl font-bold text-green-900">
  {((formData.honoraires_be * formData.taux_marge) / 100).toLocaleString('fr-FR', {
  style: 'currency',
@@ -710,14 +710,14 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  </p>
  </div>
  <div className="bg-white rounded p-3 border border-green-300">
- <p className="text-xs text-green-600 mb-1">Co\u00fbt horaire estim\u00e9</p>
+ <p className="text-xs text-green-600 mb-1">Coût horaire estimé</p>
  <p className="text-xl font-bold text-green-900">
  {formData.heures_estimees > 0
  ? (formData.honoraires_be / formData.heures_estimees).toLocaleString('fr-FR', {
  style: 'currency',
  currency: 'EUR',
  })
- : '0,00 \u20ac'}
+ : '0,00 €'}
  /h
  </p>
  </div>
@@ -726,20 +726,20 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
 
  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
  <h4 className="text-sm font-semibold text-yellow-900 mb-2">
- R\u00e9capitulatif du projet
+ Récapitulatif du projet
  </h4>
  <div className="space-y-1 text-sm text-yellow-800">
  <p>
- <span className="font-medium">Nom:</span> {formData.nom || 'Non renseign\u00e9'}
+ <span className="font-medium">Nom:</span> {formData.nom || 'Non renseigné'}
  </p>
  <p>
  <span className="font-medium">Phase:</span> {formData.phase}
  </p>
  <p>
- <span className="font-medium">Surface:</span> {formData.surface_shon} m\u00b2 SHON
+ <span className="font-medium">Surface:</span> {formData.surface_shon} m² SHON
  </p>
  <p>
- <span className="font-medium">Dur\u00e9e estim\u00e9e:</span> {formData.delai_global_jours} jours
+ <span className="font-medium">Durée estimée:</span> {formData.delai_global_jours} jours
  </p>
  <p>
  <span className="font-medium">Volume horaire:</span> {formData.heures_estimees} heures
@@ -761,11 +761,11 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  className="px-6 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition-colors flex items-center gap-2"
  >
  <ArrowLeft className="w-4 h-4" />
- Pr\u00e9c\u00e9dent
+ Précédent
  </button>
 
  <div className="text-sm text-gray-600">
- \u00c9tape {currentStep} sur {steps.length}
+ Étape {currentStep} sur {steps.length}
  </div>
 
  {currentStep < steps.length ? (
@@ -785,12 +785,12 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  {createChantierMutation.isPending ? (
  <>
  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
- Cr\u00e9ation...
+ Création...
  </>
  ) : (
  <>
  <Check className="w-4 h-4" />
- Cr\u00e9er le chantier
+ Créer le chantier
  </>
  )}
  </button>

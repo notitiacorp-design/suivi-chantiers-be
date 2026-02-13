@@ -80,8 +80,8 @@ export default function CommandesTable({ chantierId }: CommandesTableProps) {
  };
  const labels = {
  en_attente: 'En attente',
- commandee: 'Command\u00e9e',
- livree: 'Livr\u00e9e',
+ commandee: 'Commandée',
+ livree: 'Livrée',
  litige: 'Litige',
  };
  return (
@@ -107,7 +107,7 @@ export default function CommandesTable({ chantierId }: CommandesTableProps) {
  };
 
  const handleDelete = (id: string) => {
- if (confirm('\u00cates-vous s\u00fbr de vouloir supprimer cette commande ?')) {
+ if (confirm('Êtes-vous sûr de vouloir supprimer cette commande ?')) {
  deleteMutation.mutate(id);
  }
  };
@@ -127,7 +127,7 @@ export default function CommandesTable({ chantierId }: CommandesTableProps) {
  <div className="bg-white rounded-lg shadow p-6">
  <div className="text-sm text-gray-600 mb-1">Montant Total</div>
  <div className="text-2xl font-bold text-blue-600">
- {totalCommandes.toLocaleString('fr-FR')} \u20ac
+ {totalCommandes.toLocaleString('fr-FR')} €
  </div>
  </div>
  <div className="bg-white rounded-lg shadow p-6">
@@ -138,7 +138,7 @@ export default function CommandesTable({ chantierId }: CommandesTableProps) {
  </div>
  </div>
  <div className="bg-white rounded-lg shadow p-6">
- <div className="text-sm text-gray-600 mb-1">Livr\u00e9es</div>
+ <div className="text-sm text-gray-600 mb-1">Livrées</div>
  <div className="text-2xl font-bold text-green-600">
  {commandes.filter(c => c.statut === 'livree').length}
  </div>
@@ -158,8 +158,8 @@ export default function CommandesTable({ chantierId }: CommandesTableProps) {
  >
  <option value="all">Tous les statuts</option>
  <option value="en_attente">En attente</option>
- <option value="commandee">Command\u00e9e</option>
- <option value="livree">Livr\u00e9e</option>
+ <option value="commandee">Commandée</option>
+ <option value="livree">Livrée</option>
  <option value="litige">Litige</option>
  </select>
  </div>
@@ -188,11 +188,11 @@ export default function CommandesTable({ chantierId }: CommandesTableProps) {
  <ul className="space-y-1 text-sm text-red-800">
  {commandesEnRetard.slice(0, 3).map(c => (
  <li key={c.id}>
- \u2022 {c.fournisseur} - {c.description} (retard: {getRetardJours(c)} jours)
+ • {c.fournisseur} - {c.description} (retard: {getRetardJours(c)} jours)
  </li>
  ))}
  {commandesEnRetard.length > 3 && (
- <li>\u2022 ... et {commandesEnRetard.length - 3} autre(s)</li>
+ <li>• ... et {commandesEnRetard.length - 3} autre(s)</li>
  )}
  </ul>
  </div>
@@ -209,7 +209,7 @@ export default function CommandesTable({ chantierId }: CommandesTableProps) {
  <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
  <p className="text-gray-600">
  {filterStatut === 'all'
- ? 'Aucune commande enregistr\u00e9e'
+ ? 'Aucune commande enregistrée'
  : 'Aucune commande avec ce statut'}
  </p>
  </div>
@@ -219,7 +219,7 @@ export default function CommandesTable({ chantierId }: CommandesTableProps) {
  <thead className="bg-gray-50">
  <tr>
  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
- N\u00b0 Commande
+ N° Commande
  </th>
  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
  Fournisseur
@@ -234,10 +234,10 @@ export default function CommandesTable({ chantierId }: CommandesTableProps) {
  Date Commande
  </th>
  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
- Livraison Pr\u00e9vue
+ Livraison Prévue
  </th>
  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
- Livraison R\u00e9elle
+ Livraison Réelle
  </th>
  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
  Statut
@@ -272,7 +272,7 @@ export default function CommandesTable({ chantierId }: CommandesTableProps) {
  {commande.description}
  </td>
  <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
- {commande.montant.toLocaleString('fr-FR')} \u20ac
+ {commande.montant.toLocaleString('fr-FR')} €
  </td>
  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
  {format(new Date(commande.date_commande), 'dd/MM/yyyy', { locale: fr })}
@@ -402,7 +402,7 @@ function CommandeForm({ chantierId, commande, onClose, onSuccess }: CommandeForm
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- N\u00b0 Commande *
+ N° Commande *
  </label>
  <input
  type="text"
@@ -438,7 +438,7 @@ function CommandeForm({ chantierId, commande, onClose, onSuccess }: CommandeForm
  value={formData.contact_fournisseur}
  onChange={(e) => setFormData({ ...formData, contact_fournisseur: e.target.value })}
  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
- placeholder="Email ou t\u00e9l\u00e9phone"
+ placeholder="Email ou téléphone"
  />
  </div>
 
@@ -459,7 +459,7 @@ function CommandeForm({ chantierId, commande, onClose, onSuccess }: CommandeForm
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Montant (\u20ac) *
+ Montant (€) *
  </label>
  <input
  type="number"
@@ -482,8 +482,8 @@ function CommandeForm({ chantierId, commande, onClose, onSuccess }: CommandeForm
  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
  >
  <option value="en_attente">En attente</option>
- <option value="commandee">Command\u00e9e</option>
- <option value="livree">Livr\u00e9e</option>
+ <option value="commandee">Commandée</option>
+ <option value="livree">Livrée</option>
  <option value="litige">Litige</option>
  </select>
  </div>
@@ -505,7 +505,7 @@ function CommandeForm({ chantierId, commande, onClose, onSuccess }: CommandeForm
 
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Livraison Pr\u00e9vue *
+ Livraison Prévue *
  </label>
  <input
  type="date"
@@ -518,7 +518,7 @@ function CommandeForm({ chantierId, commande, onClose, onSuccess }: CommandeForm
 
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Livraison R\u00e9elle
+ Livraison Réelle
  </label>
  <input
  type="date"
@@ -555,7 +555,7 @@ function CommandeForm({ chantierId, commande, onClose, onSuccess }: CommandeForm
  disabled={mutation.isPending}
  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
  >
- {mutation.isPending ? 'Enregistrement...' : commande ? 'Modifier' : 'Cr\u00e9er'}
+ {mutation.isPending ? 'Enregistrement...' : commande ? 'Modifier' : 'Créer'}
  </button>
  </div>
  </form>

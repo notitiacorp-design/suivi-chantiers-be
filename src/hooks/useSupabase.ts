@@ -36,7 +36,7 @@ export function useChantiers(filters?: ChantierFilters) {
           .eq('actif', true)
           .order('created_at', { ascending: false })
 
-        // Si charg\u00e9 d'affaires, filtrer ses chantiers
+        // Si chargé d'affaires, filtrer ses chantiers
         if (profile?.role === 'charge_affaires') {
           query = query.eq('charge_affaires_id', profile.id)
         }
@@ -81,7 +81,7 @@ export function useChantiers(filters?: ChantierFilters) {
   })
 }
 
-// Hook pour un chantier sp\u00e9cifique
+// Hook pour un chantier spécifique
 export function useChantier(id: string | undefined) {
   return useQuery({
     queryKey: ['chantier', id],
@@ -116,7 +116,7 @@ export function useChantier(id: string | undefined) {
   })
 }
 
-// Hook pour les t\u00e2ches d'un chantier
+// Hook pour les tâches d'un chantier
 export function useTaches(chantierId?: string, filters?: TacheFilters) {
   return useQuery({
     queryKey: ['taches', chantierId, filters],
@@ -208,7 +208,7 @@ export function useNotifications() {
     enabled: !!profile,
   })
 
-  // Abonnement temps r\u00e9el
+  // Abonnement temps réel
   useEffect(() => {
     if (!profile) return
 
@@ -250,7 +250,7 @@ export function useNotifications() {
 
   const markAllAsRead = useMutation({
     mutationFn: async () => {
-      if (!profile) throw new Error('Profil non charg\u00e9')
+      if (!profile) throw new Error('Profil non chargé')
 
       const { error } = await supabase
         .from('notifications')
@@ -262,7 +262,7 @@ export function useNotifications() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] })
-      toast.success('Toutes les notifications ont \u00e9t\u00e9 marqu\u00e9es comme lues')
+      toast.success('Toutes les notifications ont été marquées comme lues')
     },
   })
 
@@ -324,7 +324,7 @@ export function useDashboardStats() {
   return useQuery({
     queryKey: ['dashboard-stats', profile?.id],
     queryFn: async () => {
-      if (!profile) throw new Error('Profil non charg\u00e9')
+      if (!profile) throw new Error('Profil non chargé')
 
       try {
         const { data, error } = await supabase.rpc('get_dashboard_stats', {
@@ -342,7 +342,7 @@ export function useDashboardStats() {
   })
 }
 
-// Hook pour les stats d'un charg\u00e9 d'affaires
+// Hook pour les stats d'un chargé d'affaires
 export function useChargeAffairesStats(chargeId?: string) {
   const { profile } = useAuth()
   const targetId = chargeId || profile?.id
@@ -350,7 +350,7 @@ export function useChargeAffairesStats(chargeId?: string) {
   return useQuery({
     queryKey: ['charge-stats', targetId],
     queryFn: async () => {
-      if (!targetId) throw new Error('ID du charg\u00e9 d\'affaires requis')
+      if (!targetId) throw new Error('ID du chargé d\'affaires requis')
 
       try {
         const { data, error } = await supabase.rpc('get_charge_affaires_stats', {
@@ -402,10 +402,10 @@ export function useChargesTravail() {
   return useQuery({
     queryKey: ['charges-travail', profile?.id],
     queryFn: async () => {
-      if (!profile) throw new Error('Profil non charg\u00e9')
+      if (!profile) throw new Error('Profil non chargé')
 
       try {
-        // R\u00e9cup\u00e9rer toutes les t\u00e2ches en cours ou \u00e0 faire
+        // Récupérer toutes les tâches en cours ou à faire
         const { data: taches, error: tachesError } = await supabase
           .from('taches')
           .select(`
@@ -448,7 +448,7 @@ export function useChargesTravail() {
   })
 }
 
-// Hook pour rafra\u00eechir le health score
+// Hook pour rafraîchir le health score
 export function useRefreshHealthScore() {
   const queryClient = useQueryClient()
 
@@ -466,7 +466,7 @@ export function useRefreshHealthScore() {
       queryClient.invalidateQueries({ queryKey: ['chantier', chantierId] })
       queryClient.invalidateQueries({ queryKey: ['chantiers'] })
       queryClient.invalidateQueries({ queryKey: ['historique-scores', chantierId] })
-      toast.success('Score actualis\u00e9')
+      toast.success('Score actualisé')
     },
   })
 }

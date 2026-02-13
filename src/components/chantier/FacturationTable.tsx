@@ -38,7 +38,7 @@ const FacturationTable: React.FC<FacturationTableProps> = ({ chantierId }) => {
  statut: 'emise' as const
  });
 
- // R\u00e9cup\u00e9rer les factures
+ // Récupérer les factures
  const { data: factures = [], isLoading } = useQuery<Facture[]>({
  queryKey: ['factures', chantierId],
  queryFn: async () => {
@@ -176,8 +176,8 @@ const FacturationTable: React.FC<FacturationTableProps> = ({ chantierId }) => {
  }
 
  const badges = {
- emise: <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">\u00c9mise</span>,
- payee: <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"><Check className="w-3 h-3" />Pay\u00e9e</span>,
+ emise: <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Émise</span>,
+ payee: <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"><Check className="w-3 h-3" />Payée</span>,
  en_retard: <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800"><AlertCircle className="w-3 h-3" />En retard</span>,
  avoir: <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Avoir</span>
  };
@@ -186,7 +186,7 @@ const FacturationTable: React.FC<FacturationTableProps> = ({ chantierId }) => {
  };
 
  const exportCSV = () => {
- const headers = ['Num\u00e9ro', 'Date \u00c9mission', 'Montant HT', 'TVA', 'Montant TTC', '\u00c9ch\u00e9ance', 'Statut'];
+ const headers = ['Numéro', 'Date Émission', 'Montant HT', 'TVA', 'Montant TTC', 'Échéance', 'Statut'];
  const rows = facturesFiltrees.map(f => [
  f.numero,
  format(parseISO(f.date_emission), 'dd/MM/yyyy'),
@@ -211,7 +211,7 @@ const FacturationTable: React.FC<FacturationTableProps> = ({ chantierId }) => {
 
  return (
  <div className="space-y-4">
- {/* En-t\u00eate */}
+ {/* En-tête */}
  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
  <div className="flex items-center gap-2">
  <Filter className="w-5 h-5 text-gray-400" />
@@ -221,8 +221,8 @@ const FacturationTable: React.FC<FacturationTableProps> = ({ chantierId }) => {
  className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
  >
  <option value="tous">Tous les statuts</option>
- <option value="emise">\u00c9mises</option>
- <option value="payee">Pay\u00e9es</option>
+ <option value="emise">Émises</option>
+ <option value="payee">Payées</option>
  <option value="en_retard">En retard</option>
  <option value="avoir">Avoirs</option>
  </select>
@@ -264,7 +264,7 @@ const FacturationTable: React.FC<FacturationTableProps> = ({ chantierId }) => {
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Num\u00e9ro de facture *
+ Numéro de facture *
  </label>
  <input
  type="text"
@@ -278,7 +278,7 @@ const FacturationTable: React.FC<FacturationTableProps> = ({ chantierId }) => {
 
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Date d'\u00e9mission *
+ Date d'émission *
  </label>
  <input
  type="date"
@@ -291,7 +291,7 @@ const FacturationTable: React.FC<FacturationTableProps> = ({ chantierId }) => {
 
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Montant HT (\u20ac) *
+ Montant HT (€) *
  </label>
  <input
  type="number"
@@ -323,7 +323,7 @@ const FacturationTable: React.FC<FacturationTableProps> = ({ chantierId }) => {
 
  <div>
  <label className="block text-sm font-medium text-gray-700 mb-1">
- Date d'\u00e9ch\u00e9ance *
+ Date d'échéance *
  </label>
  <input
  type="date"
@@ -343,8 +343,8 @@ const FacturationTable: React.FC<FacturationTableProps> = ({ chantierId }) => {
  onChange={(e) => setFormData({ ...formData, statut: e.target.value as any })}
  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
  >
- <option value="emise">\u00c9mise</option>
- <option value="payee">Pay\u00e9e</option>
+ <option value="emise">Émise</option>
+ <option value="payee">Payée</option>
  <option value="avoir">Avoir</option>
  </select>
  </div>
@@ -397,7 +397,7 @@ const FacturationTable: React.FC<FacturationTableProps> = ({ chantierId }) => {
  disabled={addFactureMutation.isPending}
  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
  >
- {addFactureMutation.isPending ? 'Cr\u00e9ation...' : 'Cr\u00e9er la facture'}
+ {addFactureMutation.isPending ? 'Création...' : 'Créer la facture'}
  </button>
  </div>
  </form>
@@ -411,12 +411,12 @@ const FacturationTable: React.FC<FacturationTableProps> = ({ chantierId }) => {
  <table className="min-w-full divide-y divide-gray-200">
  <thead className="bg-gray-50">
  <tr>
- <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">N\u00b0 Facture</th>
- <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date \u00c9mission</th>
+ <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">N° Facture</th>
+ <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Émission</th>
  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Montant HT</th>
  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">TVA</th>
  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Montant TTC</th>
- <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">\u00c9ch\u00e9ance</th>
+ <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Échéance</th>
  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
  </tr>
@@ -431,7 +431,7 @@ const FacturationTable: React.FC<FacturationTableProps> = ({ chantierId }) => {
  ) : facturesFiltrees.length === 0 ? (
  <tr>
  <td colSpan={8} className="px-6 py-12 text-center text-gray-500">
- Aucune facture trouv\u00e9e
+ Aucune facture trouvée
  </td>
  </tr>
  ) : (
@@ -472,7 +472,7 @@ const FacturationTable: React.FC<FacturationTableProps> = ({ chantierId }) => {
  onClick={() => updateStatutMutation.mutate({ id: facture.id, statut: 'payee' })}
  className="text-green-600 hover:text-green-800 font-medium"
  >
- Marquer pay\u00e9e
+ Marquer payée
  </button>
  )}
  </td>

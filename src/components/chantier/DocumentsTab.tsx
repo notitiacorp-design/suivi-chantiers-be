@@ -28,7 +28,7 @@ interface DocumentsTabProps {
 
 const CATEGORIES = [
  { value: 'plans', label: 'Plans', icon: FileText },
- { value: 'pv_reunion', label: 'PV R\u00e9union', icon: FileText },
+ { value: 'pv_reunion', label: 'PV Réunion', icon: FileText },
  { value: 'doe', label: 'DOE', icon: FileText },
  { value: 'dgd', label: 'DGD', icon: FileText },
  { value: 'fiches_techniques', label: 'Fiches Techniques', icon: FileText },
@@ -104,7 +104,7 @@ export default function DocumentsTab({ chantierId }: DocumentsTabProps) {
  const deleteMutation = useMutation({
  mutationFn: async (documentId: string) => {
  const document = documents.find(d => d.id === documentId);
- if (!document) throw new Error('Document non trouv\u00e9');
+ if (!document) throw new Error('Document non trouvé');
 
  const filePath = document.url.split('/documents/')[1];
  await supabase.storage.from('documents').remove([filePath]);
@@ -173,7 +173,7 @@ export default function DocumentsTab({ chantierId }: DocumentsTabProps) {
  </div>
  </div>
 
- {/* Filtres par cat\u00e9gorie */}
+ {/* Filtres par catégorie */}
  <div className="flex gap-2 overflow-x-auto pb-2">
  <button
  onClick={() => setSelectedCategory('all')}
@@ -201,7 +201,7 @@ export default function DocumentsTab({ chantierId }: DocumentsTabProps) {
  ))}
  </div>
 
- {/* Grille de documents par cat\u00e9gorie */}
+ {/* Grille de documents par catégorie */}
  {isLoading ? (
  <div className="flex justify-center items-center h-64">
  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -234,7 +234,7 @@ export default function DocumentsTab({ chantierId }: DocumentsTabProps) {
  </div>
  )}
 
- {/* Modal de pr\u00e9visualisation */}
+ {/* Modal de prévisualisation */}
  {previewDocument && (
  <PreviewModal
  document={previewDocument}
@@ -309,8 +309,8 @@ function CategorySection({
  <Upload className="h-12 w-12 text-gray-400 mx-auto mb-3" />
  <p className="text-gray-600 mb-1">
  {isDragActive
- ? 'D\u00e9posez les fichiers ici...'
- : 'Glissez-d\u00e9posez des fichiers ici ou cliquez pour s\u00e9lectionner'}
+ ? 'Déposez les fichiers ici...'
+ : 'Glissez-déposez des fichiers ici ou cliquez pour sélectionner'}
  </p>
  <p className="text-sm text-gray-500">
  {category.value === 'photos' ? 'Images uniquement' : 'PDF, Word, Excel, Images'}
@@ -348,14 +348,14 @@ function CategorySection({
  <button
  onClick={() => onPreview(doc)}
  className="opacity-0 group-hover:opacity-100 transition-opacity bg-white text-gray-900 p-2 rounded-full hover:bg-gray-100"
- title="Pr\u00e9visualiser"
+ title="Prévisualiser"
  >
  <Eye className="h-5 w-5" />
  </button>
  <button
  onClick={() => onDownload(doc)}
  className="opacity-0 group-hover:opacity-100 transition-opacity bg-white text-gray-900 p-2 rounded-full hover:bg-gray-100"
- title="T\u00e9l\u00e9charger"
+ title="Télécharger"
  >
  <Download className="h-5 w-5" />
  </button>
@@ -388,7 +388,7 @@ function CategorySection({
  <span>{formatFileSize(doc.taille)}</span>
  </div>
  <div className="flex justify-between">
- <span>Upload\u00e9 par:</span>
+ <span>Uploadé par:</span>
  <span className="truncate max-w-[120px]" title={doc.uploade_par}>
  {doc.uploade_par}
  </span>
@@ -404,7 +404,7 @@ function CategorySection({
  </div>
  ) : (
  <div className="text-center py-8 text-gray-500">
- Aucun document dans cette cat\u00e9gorie
+ Aucun document dans cette catégorie
  </div>
  )}
  </div>
@@ -436,7 +436,7 @@ function PreviewModal({ document: doc, onClose, onDownload }: PreviewModalProps)
  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
  >
  <Download className="h-4 w-4" />
- T\u00e9l\u00e9charger
+ Télécharger
  </button>
  <button
  onClick={onClose}
@@ -456,12 +456,12 @@ function PreviewModal({ document: doc, onClose, onDownload }: PreviewModalProps)
  ) : (
  <div className="flex flex-col items-center justify-center h-64">
  <File className="h-24 w-24 text-gray-400 mb-4" />
- <p className="text-gray-600">Aper\u00e7u non disponible pour ce type de fichier</p>
+ <p className="text-gray-600">Aperçu non disponible pour ce type de fichier</p>
  <button
  onClick={onDownload}
  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
  >
- T\u00e9l\u00e9charger le fichier
+ Télécharger le fichier
  </button>
  </div>
  )}

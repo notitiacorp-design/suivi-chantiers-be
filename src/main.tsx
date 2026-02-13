@@ -22,7 +22,7 @@ class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasErr
       return (
         <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
           <h1 style={{ color: 'red' }}>Erreur de chargement</h1>
-          <p>L'application a rencontr\u00e9 une erreur.</p>
+          <p>L'application a rencontré une erreur.</p>
           <pre style={{ background: '#f5f5f5', padding: '1rem', overflow: 'auto', fontSize: '0.875rem' }}>
             {this.state.error?.message}
           </pre>

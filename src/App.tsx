@@ -64,7 +64,7 @@ const App: React.FC = () => {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
-              {/* Routes prot\u00e9g\u00e9es */}
+              {/* Routes protégées */}
               <Route
                 path="/"
                 element={
@@ -91,7 +91,7 @@ const App: React.FC = () => {
                 <Route path="achats" element={<AchatsPage />} />
               </Route>
 
-              {/* Redirection par d\u00e9faut */}
+              {/* Redirection par défaut */}
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Routes>
           </Suspense>

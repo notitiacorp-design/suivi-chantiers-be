@@ -710,7 +710,7 @@ export type Updates<T extends keyof Database['public']['Tables']> =
 export type Enums<T extends keyof Database['public']['Enums']> =
   Database['public']['Enums'][T]
 
-// Types sp\u00e9cifiques
+// Types spécifiques
 export type Profile = Tables<'profiles'>
 export type Chantier = Tables<'chantiers'>
 export type Tache = Tables<'taches'>

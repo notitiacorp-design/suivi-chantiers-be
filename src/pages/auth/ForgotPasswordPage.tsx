@@ -35,11 +35,11 @@ const ForgotPasswordPage: React.FC = () => {
       if (error) throw error;
 
       setEmailSent(true);
-      toast.success('Email de r\u00e9initialisation envoy\u00e9 !');
+      toast.success('Email de réinitialisation envoyé !');
     } catch (error: any) {
       console.error('Erreur reset password:', error);
       setError(error.message || 'Erreur lors de l\'envoi de l\'email');
-      toast.error('\u00c9chec de l\'envoi');
+      toast.error('Échec de l\'envoi');
     } finally {
       setLoading(false);
     }
@@ -61,8 +61,8 @@ const ForgotPasswordPage: React.FC = () => {
             <>
               {/* Title */}
               <div className="text-center mb-8">
-                <h1 className="text-3xl font-bold text-slate-900 mb-2">Mot de passe oubli\u00e9</h1>
-                <p className="text-slate-600">Entrez votre email pour r\u00e9initialiser votre mot de passe</p>
+                <h1 className="text-3xl font-bold text-slate-900 mb-2">Mot de passe oublié</h1>
+                <p className="text-slate-600">Entrez votre email pour réinitialiser votre mot de passe</p>
               </div>
 
               {/* Form */}
@@ -99,7 +99,7 @@ const ForgotPasswordPage: React.FC = () => {
                   disabled={loading}
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
                 >
-                  {loading ? <LoadingSpinner size="sm" /> : 'Envoyer le lien de r\u00e9initialisation'}
+                  {loading ? <LoadingSpinner size="sm" /> : 'Envoyer le lien de réinitialisation'}
                 </button>
               </form>
             </>
@@ -110,10 +110,10 @@ const ForgotPasswordPage: React.FC = () => {
                 <div className="flex justify-center mb-6">
                   <CheckCircleIcon className="w-16 h-16 text-green-500" />
                 </div>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">Email envoy\u00e9 !</h2>
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">Email envoyé !</h2>
                 <p className="text-slate-600 mb-8">
-                  Un lien de r\u00e9initialisation a \u00e9t\u00e9 envoy\u00e9 \u00e0 <strong>{email}</strong>.
-                  V\u00e9rifiez votre bo\u00eete de r\u00e9ception.
+                  Un lien de réinitialisation a été envoyé à <strong>{email}</strong>.
+                  Vérifiez votre boîte de réception.
                 </p>
               </div>
             </>
@@ -126,7 +126,7 @@ const ForgotPasswordPage: React.FC = () => {
               className="flex items-center justify-center space-x-2 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
             >
               <ArrowLeftIcon className="w-4 h-4" />
-              <span>Retour \u00e0 la connexion</span>
+              <span>Retour à la connexion</span>
             </Link>
           </div>
         </div>

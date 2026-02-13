@@ -25,7 +25,7 @@ const LoginPage: React.FC = () => {
     if (!password) {
       newErrors.password = 'Le mot de passe est requis';
     } else if (password.length < 6) {
-      newErrors.password = 'Le mot de passe doit contenir au moins 6 caract\u00e8res';
+      newErrors.password = 'Le mot de passe doit contenir au moins 6 caractères';
     }
 
     setErrors(newErrors);
@@ -53,7 +53,7 @@ const LoginPage: React.FC = () => {
       if (data.session) {
         setSession(data.session);
         setUser(data.session.user);
-        toast.success('Connexion r\u00e9ussie !');
+        toast.success('Connexion réussie !');
         navigate('/dashboard');
       }
     } catch (error: any) {
@@ -71,37 +71,37 @@ const LoginPage: React.FC = () => {
         <div>
           <h1 className="text-4xl font-bold mb-2">BE Pilot</h1>
           <p className="text-xl text-blue-200 mb-12">Plateforme de gestion de projets</p>
-          <p className="text-2xl font-semibold mb-8 text-blue-100">Pilotez vos projets d'\u00e9tudes avec pr\u00e9cision</p>
+          <p className="text-2xl font-semibold mb-8 text-blue-100">Pilotez vos projets d'études avec précision</p>
           <ul className="space-y-4">
             <li className="flex items-start">
               <svg className="w-6 h-6 text-blue-300 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span className="text-lg">Suivi en temps r\u00e9el de tous vos projets</span>
+              <span className="text-lg">Suivi en temps réel de tous vos projets</span>
             </li>
             <li className="flex items-start">
               <svg className="w-6 h-6 text-blue-300 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span className="text-lg">Gestion collaborative des \u00e9quipes</span>
+              <span className="text-lg">Gestion collaborative des équipes</span>
             </li>
             <li className="flex items-start">
               <svg className="w-6 h-6 text-blue-300 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span className="text-lg">Tableaux de bord et analyses d\u00e9taill\u00e9es</span>
+              <span className="text-lg">Tableaux de bord et analyses détaillées</span>
             </li>
           </ul>
         </div>
         <div className="text-blue-200 text-sm">
-          \u00a9 2024 BE Pilot. Tous droits r\u00e9serv\u00e9s.
+          © 2024 BE Pilot. Tous droits réservés.
         </div>
       </div>
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
         <div className="w-full max-w-md">
           <div className="mb-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Connexion</h2>
-            <p className="text-gray-600">Acc\u00e9dez \u00e0 votre espace de gestion de projets</p>
+            <p className="text-gray-600">Accédez à votre espace de gestion de projets</p>
           </div>
           <div className="bg-white rounded-xl shadow-lg p-8">
             <form className="space-y-6" onSubmit={handleSubmit}>
@@ -153,7 +153,7 @@ const LoginPage: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className={`block w-full rounded-lg border ${errors.password ? 'border-red-300' : 'border-gray-300'} pl-10 pr-3 py-3 focus:border-[#1e3a5f] focus:ring-2 focus:ring-[#1e3a5f] focus:ring-opacity-20 sm:text-sm transition-colors`}
-                    placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
+                    placeholder="••••••••"
                   />
                 </div>
                 {errors.password && <p className="mt-2 text-sm text-red-600">{errors.password}</p>}
@@ -172,7 +172,7 @@ const LoginPage: React.FC = () => {
                 </div>
                 <div className="text-sm">
                   <Link to="/forgot-password" className="font-medium text-[#1e3a5f] hover:text-[#0f172a] transition-colors">
-                    Mot de passe oubli\u00e9 ?
+                    Mot de passe oublié ?
                   </Link>
                 </div>
               </div>

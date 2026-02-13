@@ -10,7 +10,7 @@ const TrendChart: React.FC<TrendChartProps> = ({ chantierId }) => {
  const [data, setData] = useState<any[]>([]);
 
  useEffect(() => {
- // G\u00e9n\u00e9rer des donn\u00e9es mock\u00e9es pour la tendance
+ // Générer des données mockées pour la tendance
  const generateData = (jours: number) => {
  const result = [];
  const today = new Date();
@@ -54,7 +54,7 @@ const TrendChart: React.FC<TrendChartProps> = ({ chantierId }) => {
  <div>
  <div className="flex justify-between items-center mb-4">
  <h3 className="text-xl font-bold text-gray-900">
- Tendance du score sant\u00e9
+ Tendance du score santé
  </h3>
  <div className="flex space-x-2">
  <button
@@ -114,7 +114,7 @@ const TrendChart: React.FC<TrendChartProps> = ({ chantierId }) => {
  strokeWidth={3}
  dot={{ r: 3 }}
  activeDot={{ r: 6 }}
- name="Score sant\u00e9"
+ name="Score santé"
  />
  </LineChart>
  </ResponsiveContainer>

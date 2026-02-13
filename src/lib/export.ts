@@ -6,14 +6,14 @@ import { fr } from 'date-fns/locale';
 import { calculStatistiquesChantier } from './calculations';
 
 /**
- * Exporte des donn\u00e9es vers Excel
+ * Exporte des données vers Excel
  */
-export function exportToExcel(data: any[], filename: string, sheetName: string = 'Donn\u00e9es') {
+export function exportToExcel(data: any[], filename: string, sheetName: string = 'Données') {
  try {
- // Cr\u00e9er un workbook
+ // Créer un workbook
  const wb = XLSX.utils.book_new();
 
- // Convertir les donn\u00e9es en worksheet
+ // Convertir les données en worksheet
  const ws = XLSX.utils.json_to_sheet(data);
 
  // Ajuster la largeur des colonnes
@@ -25,7 +25,7 @@ export function exportToExcel(data: any[], filename: string, sheetName: string =
  // Ajouter le worksheet au workbook
  XLSX.utils.book_append_sheet(wb, ws, sheetName);
 
- // G\u00e9n\u00e9rer le fichier
+ // Générer le fichier
  XLSX.writeFile(wb, `${filename}.xlsx`);
 
  return { success: true };
@@ -48,42 +48,42 @@ export function exportChantierToExcel(chantierData: {
  try {
  const wb = XLSX.utils.book_new();
 
- // Onglet 1: Informations g\u00e9n\u00e9rales
+ // Onglet 1: Informations générales
  const infoGenerales = [{
  'Nom du chantier': chantierData.chantier.nom,
- 'R\u00e9f\u00e9rence': chantierData.chantier.reference,
+ 'Référence': chantierData.chantier.reference,
  'Client': chantierData.chantier.client_nom,
- 'Date d\u00e9but': format(new Date(chantierData.chantier.date_debut), 'dd/MM/yyyy'),
- 'Date fin pr\u00e9vue': format(new Date(chantierData.chantier.date_fin_prevue), 'dd/MM/yyyy'),
- 'Budget initial (\u20ac)': chantierData.chantier.budget_initial,
- 'Montant factur\u00e9 (\u20ac)': chantierData.chantier.montant_facture,
+ 'Date début': format(new Date(chantierData.chantier.date_debut), 'dd/MM/yyyy'),
+ 'Date fin prévue': format(new Date(chantierData.chantier.date_fin_prevue), 'dd/MM/yyyy'),
+ 'Budget initial (€)': chantierData.chantier.budget_initial,
+ 'Montant facturé (€)': chantierData.chantier.montant_facture,
  'Avancement (%)': chantierData.chantier.pourcentage_avancement,
  'Statut': chantierData.chantier.statut
  }];
  const wsInfo = XLSX.utils.json_to_sheet(infoGenerales);
  XLSX.utils.book_append_sheet(wb, wsInfo, 'Informations');
 
- // Onglet 2: T\u00e2ches
+ // Onglet 2: Tâches
  const tachesExport = chantierData.taches.map(t => ({
  'Nom': t.nom,
  'Statut': t.statut,
- 'D\u00e9but pr\u00e9vu': format(new Date(t.date_debut_prevue), 'dd/MM/yyyy'),
- 'Fin pr\u00e9vue': format(new Date(t.date_fin_prevue), 'dd/MM/yyyy'),
- 'D\u00e9but r\u00e9el': t.date_debut_reelle ? format(new Date(t.date_debut_reelle), 'dd/MM/yyyy') : '-',
- 'Fin r\u00e9elle': t.date_fin_reelle ? format(new Date(t.date_fin_reelle), 'dd/MM/yyyy') : '-',
+ 'Début prévu': format(new Date(t.date_debut_prevue), 'dd/MM/yyyy'),
+ 'Fin prévue': format(new Date(t.date_fin_prevue), 'dd/MM/yyyy'),
+ 'Début réel': t.date_debut_reelle ? format(new Date(t.date_debut_reelle), 'dd/MM/yyyy') : '-',
+ 'Fin réelle': t.date_fin_reelle ? format(new Date(t.date_fin_reelle), 'dd/MM/yyyy') : '-',
  'Completion (%)': t.pourcentage_completion,
  'Responsable': t.responsable_nom || '-'
  }));
  const wsTaches = XLSX.utils.json_to_sheet(tachesExport);
- XLSX.utils.book_append_sheet(wb, wsTaches, 'T\u00e2ches');
+ XLSX.utils.book_append_sheet(wb, wsTaches, 'Tâches');
 
  // Onglet 3: Factures
  const facturesExport = chantierData.factures.map(f => ({
- 'Num\u00e9ro': f.numero,
- 'Date \u00e9mission': format(new Date(f.date_emission), 'dd/MM/yyyy'),
- 'Date \u00e9ch\u00e9ance': format(new Date(f.date_echeance), 'dd/MM/yyyy'),
- 'Montant HT (\u20ac)': f.montant_ht,
- 'Montant TTC (\u20ac)': f.montant_ttc,
+ 'Numéro': f.numero,
+ 'Date émission': format(new Date(f.date_emission), 'dd/MM/yyyy'),
+ 'Date échéance': format(new Date(f.date_echeance), 'dd/MM/yyyy'),
+ 'Montant HT (€)': f.montant_ht,
+ 'Montant TTC (€)': f.montant_ttc,
  'Statut': f.statut,
  'Date paiement': f.date_paiement ? format(new Date(f.date_paiement), 'dd/MM/yyyy') : '-'
  }));
@@ -92,17 +92,17 @@ export function exportChantierToExcel(chantierData: {
 
  // Onglet 4: Avenants
  const avenantsExport = chantierData.avenants.map(a => ({
- 'Num\u00e9ro': a.numero,
+ 'Numéro': a.numero,
  'Date': format(new Date(a.date_avenant), 'dd/MM/yyyy'),
- 'Montant (\u20ac)': a.montant_supplementaire,
- 'D\u00e9lai suppl\u00e9mentaire (j)': a.delai_supplementaire_jours,
+ 'Montant (€)': a.montant_supplementaire,
+ 'Délai supplémentaire (j)': a.delai_supplementaire_jours,
  'Statut': a.statut,
  'Description': a.description
  }));
  const wsAvenants = XLSX.utils.json_to_sheet(avenantsExport);
  XLSX.utils.book_append_sheet(wb, wsAvenants, 'Avenants');
 
- // G\u00e9n\u00e9rer le fichier
+ // Générer le fichier
  const filename = `chantier_${chantierData.chantier.reference}_${format(new Date(), 'yyyyMMdd')}`;
  XLSX.writeFile(wb, `${filename}.xlsx`);
 
@@ -126,30 +126,30 @@ export function exportToPDF(chantierData: {
  const doc = new jsPDF();
  let yPos = 20;
 
- // En-t\u00eate
+ // En-tête
  doc.setFontSize(20);
  doc.setFont('helvetica', 'bold');
  doc.text('RAPPORT DE CHANTIER', 105, yPos, { align: 'center' });
  yPos += 15;
 
- // Informations g\u00e9n\u00e9rales
+ // Informations générales
  doc.setFontSize(12);
  doc.setFont('helvetica', 'bold');
- doc.text('Informations g\u00e9n\u00e9rales', 20, yPos);
+ doc.text('Informations générales', 20, yPos);
  yPos += 8;
 
  doc.setFontSize(10);
  doc.setFont('helvetica', 'normal');
  const infos = [
  `Nom: ${chantierData.chantier.nom}`,
- `R\u00e9f\u00e9rence: ${chantierData.chantier.reference}`,
+ `Référence: ${chantierData.chantier.reference}`,
  `Client: ${chantierData.chantier.client_nom}`,
- `Date d\u00e9but: ${format(new Date(chantierData.chantier.date_debut), 'dd/MM/yyyy', { locale: fr })}`,
- `Date fin pr\u00e9vue: ${format(new Date(chantierData.chantier.date_fin_prevue), 'dd/MM/yyyy', { locale: fr })}`,
+ `Date début: ${format(new Date(chantierData.chantier.date_debut), 'dd/MM/yyyy', { locale: fr })}`,
+ `Date fin prévue: ${format(new Date(chantierData.chantier.date_fin_prevue), 'dd/MM/yyyy', { locale: fr })}`,
  `Budget initial: ${new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(chantierData.chantier.budget_initial)}`,
- `Montant factur\u00e9: ${new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(chantierData.chantier.montant_facture)}`,
+ `Montant facturé: ${new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(chantierData.chantier.montant_facture)}`,
  `Avancement: ${chantierData.chantier.pourcentage_avancement}%`,
- `Score sant\u00e9: ${chantierData.statistiques.score}/100 (${chantierData.statistiques.label})`
+ `Score santé: ${chantierData.statistiques.score}/100 (${chantierData.statistiques.label})`
  ];
 
  infos.forEach(info => {
@@ -168,11 +168,11 @@ export function exportToPDF(chantierData: {
  doc.setFontSize(10);
  doc.setFont('helvetica', 'normal');
  const stats = [
- `T\u00e2ches termin\u00e9es: ${chantierData.statistiques.taches.terminees}/${chantierData.statistiques.taches.total}`,
- `T\u00e2ches en retard: ${chantierData.statistiques.taches.enRetard}`,
- `Taux de compl\u00e9tion: ${chantierData.statistiques.taches.tauxCompletion.toFixed(1)}%`,
- `Temps \u00e9coul\u00e9: ${chantierData.statistiques.planning.tempsEcoule} jours / ${chantierData.statistiques.planning.dureeTotal} jours`,
- `\u00c9cart avancement/temps: ${chantierData.statistiques.planning.ecartAvancement.toFixed(1)}%`,
+ `Tâches terminées: ${chantierData.statistiques.taches.terminees}/${chantierData.statistiques.taches.total}`,
+ `Tâches en retard: ${chantierData.statistiques.taches.enRetard}`,
+ `Taux de complétion: ${chantierData.statistiques.taches.tauxCompletion.toFixed(1)}%`,
+ `Temps écoulé: ${chantierData.statistiques.planning.tempsEcoule} jours / ${chantierData.statistiques.planning.dureeTotal} jours`,
+ `Écart avancement/temps: ${chantierData.statistiques.planning.ecartAvancement.toFixed(1)}%`,
  `Taux facturation: ${chantierData.statistiques.budget.tauxFacturation.toFixed(1)}%`
  ];
 
@@ -183,7 +183,7 @@ export function exportToPDF(chantierData: {
 
  yPos += 10;
 
- // Tableau des t\u00e2ches
+ // Tableau des tâches
  if (yPos > 250) {
  doc.addPage();
  yPos = 20;
@@ -191,7 +191,7 @@ export function exportToPDF(chantierData: {
 
  doc.setFontSize(12);
  doc.setFont('helvetica', 'bold');
- doc.text('T\u00e2ches', 20, yPos);
+ doc.text('Tâches', 20, yPos);
  yPos += 5;
 
  const tachesRows = chantierData.taches.slice(0, 20).map(t => [
@@ -204,7 +204,7 @@ export function exportToPDF(chantierData: {
 
  (doc as any).autoTable({
  startY: yPos,
- head: [['Nom', 'Statut', 'D\u00e9but', 'Fin', '%']],
+ head: [['Nom', 'Statut', 'Début', 'Fin', '%']],
  body: tachesRows,
  styles: { fontSize: 8 },
  headStyles: { fillColor: [59, 130, 246] },
@@ -233,7 +233,7 @@ export function exportToPDF(chantierData: {
 
  (doc as any).autoTable({
  startY: yPos,
- head: [['Num\u00e9ro', 'Date', 'Montant TTC', 'Statut']],
+ head: [['Numéro', 'Date', 'Montant TTC', 'Statut']],
  body: facturesRows,
  styles: { fontSize: 8 },
  headStyles: { fillColor: [59, 130, 246] },
@@ -247,7 +247,7 @@ export function exportToPDF(chantierData: {
  doc.setFontSize(8);
  doc.setFont('helvetica', 'normal');
  doc.text(
- `Page ${i} / ${pageCount} - G\u00e9n\u00e9r\u00e9 le ${format(new Date(), 'dd/MM/yyyy \u00e0 HH:mm', { locale: fr })}`,
+ `Page ${i} / ${pageCount} - Généré le ${format(new Date(), 'dd/MM/yyyy à HH:mm', { locale: fr })}`,
  105,
  290,
  { align: 'center' }
@@ -266,14 +266,14 @@ export function exportToPDF(chantierData: {
 }
 
 /**
- * G\u00e9n\u00e8re un rapport complet d'un chantier
+ * Génère un rapport complet d'un chantier
  */
 export async function generateReport(chantier: any, taches: any[], factures: any[], avenants: any[]) {
  try {
  // Calculer les statistiques
  const statistiques = calculStatistiquesChantier(chantier, taches);
 
- // Pr\u00e9parer les donn\u00e9es
+ // Préparer les données
  const reportData = {
  chantier,
  taches,
@@ -286,7 +286,7 @@ export async function generateReport(chantier: any, taches: any[], factures: any
 
  return { success: true, data: reportData };
  } catch (error) {
- console.error('Erreur g\u00e9n\u00e9ration rapport:', error);
+ console.error('Erreur génération rapport:', error);
  return { success: false, error };
  }
 }
@@ -303,26 +303,26 @@ export function exportDashboardToExcel(chantiers: any[], statistiquesGlobales: a
  'Total chantiers': statistiquesGlobales.totalChantiers,
  'Chantiers actifs': statistiquesGlobales.chantiersActifs,
  'Chantiers en retard': statistiquesGlobales.chantiersEnRetard,
- 'Budget total (\u20ac)': statistiquesGlobales.budgetTotal,
- 'Montant factur\u00e9 (\u20ac)': statistiquesGlobales.montantFacture,
+ 'Budget total (€)': statistiquesGlobales.budgetTotal,
+ 'Montant facturé (€)': statistiquesGlobales.montantFacture,
  'Taux facturation (%)': statistiquesGlobales.tauxFacturation,
- 'Score sant\u00e9 moyen': statistiquesGlobales.scoreMoyen
+ 'Score santé moyen': statistiquesGlobales.scoreMoyen
  }];
  const wsVue = XLSX.utils.json_to_sheet(vueEnsemble);
  XLSX.utils.book_append_sheet(wb, wsVue, 'Vue d\'ensemble');
 
  // Onglet 2: Liste des chantiers
  const chantiersExport = chantiers.map(c => ({
- 'R\u00e9f\u00e9rence': c.reference,
+ 'Référence': c.reference,
  'Nom': c.nom,
  'Client': c.client_nom,
  'Chef de chantier': c.chef_chantier_nom,
- 'Date d\u00e9but': format(new Date(c.date_debut), 'dd/MM/yyyy'),
+ 'Date début': format(new Date(c.date_debut), 'dd/MM/yyyy'),
  'Date fin': format(new Date(c.date_fin_prevue), 'dd/MM/yyyy'),
- 'Budget (\u20ac)': c.budget_initial,
- 'Factur\u00e9 (\u20ac)': c.montant_facture,
+ 'Budget (€)': c.budget_initial,
+ 'Facturé (€)': c.montant_facture,
  'Avancement (%)': c.pourcentage_avancement,
- 'Score sant\u00e9': c.score_sante || '-',
+ 'Score santé': c.score_sante || '-',
  'Statut': c.statut
  }));
  const wsChantiers = XLSX.utils.json_to_sheet(chantiersExport);
@@ -333,16 +333,16 @@ export function exportDashboardToExcel(chantiers: any[], statistiquesGlobales: a
  const score = c.score_sante || 100;
  return score < 60 || c.statut === 'en_retard';
  }).map(c => ({
- 'R\u00e9f\u00e9rence': c.reference,
+ 'Référence': c.reference,
  'Nom': c.nom,
- 'Score sant\u00e9': c.score_sante || '-',
+ 'Score santé': c.score_sante || '-',
  'Statut': c.statut,
  'Alerte': c.score_sante < 40 ? 'CRITIQUE' : c.score_sante < 60 ? 'ATTENTION' : 'RETARD'
  }));
  const wsAlertes = XLSX.utils.json_to_sheet(alertesChantiers);
  XLSX.utils.book_append_sheet(wb, wsAlertes, 'Alertes');
 
- // G\u00e9n\u00e9rer le fichier
+ // Générer le fichier
  const filename = `dashboard_${format(new Date(), 'yyyyMMdd_HHmmss')}`;
  XLSX.writeFile(wb, `${filename}.xlsx`);
 
