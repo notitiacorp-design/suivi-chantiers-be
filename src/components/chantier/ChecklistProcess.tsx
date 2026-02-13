@@ -96,7 +96,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  .from('taches')
  .select('*')
  .eq('chantier_id', chantierId)
- .order('numero');
+ .order('ordre');
 
  if (error) throw error;
 
@@ -119,12 +119,12 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  const tachesInit = TACHES_TEMPLATE.map((t) => ({
  chantier_id: chantierId,
  phase: t.phase,
- numero: t.ordre,
- nom: t.titre,
+ ordre: t.ordre,
+ titre: t.titre,
  statut: 'À faire',
  priorite: 'Normale',
  poids: t.pourcentage,
- date_debut: null,
+ created_at: null,
  date_fin_prevue: null,
  date_fin_reelle: null,
  commentaire: null,
@@ -454,7 +454,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  type="date"
  value={tache.created_at || ''}
  onChange={(e) =>
- updateTache(tache.id, { date_debut: e.target.value })
+ updateTache(tache.id, { created_at: e.target.value })
  }
  className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
  />

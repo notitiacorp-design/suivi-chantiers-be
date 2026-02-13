@@ -266,7 +266,7 @@ function AvenantForm({ chantierId, avenant, onClose, onSuccess }: AvenantFormPro
  numero: avenant?.numero || '',
  objet: avenant?.objet || '',
  montant: avenant?.montant || 0,
- date_demande: avenant?.date_avenant || new Date().toISOString().split('T')[0],
+ date_demande: avenant?.date_demande || new Date().toISOString().split('T')[0],
  statut: avenant?.statut || 'en_attente' as AvenantStatut,
  commentaire: avenant?.commentaire || '',
  });
@@ -325,7 +325,7 @@ function AvenantForm({ chantierId, avenant, onClose, onSuccess }: AvenantFormPro
  <input
  type="date"
  required
- value={formData.date_avenant}
+ value={formData.date_demande}
  onChange={(e) => setFormData({ ...formData, date_demande: e.target.value })}
  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
  />
