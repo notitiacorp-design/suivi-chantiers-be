@@ -117,7 +117,7 @@ const FinancierTab: React.FC<FinancierTabProps> = ({ chantierId }) => {
  const margePourcentage = budgetActuel > 0 ? (margeEstimee / budgetActuel) * 100 : 0;
 
  // Alerte trésorerie
- const alerteTresorerie = (factureNet / budgetActuel * 100) < (avancement - 20);
+ const alerteTresorerie = budgetActuel > 0 ? (factureNet / budgetActuel * 100) < (avancement - 20) : false;
 
  return {
  budgetInitial,
@@ -253,14 +253,14 @@ const FinancierTab: React.FC<FinancierTabProps> = ({ chantierId }) => {
  <KPICard
  title="Facturé"
  value={formatEuro(kpis.factureNet)}
- subtitle={`${((kpis.factureNet / kpis.budgetActuel) * 100).toFixed(1)}% du budget`}
+ subtitle={`${(kpis.budgetActuel > 0 ? ((kpis.factureNet / kpis.budgetActuel) * 100) : 0).toFixed(1)}% du budget`}
  icon={<FileText className="w-5 h-5 text-green-600" />}
  color="#10B981"
  />
  <KPICard
  title="Reste à Facturer"
  value={formatEuro(kpis.resteAFacturer)}
- subtitle={`${((kpis.resteAFacturer / kpis.budgetActuel) * 100).toFixed(1)}%`}
+ subtitle={`${(kpis.budgetActuel > 0 ? ((kpis.resteAFacturer / kpis.budgetActuel) * 100) : 0).toFixed(1)}%`}
  icon={<DollarSign className="w-5 h-5 text-orange-600" />}
  color="#F59E0B"
  />
@@ -359,7 +359,7 @@ const FinancierTab: React.FC<FinancierTabProps> = ({ chantierId }) => {
  </td>
  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">
  {recapPostes.length > 0
- ? (recapPostes.reduce((sum, p) => sum + p.avancement, 0) / recapPostes.length).toFixed(1)
+ ? (recapPostes.length > 0 ? (recapPostes.reduce((sum, p) => sum + p.avancement, 0) / recapPostes.length) : 0).toFixed(1)
  : 0}%
  </td>
  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">

@@ -47,13 +47,34 @@ const PlanningGantt: React.FC<PlanningGanttProps> = ({ chantierId }) => {
  }
  };
 
+ const getStatutLabel = (statut: string) => {
+ switch (statut) {
+ case 'terminee': return 'Terminé';
+ case 'en_cours': return 'En cours';
+ case 'bloque': return 'Bloqué';
+ case 'a_faire': return 'À faire';
+ default: return statut;
+ }
+ };
+
+ const getPhaseLabel = (phase: string) => {
+ switch (phase) {
+ case 'etude': return 'Études';
+ case 'execution': return 'Exécution';
+ case 'preparation': return 'Préparation';
+ case 'reception': return 'OPR / Réception';
+ case 'garantie': return 'Garantie';
+ default: return phase;
+ }
+ };
+
  const getStatutColor = (statut: string) => {
  switch (statut) {
- case 'Terminé':
+ case 'terminee':
  return 'bg-green-500';
- case 'En cours':
+ case 'en_cours':
  return 'bg-blue-500';
- case 'Bloqué':
+ case 'bloque':
  return 'bg-red-500';
  default:
  return 'bg-gray-400';
@@ -267,7 +288,7 @@ const PlanningGantt: React.FC<PlanningGanttProps> = ({ chantierId }) => {
  {tache.titre}
  </span>
  </div>
- <span className="text-xs text-gray-500">{tache.phase}</span>
+ <span className="text-xs text-gray-500">{getPhaseLabel(tache.phase)}</span>
  </div>
  <div className="flex-1 relative py-3 px-2">
  <div
@@ -281,7 +302,7 @@ const PlanningGantt: React.FC<PlanningGanttProps> = ({ chantierId }) => {
  className={`h-6 rounded-md ${
  getStatutColor(tache.statut)
  } opacity-80 hover:opacity-100 transition-opacity cursor-pointer group`}
- title={`${tache.titre}\n${tache.statut}\nDébut: ${new Date(
+ title={`${tache.titre}\n${getStatutLabel(tache.statut)}\nDébut: ${new Date(
  tache.created_at
  ).toLocaleDateString('fr-FR')}\nFin: ${new Date(
  tache.date_echeance

@@ -63,7 +63,7 @@ export default function AvenantsTable({ chantierId, budgetInitial = 0 }: Avenant
  .reduce((sum, a) => sum + a.montant, 0);
 
  const budgetActuel = budgetInitial + totalAvenantsAcceptes;
- const pourcentageImpact = ((totalAvenantsAcceptes / budgetInitial) * 100).toFixed(2);
+ const pourcentageImpact = budgetInitial > 0 ? ((totalAvenantsAcceptes / budgetInitial) * 100).toFixed(2) : '0.00';
 
  const getStatutBadge = (statut: AvenantStatut) => {
  const styles = {
