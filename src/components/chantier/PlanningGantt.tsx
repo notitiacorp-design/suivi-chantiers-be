@@ -5,13 +5,13 @@ import { toast } from 'react-hot-toast';
 
 interface Tache {
  id: string;
- numero: number;
- nom: string;
+ ordre: number;
+ titre: string;
  phase: string;
  statut: string;
- date_debut: string | null;
- date_fin_prevue: string | null;
- date_fin_reelle: string | null;
+ created_at: string;
+ date_echeance: string | null;
+ 
 }
 
 interface PlanningGanttProps {
@@ -32,11 +32,10 @@ const PlanningGantt: React.FC<PlanningGanttProps> = ({ chantierId }) => {
  try {
  setLoading(true);
  const { data, error } = await supabase
- .from('taches_process')
- .select('id, numero, nom, phase, statut, date_debut, date_fin_prevue, date_fin_reelle')
+ .from('taches')
+ .select('id, ordre, titre, phase, statut, created_at, date_echeance')
  .eq('chantier_id', chantierId)
- .not('date_debut', 'is', null)
- .order('date_debut');
+  .order('ordre');
 
  if (error) throw error;
  setTaches(data || []);
@@ -243,10 +242,10 @@ const PlanningGantt: React.FC<PlanningGanttProps> = ({ chantierId }) => {
  )}
 
  {taches.map((tache) => {
- if (!tache.date_debut || !tache.date_fin_prevue) return null;
+ if (!tache.created_at || !tache.date_echeance) return null;
 
- const startOffset = getDaysSinceStart(tache.date_debut, startDate);
- const duration = getDuration(tache.date_debut, tache.date_fin_prevue);
+ const startOffset = getDaysSinceStart(tache.created_at, startDate);
+ const duration = getDuration(tache.created_at, tache.date_echeance);
 
  // Skip if outside view
  if (startOffset + duration < 0 || startOffset >= dateRange.length) {
@@ -263,9 +262,9 @@ const PlanningGantt: React.FC<PlanningGanttProps> = ({ chantierId }) => {
  >
  <div className="w-64 flex-shrink-0 px-4 py-3 border-r border-gray-200">
  <div className="flex items-center space-x-2">
- <span className="text-xs text-gray-500">#{tache.numero}</span>
+ <span className="text-xs text-gray-500">#{tache.ordre}</span>
  <span className="text-sm text-gray-900 truncate">
- {tache.nom}
+ {tache.titre}
  </span>
  </div>
  <span className="text-xs text-gray-500">{tache.phase}</span>
@@ -282,14 +281,14 @@ const PlanningGantt: React.FC<PlanningGanttProps> = ({ chantierId }) => {
  className={`h-6 rounded-md ${
  getStatutColor(tache.statut)
  } opacity-80 hover:opacity-100 transition-opacity cursor-pointer group`}
- title={`${tache.nom}\n${tache.statut}\nDébut: ${new Date(
- tache.date_debut
+ title={`${tache.titre}\n${tache.statut}\nDébut: ${new Date(
+ tache.created_at
  ).toLocaleDateString('fr-FR')}\nFin: ${new Date(
- tache.date_fin_prevue
+ tache.date_echeance
  ).toLocaleDateString('fr-FR')}`}
  >
  <div className="px-2 py-1 text-xs text-white font-medium truncate">
- {tache.nom}
+ {tache.titre}
  </div>
  </div>
  </div>

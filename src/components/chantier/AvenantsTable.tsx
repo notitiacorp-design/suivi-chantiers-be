@@ -11,21 +11,21 @@ interface Avenant {
  id: string;
  chantier_id: string;
  numero: string;
- description: string;
+ objet: string;
  montant: number;
- date_avenant: string;
+ date_demande: string;
  statut: AvenantStatut;
- impact_planning: string | null;
+ commentaire: string | null;
  created_at: string;
  updated_at: string;
 }
 
 interface AvenantsTableProps {
  chantierId: string;
- budgetInitial: number;
+ budgetInitial?: number;
 }
 
-export default function AvenantsTable({ chantierId, budgetInitial }: AvenantsTableProps) {
+export default function AvenantsTable({ chantierId, budgetInitial = 0 }: AvenantsTableProps) {
  const [isFormOpen, setIsFormOpen] = useState(false);
  const [editingAvenant, setEditingAvenant] = useState<Avenant | null>(null);
  const queryClient = useQueryClient();
@@ -37,7 +37,7 @@ export default function AvenantsTable({ chantierId, budgetInitial }: AvenantsTab
  .from('avenants')
  .select('*')
  .eq('chantier_id', chantierId)
- .order('date_avenant', { ascending: false });
+ .order('date_demande', { ascending: false });
 
  if (error) throw error;
  return data as Avenant[];
@@ -101,7 +101,7 @@ export default function AvenantsTable({ chantierId, budgetInitial }: AvenantsTab
  <div className="bg-white rounded-lg shadow p-6">
  <div className="text-sm text-gray-600 mb-1">Budget Initial</div>
  <div className="text-2xl font-bold text-gray-900">
- {budgetInitial.toLocaleString('fr-FR')} €
+ {(budgetInitial || 0).toLocaleString('fr-FR')} €
  </div>
  </div>
  <div className="bg-white rounded-lg shadow p-6">
@@ -109,13 +109,13 @@ export default function AvenantsTable({ chantierId, budgetInitial }: AvenantsTab
  <div className={`text-2xl font-bold ${
  totalAvenantsAcceptes >= 0 ? 'text-green-600' : 'text-red-600'
  }`}>
- {totalAvenantsAcceptes >= 0 ? '+' : ''}{totalAvenantsAcceptes.toLocaleString('fr-FR')} €
+ {totalAvenantsAcceptes >= 0 ? '+' : ''}{(totalAvenantsAcceptes || 0).toLocaleString('fr-FR')} €
  </div>
  </div>
  <div className="bg-white rounded-lg shadow p-6">
  <div className="text-sm text-gray-600 mb-1">Budget Actuel</div>
  <div className="text-2xl font-bold text-blue-600">
- {budgetActuel.toLocaleString('fr-FR')} €
+ {(budgetActuel || 0).toLocaleString('fr-FR')} €
  </div>
  </div>
  <div className="bg-white rounded-lg shadow p-6">
@@ -193,23 +193,23 @@ export default function AvenantsTable({ chantierId, budgetInitial }: AvenantsTab
  {avenant.numero}
  </td>
  <td className="px-6 py-4 text-sm text-gray-900">
- {avenant.description}
+ {avenant.objet}
  </td>
  <td className="px-6 py-4 whitespace-nowrap">
  <span className={`text-sm font-semibold ${
  avenant.montant >= 0 ? 'text-green-600' : 'text-red-600'
  }`}>
- {avenant.montant >= 0 ? '+' : ''}{avenant.montant.toLocaleString('fr-FR')} €
+ {avenant.montant >= 0 ? '+' : ''}{avenant.(montant || 0).toLocaleString('fr-FR')} €
  </span>
  </td>
  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
- {format(new Date(avenant.date_avenant), 'dd/MM/yyyy', { locale: fr })}
+ {format(new Date(avenant.date_demande), 'dd/MM/yyyy', { locale: fr })}
  </td>
  <td className="px-6 py-4 whitespace-nowrap">
  {getStatutBadge(avenant.statut)}
  </td>
  <td className="px-6 py-4 text-sm text-gray-600">
- {avenant.impact_planning || '-'}
+ {avenant.commentaire || '-'}
  </td>
  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
  <button
@@ -264,11 +264,11 @@ interface AvenantFormProps {
 function AvenantForm({ chantierId, avenant, onClose, onSuccess }: AvenantFormProps) {
  const [formData, setFormData] = useState({
  numero: avenant?.numero || '',
- description: avenant?.description || '',
+ objet: avenant?.objet || '',
  montant: avenant?.montant || 0,
- date_avenant: avenant?.date_avenant || new Date().toISOString().split('T')[0],
+ date_demande: avenant?.date_avenant || new Date().toISOString().split('T')[0],
  statut: avenant?.statut || 'en_attente' as AvenantStatut,
- impact_planning: avenant?.impact_planning || '',
+ commentaire: avenant?.commentaire || '',
  });
 
  const mutation = useMutation({
@@ -326,7 +326,7 @@ function AvenantForm({ chantierId, avenant, onClose, onSuccess }: AvenantFormPro
  type="date"
  required
  value={formData.date_avenant}
- onChange={(e) => setFormData({ ...formData, date_avenant: e.target.value })}
+ onChange={(e) => setFormData({ ...formData, date_demande: e.target.value })}
  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
  />
  </div>
@@ -338,8 +338,8 @@ function AvenantForm({ chantierId, avenant, onClose, onSuccess }: AvenantFormPro
  </label>
  <textarea
  required
- value={formData.description}
- onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+ value={formData.objet}
+ onChange={(e) => setFormData({ ...formData, objet: e.target.value })}
  rows={3}
  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
  placeholder="Description de l'avenant..."
@@ -387,8 +387,8 @@ function AvenantForm({ chantierId, avenant, onClose, onSuccess }: AvenantFormPro
  </label>
  <input
  type="text"
- value={formData.impact_planning}
- onChange={(e) => setFormData({ ...formData, impact_planning: e.target.value })}
+ value={formData.commentaire}
+ onChange={(e) => setFormData({ ...formData, commentaire: e.target.value })}
  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
  placeholder="Ex: +15 jours, Report livraison au 15/06..."
  />

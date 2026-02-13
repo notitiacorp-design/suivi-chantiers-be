@@ -7,15 +7,15 @@ interface Tache {
  id: string;
  chantier_id: string;
  phase: string;
- numero: number;
- nom: string;
+ ordre: number;
+ titre: string;
  statut: string;
  priorite: string;
- date_debut: string | null;
- date_fin_prevue: string | null;
- date_fin_reelle: string | null;
+ created_at: string;
+ date_echeance: string | null;
+ 
  commentaire: string | null;
- poids: number;
+ pourcentage: number;
 }
 
 interface ChecklistProcessProps {
@@ -24,38 +24,38 @@ interface ChecklistProcessProps {
 
 const TACHES_TEMPLATE = [
  // Phase Études
- { phase: 'Études', numero: 1, nom: 'Plans de réservation', poids: 10 },
- { phase: 'Études', numero: 2, nom: 'Bilan des fluides', poids: 10 },
- { phase: 'Études', numero: 3, nom: 'Fiches techniques', poids: 10 },
- { phase: 'Études', numero: 4, nom: 'Devis/Avenants', poids: 15 },
- { phase: 'Études', numero: 5, nom: 'Avancement global', poids: 5 },
- { phase: 'Études', numero: 6, nom: 'Travaux réalisés', poids: 10 },
+ { phase: 'Études', ordre: 1, titre: 'Plans de réservation', pourcentage: 10 },
+ { phase: 'Études', ordre: 2, titre: 'Bilan des fluides', pourcentage: 10 },
+ { phase: 'Études', ordre: 3, titre: 'Fiches techniques', pourcentage: 10 },
+ { phase: 'Études', ordre: 4, titre: 'Devis/Avenants', pourcentage: 15 },
+ { phase: 'Études', ordre: 5, titre: 'Avancement global', pourcentage: 5 },
+ { phase: 'Études', ordre: 6, titre: 'Travaux réalisés', pourcentage: 10 },
  // Phase Exécution
- { phase: 'Exécution', numero: 7, nom: 'Planning respecté', poids: 10 },
- { phase: 'Exécution', numero: 8, nom: 'Commandes passées', poids: 8 },
- { phase: 'Exécution', numero: 9, nom: 'Livraisons', poids: 8 },
- { phase: 'Exécution', numero: 10, nom: 'Contraintes techniques', poids: 10 },
- { phase: 'Exécution', numero: 11, nom: 'Contraintes administratives', poids: 10 },
- { phase: 'Exécution', numero: 12, nom: 'Déclaration sous-traitance', poids: 5 },
- { phase: 'Exécution', numero: 13, nom: 'Coordination autres corps d\'état', poids: 8 },
- { phase: 'Exécution', numero: 14, nom: 'Coordination sous-traitants', poids: 8 },
- { phase: 'Exécution', numero: 15, nom: 'Visite/inspection commune', poids: 8 },
- { phase: 'Exécution', numero: 16, nom: 'Avancement facturable', poids: 10 },
- { phase: 'Exécution', numero: 17, nom: 'Information transmise à Irena', poids: 5 },
+ { phase: 'Exécution', ordre: 7, titre: 'Planning respecté', pourcentage: 10 },
+ { phase: 'Exécution', ordre: 8, titre: 'Commandes passées', pourcentage: 8 },
+ { phase: 'Exécution', ordre: 9, titre: 'Livraisons', pourcentage: 8 },
+ { phase: 'Exécution', ordre: 10, titre: 'Contraintes techniques', pourcentage: 10 },
+ { phase: 'Exécution', ordre: 11, titre: 'Contraintes administratives', pourcentage: 10 },
+ { phase: 'Exécution', ordre: 12, titre: 'Déclaration sous-traitance', pourcentage: 5 },
+ { phase: 'Exécution', ordre: 13, titre: 'Coordination autres corps d\'état', pourcentage: 8 },
+ { phase: 'Exécution', ordre: 14, titre: 'Coordination sous-traitants', pourcentage: 8 },
+ { phase: 'Exécution', ordre: 15, titre: 'Visite/inspection commune', pourcentage: 8 },
+ { phase: 'Exécution', ordre: 16, titre: 'Avancement facturable', pourcentage: 10 },
+ { phase: 'Exécution', ordre: 17, titre: 'Information transmise à Irena', pourcentage: 5 },
  // Phase OPR/Réception
- { phase: 'OPR/Réception', numero: 18, nom: 'OPR réalisée', poids: 15 },
- { phase: 'OPR/Réception', numero: 19, nom: 'Liste des réserves', poids: 10 },
- { phase: 'OPR/Réception', numero: 20, nom: 'Réception', poids: 15 },
- { phase: 'OPR/Réception', numero: 21, nom: 'Mise en service', poids: 10 },
- { phase: 'OPR/Réception', numero: 22, nom: 'DOE', poids: 10 },
- { phase: 'OPR/Réception', numero: 23, nom: 'Remise des clés', poids: 5 },
- { phase: 'OPR/Réception', numero: 24, nom: 'Étiquetage matériels', poids: 5 },
- { phase: 'OPR/Réception', numero: 25, nom: 'DGD', poids: 10 },
- { phase: 'OPR/Réception', numero: 26, nom: 'Communication client', poids: 8 },
- { phase: 'OPR/Réception', numero: 27, nom: 'Photos chantier', poids: 5 },
- { phase: 'OPR/Réception', numero: 28, nom: 'Transmission fiche', poids: 8 },
- { phase: 'OPR/Réception', numero: 29, nom: 'Impact', poids: 10 },
- { phase: 'OPR/Réception', numero: 30, nom: 'Synthèse technique', poids: 10 },
+ { phase: 'OPR/Réception', ordre: 18, titre: 'OPR réalisée', pourcentage: 15 },
+ { phase: 'OPR/Réception', ordre: 19, titre: 'Liste des réserves', pourcentage: 10 },
+ { phase: 'OPR/Réception', ordre: 20, titre: 'Réception', pourcentage: 15 },
+ { phase: 'OPR/Réception', ordre: 21, titre: 'Mise en service', pourcentage: 10 },
+ { phase: 'OPR/Réception', ordre: 22, titre: 'DOE', pourcentage: 10 },
+ { phase: 'OPR/Réception', ordre: 23, titre: 'Remise des clés', pourcentage: 5 },
+ { phase: 'OPR/Réception', ordre: 24, titre: 'Étiquetage matériels', pourcentage: 5 },
+ { phase: 'OPR/Réception', ordre: 25, titre: 'DGD', pourcentage: 10 },
+ { phase: 'OPR/Réception', ordre: 26, titre: 'Communication client', pourcentage: 8 },
+ { phase: 'OPR/Réception', ordre: 27, titre: 'Photos chantier', pourcentage: 5 },
+ { phase: 'OPR/Réception', ordre: 28, titre: 'Transmission fiche', pourcentage: 8 },
+ { phase: 'OPR/Réception', ordre: 29, titre: 'Impact', pourcentage: 10 },
+ { phase: 'OPR/Réception', ordre: 30, titre: 'Synthèse technique', pourcentage: 10 },
 ];
 
 const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
@@ -75,7 +75,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  {
  event: '*',
  schema: 'public',
- table: 'taches_process',
+ table: 'taches',
  filter: `chantier_id=eq.${chantierId}`,
  },
  () => {
@@ -93,7 +93,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  try {
  setLoading(true);
  const { data, error } = await supabase
- .from('taches_process')
+ .from('taches')
  .select('*')
  .eq('chantier_id', chantierId)
  .order('numero');
@@ -119,11 +119,11 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  const tachesInit = TACHES_TEMPLATE.map((t) => ({
  chantier_id: chantierId,
  phase: t.phase,
- numero: t.numero,
- nom: t.nom,
+ numero: t.ordre,
+ nom: t.titre,
  statut: 'À faire',
  priorite: 'Normale',
- poids: t.poids,
+ poids: t.pourcentage,
  date_debut: null,
  date_fin_prevue: null,
  date_fin_reelle: null,
@@ -131,7 +131,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  }));
 
  const { data, error } = await supabase
- .from('taches_process')
+ .from('taches')
  .insert(tachesInit)
  .select();
 
@@ -152,7 +152,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  );
 
  const { error } = await supabase
- .from('taches_process')
+ .from('taches')
  .update(updates)
  .eq('id', tacheId);
 
@@ -180,10 +180,10 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  const phaseTaches = taches.filter((t) => t.phase === phase);
  if (phaseTaches.length === 0) return 0;
 
- const totalPoids = phaseTaches.reduce((sum, t) => sum + t.poids, 0);
+ const totalPoids = phaseTaches.reduce((sum, t) => sum + t.pourcentage, 0);
  const poidsTermines = phaseTaches
  .filter((t) => t.statut === 'Terminé')
- .reduce((sum, t) => sum + t.poids, 0);
+ .reduce((sum, t) => sum + t.pourcentage, 0);
 
  return totalPoids > 0 ? Math.round((poidsTermines / totalPoids) * 100) : 0;
  };
@@ -191,10 +191,10 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  const getGlobalScore = () => {
  if (taches.length === 0) return 0;
 
- const totalPoids = taches.reduce((sum, t) => sum + t.poids, 0);
+ const totalPoids = taches.reduce((sum, t) => sum + t.pourcentage, 0);
  const poidsTermines = taches
  .filter((t) => t.statut === 'Terminé')
- .reduce((sum, t) => sum + t.poids, 0);
+ .reduce((sum, t) => sum + t.pourcentage, 0);
 
  return totalPoids > 0 ? Math.round((poidsTermines / totalPoids) * 100) : 0;
  };
@@ -206,8 +206,8 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  case 'late':
  filtered = filtered.filter(
  (t) =>
- t.date_fin_prevue &&
- new Date(t.date_fin_prevue) < new Date() &&
+ t.date_echeance &&
+ new Date(t.date_echeance) < new Date() &&
  t.statut !== 'Terminé'
  );
  break;
@@ -396,7 +396,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  <div className="flex-1 min-w-0">
  <div className="flex items-center space-x-2 mb-2">
  <span className="text-xs font-medium text-gray-500">
- #{tache.numero}
+ #{tache.ordre}
  </span>
  <h4
  className={`font-medium ${
@@ -405,7 +405,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  : 'text-gray-900'
  }`}
  >
- {tache.nom}
+ {tache.titre}
  </h4>
  </div>
 
@@ -442,7 +442,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  </select>
 
  <span className="text-xs text-gray-500">
- Poids: {tache.poids}
+ Poids: {tache.pourcentage}
  </span>
  </div>
 
@@ -452,7 +452,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  <label className="text-gray-500 block mb-1">Début</label>
  <input
  type="date"
- value={tache.date_debut || ''}
+ value={tache.created_at || ''}
  onChange={(e) =>
  updateTache(tache.id, { date_debut: e.target.value })
  }
@@ -463,7 +463,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  <label className="text-gray-500 block mb-1">Fin prévue</label>
  <input
  type="date"
- value={tache.date_fin_prevue || ''}
+ value={tache.date_echeance || ''}
  onChange={(e) =>
  updateTache(tache.id, { date_fin_prevue: e.target.value })
  }
@@ -474,7 +474,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  <label className="text-gray-500 block mb-1">Fin réelle</label>
  <input
  type="date"
- value={tache.date_fin_reelle || ''}
+ value={tache.date_echeance || ''}
  onChange={(e) =>
  updateTache(tache.id, { date_fin_reelle: e.target.value })
  }
