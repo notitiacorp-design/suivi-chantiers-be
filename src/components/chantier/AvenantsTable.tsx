@@ -199,7 +199,7 @@ export default function AvenantsTable({ chantierId, budgetInitial = 0 }: Avenant
  <span className={`text-sm font-semibold ${
  avenant.montant >= 0 ? 'text-green-600' : 'text-red-600'
  }`}>
- {avenant.montant >= 0 ? '+' : ''}{avenant.(montant || 0).toLocaleString('fr-FR')} €
+ {avenant.montant >= 0 ? '+' : ''}{(avenant.montant || 0).toLocaleString('fr-FR')} €
  </span>
  </td>
  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
