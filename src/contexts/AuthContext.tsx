@@ -20,7 +20,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-// Timeout wrapper pour les requêtes Supabase
+// Timeout wrapper pour les requetes Supabase
 const withTimeout = <T,>(promise: Promise<T>, ms: number, errorMsg: string): Promise<T> => {
   return Promise.race([
     promise,
@@ -36,257 +36,150 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // Charger le profil utilisateur - VERSION NON-BLOQUANTE avec timeout
-  const loadProfile = useCallback(async (userId: string, currentUser?: User | null) => {
+  // Charger le profil utilisateur avec timeout
+  const loadProfile = useCallback(async (userId: string) => {
     try {
-      // Timeout de 2 secondes pour le chargement du profil
       const { data, error } = await withTimeout(
         supabase
           .from('profiles')
           .select('*')
           .eq('id', userId)
           .single(),
-        2000,
+        5000,
         'Timeout chargement profil'
       );
 
       if (error) {
-        console.warn('Erreur chargement profil (non bloquant):', error);
-        // Créer un profil minimal à partir des user_metadata
-        const minimalProfile: Profile = {
-          id: userId,
-          email: currentUser?.email || '',
-          nom: currentUser?.user_metadata?.nom || currentUser?.email?.split('@')[0] || 'Utilisateur',
-          prenom: currentUser?.user_metadata?.prenom || '',
-          role: currentUser?.user_metadata?.role || 'directeur',
-          actif: true,
-          created_at: currentUser?.created_at || new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        };
-        setProfile(minimalProfile);
+        console.error('Erreur chargement profil:', error.message);
         return;
       }
 
-      if (data && !data.actif) {
-        throw new Error('Votre compte a été désactivé. Contactez un administrateur.')
+      if (data) {
+        setProfile(data as Profile);
       }
-
-      setProfile(data)
-    } catch (error: any) {
-      console.error('Erreur lors du chargement du profil:', error)
-      // Ne pas bloquer - créer un profil minimal
-      const minimalProfile: Profile = {
-        id: userId,
-        email: currentUser?.email || '',
-        nom: currentUser?.user_metadata?.nom || currentUser?.email?.split('@')[0] || 'Utilisateur',
-        prenom: currentUser?.user_metadata?.prenom || '',
-        role: currentUser?.user_metadata?.role || 'directeur',
-        actif: true,
-        created_at: currentUser?.created_at || new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
-      setProfile(minimalProfile);
+    } catch (err) {
+      console.error('Erreur profil:', err);
     }
-  }, [])
+  }, []);
 
-  // Initialisation de la session - VERSION AVEC TIMEOUT GLOBAL
   useEffect(() => {
-    let mounted = true
+    let mounted = true;
 
-    async function initializeAuth() {
+    // Recuperer la session existante
+    const getInitialSession = async () => {
       try {
-        setLoading(true)
+        const { data: { session: currentSession } } = await withTimeout(
+          supabase.auth.getSession(),
+          5000,
+          'Timeout session'
+        );
 
-        // Timeout global de 3 secondes pour l'initialisation
-        const initTimeout = setTimeout(() => {
-          if (mounted) {
-            console.warn('Auth initialization timeout - forcing ready state');
-            setLoading(false);
-          }
-        }, 3000);
+        if (!mounted) return;
 
-        // Récupérer la session actuelle
-        const { data: { session: currentSession }, error: sessionError } =
-          await supabase.auth.getSession()
-
-        clearTimeout(initTimeout);
-
-        if (sessionError) throw sessionError
-
-        if (mounted) {
-          setSession(currentSession)
-          setUser(currentSession?.user ?? null)
-
-          // Charger le profil si l'utilisateur est connecté - NON BLOQUANT
-          if (currentSession?.user) {
-            // Ne pas await - laisser charger en arrière-plan
-            loadProfile(currentSession.user.id, currentSession.user).catch(err => {
-              console.warn('Profile load failed (non-blocking):', err);
-            });
-          }
+        if (currentSession?.user) {
+          setSession(currentSession);
+          setUser(currentSession.user);
+          await loadProfile(currentSession.user.id);
         }
-      } catch (error) {
-        console.error("Erreur d'initialisation:", error)
-        if (mounted) {
-          setSession(null)
-          setUser(null)
-          setProfile(null)
-        }
+      } catch (err) {
+        console.error('Erreur session initiale:', err);
       } finally {
-        if (mounted) {
-          setLoading(false)
-        }
+        if (mounted) setLoading(false);
       }
-    }
+    };
 
-    initializeAuth()
+    getInitialSession();
 
-    // Écouter les changements d'authentification
+    // Ecouter les changements d'auth
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, newSession) => {
-        if (!mounted) return
+        if (!mounted) return;
 
-        console.log('Auth event:', event)
-
-        setSession(newSession)
-        setUser(newSession?.user ?? null)
+        setSession(newSession);
+        setUser(newSession?.user ?? null);
 
         if (newSession?.user) {
-          // NON BLOQUANT - charger le profil en arrière-plan
-          loadProfile(newSession.user.id, newSession.user).catch(err => {
-            console.warn('Profile load on auth change failed (non-blocking):', err);
-          });
+          await loadProfile(newSession.user.id);
         } else {
-          setProfile(null)
+          setProfile(null);
         }
 
         if (event === 'SIGNED_OUT') {
-          setProfile(null)
+          setProfile(null);
         }
+
+        setLoading(false);
       }
-    )
+    );
 
     return () => {
-      mounted = false
-      subscription.unsubscribe()
-    }
-  }, [loadProfile])
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, [loadProfile]);
 
-  // Connexion - VERSION AVEC REDIRECTION IMMÉDIATE
   const signIn = useCallback(async (email: string, password: string) => {
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
+    // SECURITY: Always use Supabase auth - no mock fallback
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-      if (error) throw error
+    if (error) throw error;
 
-      if (data.session && data.user) {
-        setSession(data.session)
-        setUser(data.user)
-        
-        // Charger le profil en arrière-plan (non-bloquant)
-        loadProfile(data.user.id, data.user).catch(err => {
-          console.warn('Profile load after signin failed (non-blocking):', err);
-        });
-      }
-    } catch (error) {
-      console.error('Erreur de connexion:', error)
-      throw error
+    if (data.user) {
+      setUser(data.user);
+      setSession(data.session);
+      await loadProfile(data.user.id);
+      toast.success('Connexion reussie !');
     }
-  }, [loadProfile])
+  }, [loadProfile]);
 
-  // Inscription
   const signUp = useCallback(async (email: string, password: string, userData: Partial<Profile>) => {
-    try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: userData,
-        },
-      })
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: userData,
+      },
+    });
 
-      if (error) throw error
+    if (error) throw error;
 
-      if (data.session) {
-        setSession(data.session)
-        setUser(data.user)
-        
-        // Créer le profil en arrière-plan
-        if (data.user) {
-          const newProfile: Profile = {
-            id: data.user.id,
-            email: email,
-            nom: userData.nom || '',
-            prenom: userData.prenom || '',
-            role: userData.role || 'charge_affaires',
-            actif: true,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          }
-          
-          // Non-bloquant
-          supabase.from('profiles').insert(newProfile).then(({ error }) => {
-            if (error) console.warn('Erreur création profil (non bloquant):', error);
-          });
-          
-          setProfile(newProfile)
-        }
-      }
-    } catch (error) {
-      console.error("Erreur d'inscription:", error)
-      throw error
-    }
-  }, [])
+    toast.success('Inscription reussie ! Verifiez votre email.');
+  }, []);
 
-  // déconnexion
   const signOut = useCallback(async () => {
-    try {
-      const { error } = await supabase.auth.signOut()
-      if (error) throw error
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
 
-      setSession(null)
-      setUser(null)
-      setProfile(null)
-    } catch (error) {
-      console.error('Erreur de déconnexion:', error)
-      throw error
-    }
-  }, [])
+    setUser(null);
+    setProfile(null);
+    setSession(null);
+    toast.success('Deconnexion reussie');
+  }, []);
 
-  // Mettre à jour le profil
   const updateProfile = useCallback(async (updates: Partial<Profile>) => {
-    try {
-      if (!user) throw new Error('Non authentifié')
+    if (!user?.id) throw new Error('Non authentifie');
 
-      const { data, error } = await supabase
-        .from('profiles')
-        .update(updates)
-        .eq('id', user.id)
-        .select()
-        .single()
+    const { error } = await supabase
+      .from('profiles')
+      .update(updates)
+      .eq('id', user.id);
 
-      if (error) throw error
+    if (error) throw error;
 
-      setProfile(data)
-      toast.success('Profil mis à jour')
-    } catch (error) {
-      console.error('Erreur mise à jour profil:', error)
-      toast.error('Erreur lors de la mise à jour')
-      throw error
-    }
-  }, [user])
+    await loadProfile(user.id);
+    toast.success('Profil mis a jour');
+  }, [user, loadProfile]);
 
-  // Rafraîchir le profil
   const refreshProfile = useCallback(async () => {
-    if (user) {
-      await loadProfile(user.id, user)
+    if (user?.id) {
+      await loadProfile(user.id);
     }
-  }, [user, loadProfile])
+  }, [user, loadProfile]);
 
-  const value = {
+  const value: AuthContextType = {
     user,
     profile,
     session,
@@ -298,15 +191,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signOut,
     updateProfile,
     refreshProfile,
-  }
+  };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext)
+  const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider')
+    throw new Error('useAuth must be used within an AuthProvider');
   }
-  return context
+  return context;
 }

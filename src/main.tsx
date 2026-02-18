@@ -14,19 +14,23 @@ class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasErr
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('React Error:', error, errorInfo);
+    // SECURITY: Log to monitoring service, not console in production
+    if (import.meta.env.DEV) {
+      console.error('React Error:', error, errorInfo);
+    }
+    // TODO: Send to Sentry or similar monitoring service
   }
 
   render() {
     if (this.state.hasError) {
       return (
         <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-          <h1 style={{ color: 'red' }}>Erreur de chargement</h1>
-          <p>L'application a rencontré une erreur.</p>
-          <pre style={{ background: '#f5f5f5', padding: '1rem', overflow: 'auto', fontSize: '0.875rem' }}>
-            {this.state.error?.message}
-          </pre>
-          <button onClick={() => window.location.reload()} style={{ padding: '0.5rem 1rem', marginTop: '1rem', cursor: 'pointer' }}>
+          <h1 style={{ color: '#dc2626' }}>Erreur de chargement</h1>
+          <p>L'application a rencontre une erreur inattendue.</p>
+          <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>
+            Si le probleme persiste, contactez l'administrateur.
+          </p>
+          <button onClick={() => window.location.reload()} style={{ padding: '0.5rem 1rem', marginTop: '1rem', cursor: 'pointer', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '0.375rem' }}>
             Recharger
           </button>
         </div>
