@@ -37,7 +37,7 @@ interface Facture {
 const FinancierTab: React.FC<FinancierTabProps> = ({ chantierId }) => {
  const [selectedPeriod, setSelectedPeriod] = useState<number>(6);
 
- // RÃ©cupÃ©rer le chantier
+ // Récupérer le chantier
  const { data: chantier } = useQuery({
  queryKey: ['chantier', chantierId],
  queryFn: async () => {
@@ -51,7 +51,7 @@ const FinancierTab: React.FC<FinancierTabProps> = ({ chantierId }) => {
  }
  });
 
- // RÃ©cupÃ©rer les avenants
+ // Récupérer les avenants
  const { data: avenants = [] } = useQuery<Avenant[]>({
  queryKey: ['avenants', chantierId],
  queryFn: async () => {
@@ -65,7 +65,7 @@ const FinancierTab: React.FC<FinancierTabProps> = ({ chantierId }) => {
  }
  });
 
- // RÃ©cupÃ©rer les factures
+ // Récupérer les factures
  const { data: factures = [] } = useQuery<Facture[]>({
  queryKey: ['factures', chantierId],
  queryFn: async () => {
@@ -79,7 +79,7 @@ const FinancierTab: React.FC<FinancierTabProps> = ({ chantierId }) => {
  }
  });
 
- // Budgets par poste (table budget_postes non disponible - utilisation des donnÃ©es chantier)
+ // Budgets par poste (table budget_postes non disponible - utilisation des données chantier)
  const budgets: Budget[] = [];
 
  // Calculer les KPIs
@@ -104,7 +104,7 @@ const FinancierTab: React.FC<FinancierTabProps> = ({ chantierId }) => {
  const margeEstimee = budgetActuel - budgetConsomme;
  const margePourcentage = budgetActuel > 0 ? (margeEstimee / budgetActuel) * 100 : 0;
 
- // Alerte trÃ©sorerie
+ // Alerte trésorerie
  const alerteTresorerie = budgetActuel > 0 ? (factureNet / budgetActuel * 100) < (avancement - 20) : false;
 
  return {
@@ -121,18 +121,18 @@ const FinancierTab: React.FC<FinancierTabProps> = ({ chantierId }) => {
  };
  }, [chantier, avenants, factures, budgets]);
 
- // DonnÃ©es pour le graphique Budget vs FacturÃ© vs Avancement
+ // Données pour le graphique Budget vs Facturé vs Avancement
  const chartBudgetData = useMemo(() => {
  return [{
  name: 'Chantier',
  'Budget Initial': kpis.budgetInitial,
  'Budget Actuel': kpis.budgetActuel,
- 'FacturÃ©': kpis.factureNet,
+ 'Facturé': kpis.factureNet,
  'Avancement (%)': kpis.avancement
  }];
  }, [kpis]);
 
- // DonnÃ©es pour l'Ã©volution mensuelle
+ // Données pour l'évolution mensuelle
  const evolutionMensuelle = useMemo(() => {
  const startDate = subMonths(new Date(), selectedPeriod - 1);
  const months = eachMonthOfInterval({
@@ -159,7 +159,7 @@ const FinancierTab: React.FC<FinancierTabProps> = ({ chantierId }) => {
  });
  }, [factures, selectedPeriod, kpis.budgetActuel]);
 
- // DonnÃ©es rÃ©cap par poste
+ // Données récap par poste
  const recapPostes = useMemo(() => {
  return budgets.map(budget => ({
  poste: budget.poste,
@@ -208,15 +208,15 @@ const FinancierTab: React.FC<FinancierTabProps> = ({ chantierId }) => {
 
  return (
  <div className="space-y-6 p-6">
- {/* Alerte TrÃ©sorerie */}
+ {/* Alerte Trésorerie */}
  {kpis.alerteTresorerie && (
  <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
  <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
  <div>
- <h4 className="text-sm font-semibold text-red-900">Alerte TrÃ©sorerie</h4>
+ <h4 className="text-sm font-semibold text-red-900">Alerte Trésorerie</h4>
  <p className="text-sm text-red-700 mt-1">
- La facturation est infÃ©rieure de plus de 20% Ã  l'avancement physique du chantier.
- Il est recommandÃ© d'Ã©mettre une facture d'acompte.
+ La facturation est inférieure de plus de 20% à l'avancement physique du chantier.
+ Il est recommandé d'émettre une facture d'acompte.
  </p>
  </div>
  </div>
@@ -239,21 +239,21 @@ const FinancierTab: React.FC<FinancierTabProps> = ({ chantierId }) => {
  trend={kpis.totalAvenants > 0 ? 'up' : 'neutral'}
  />
  <KPICard
- title="FacturÃ©"
+ title="Facturé"
  value={formatEuro(kpis.factureNet)}
  subtitle={`${(kpis.budgetActuel > 0 ? ((kpis.factureNet / kpis.budgetActuel) * 100) : 0).toFixed(1)}% du budget`}
  icon={<FileText className="w-5 h-5 text-green-600" />}
  color="#10B981"
  />
  <KPICard
- title="Reste Ã  Facturer"
+ title="Reste à Facturer"
  value={formatEuro(kpis.resteAFacturer)}
  subtitle={`${(kpis.budgetActuel > 0 ? ((kpis.resteAFacturer / kpis.budgetActuel) * 100) : 0).toFixed(1)}%`}
  icon={<DollarSign className="w-5 h-5 text-orange-600" />}
  color="#F59E0B"
  />
  <KPICard
- title="Marge EstimÃ©e"
+ title="Marge Estimée"
  value={formatEuro(kpis.margeEstimee)}
  subtitle={`${kpis.margePourcentage.toFixed(1)}%`}
  icon={<Percent className="w-5 h-5 text-purple-600" />}
@@ -262,9 +262,9 @@ const FinancierTab: React.FC<FinancierTabProps> = ({ chantierId }) => {
  />
  </div>
 
- {/* Graphique Budget vs FacturÃ© vs Avancement */}
+ {/* Graphique Budget vs Facturé vs Avancement */}
  <div className="bg-white rounded-lg shadow p-6">
- <h3 className="text-lg font-semibold text-gray-900 mb-4">Budget vs FacturÃ© vs Avancement</h3>
+ <h3 className="text-lg font-semibold text-gray-900 mb-4">Budget vs Facturé vs Avancement</h3>
  <ResponsiveContainer width="100%" height={300}>
  <BarChart data={chartBudgetData}>
  <CartesianGrid strokeDasharray="3 3" />
@@ -274,7 +274,7 @@ const FinancierTab: React.FC<FinancierTabProps> = ({ chantierId }) => {
  <Legend />
  <Bar dataKey="Budget Initial" fill="#3B82F6" />
  <Bar dataKey="Budget Actuel" fill="#6366F1" />
- <Bar dataKey="FacturÃ©" fill="#10B981" />
+ <Bar dataKey="Facturé" fill="#10B981" />
  </BarChart>
  </ResponsiveContainer>
  <div className="mt-4 p-4 bg-gray-50 rounded-lg">
@@ -291,10 +291,10 @@ const FinancierTab: React.FC<FinancierTabProps> = ({ chantierId }) => {
  </div>
  </div>
 
- {/* Tableau RÃ©cap par Poste */}
+ {/* Tableau Récap par Poste */}
  <div className="bg-white rounded-lg shadow overflow-hidden">
  <div className="px-6 py-4 border-b border-gray-200">
- <h3 className="text-lg font-semibold text-gray-900">RÃ©capitulatif par Poste</h3>
+ <h3 className="text-lg font-semibold text-gray-900">Récapitulatif par Poste</h3>
  </div>
  <div className="overflow-x-auto">
  <table className="min-w-full divide-y divide-gray-200">
@@ -303,7 +303,7 @@ const FinancierTab: React.FC<FinancierTabProps> = ({ chantierId }) => {
  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Poste</th>
  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Budget Initial</th>
  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Budget Actuel</th>
- <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">ConsommÃ©</th>
+ <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Consommé</th>
  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Avancement</th>
  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Reste</th>
  </tr>
@@ -363,7 +363,7 @@ const FinancierTab: React.FC<FinancierTabProps> = ({ chantierId }) => {
  {/* Evolution Mensuelle */}
  <div className="bg-white rounded-lg shadow p-6">
  <div className="flex items-center justify-between mb-4">
- <h3 className="text-lg font-semibold text-gray-900">Ãvolution Mensuelle</h3>
+ <h3 className="text-lg font-semibold text-gray-900">Évolution Mensuelle</h3>
  <select
  value={selectedPeriod}
  onChange={(e) => setSelectedPeriod(Number(e.target.value))}
@@ -381,7 +381,7 @@ const FinancierTab: React.FC<FinancierTabProps> = ({ chantierId }) => {
  <YAxis />
  <Tooltip formatter={(value: any) => formatEuro(Number(value))} />
  <Legend />
- <Line type="monotone" dataKey="facture" stroke="#10B981" strokeWidth={2} name="FacturÃ©" />
+ <Line type="monotone" dataKey="facture" stroke="#10B981" strokeWidth={2} name="Facturé" />
  <Line type="monotone" dataKey="budget" stroke="#3B82F6" strokeWidth={2} strokeDasharray="5 5" name="Budget Moyen" />
  </LineChart>
  </ResponsiveContainer>
