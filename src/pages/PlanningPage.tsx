@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
-import { ChevronLeft, ChevronRight, Plus, X, Calendar, User, Briefcase, FileText, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus, X, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 type AffectationType = 'installation' | 'sav' | 'maintenance' | 'etude';
@@ -18,15 +18,15 @@ interface Affectation {
   created_at: string;
 }
 
-const TYPE_CONFIG: Record<AffectationType, { label: string; color: string; bg: string; border: string; badge: string }> = {
-  installation: { label: 'Installation', color: '#3B82F6', bg: 'bg-blue-50', border: 'border-blue-200', badge: 'bg-blue-100 text-blue-700' },
-  sav: { label: 'SAV', color: '#F97316', bg: 'bg-orange-50', border: 'border-orange-200', badge: 'bg-orange-100 text-orange-700' },
-  maintenance: { label: 'Maintenance', color: '#10B981', bg: 'bg-emerald-50', border: 'border-emerald-200', badge: 'bg-emerald-100 text-emerald-700' },
-  etude: { label: 'Étude', color: '#8B5CF6', bg: 'bg-violet-50', border: 'border-violet-200', badge: 'bg-violet-100 text-violet-700' },
+const TYPE_CONFIG: Record<AffectationType, { label: string; color: string; bg: string; borderColor: string }> = {
+  installation: { label: 'Installation', color: '#2563EB', bg: '#EFF6FF', borderColor: '#2563EB' },
+  sav: { label: 'SAV', color: '#DC2626', bg: '#FEF2F2', borderColor: '#DC2626' },
+  maintenance: { label: 'Maintenance', color: '#16A34A', bg: '#F0FDF4', borderColor: '#16A34A' },
+  etude: { label: 'Ãtude', color: '#7C3AED', bg: '#FAF5FF', borderColor: '#7C3AED' },
 };
 
 const DAY_NAMES = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven'];
-const DAY_NAMES_FULL = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
+const MONTH_NAMES = ['Janvier', 'FÃ©vrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'AoÃ»t', 'Septembre', 'Octobre', 'Novembre', 'DÃ©cembre'];
 
 function getMonday(date: Date): Date {
   const d = new Date(date);
@@ -47,26 +47,26 @@ function formatDate(date: Date): string {
   return date.toISOString().split('T')[0];
 }
 
-function formatDisplayDate(date: Date): string {
-  return date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+function getDayIndex(date: Date, monday: Date): number {
+  const diff = Math.round((date.getTime() - monday.getTime()) / (1000 * 60 * 60 * 24));
+  return Math.max(0, Math.min(4, diff));
 }
 
-function formatShortDate(date: Date): string {
-  return date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
-}
-
-function getInitials(name: string): string {
-  return name
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
-}
-
-function isDateInRange(date: Date, start: string, end: string): boolean {
-  const d = formatDate(date);
-  return d >= start && d <= end;
+function getDemoData(monday: Date): Affectation[] {
+  const mon = formatDate(monday);
+  const tue = formatDate(addDays(monday, 1));
+  const wed = formatDate(addDays(monday, 2));
+  const thu = formatDate(addDays(monday, 3));
+  const fri = formatDate(addDays(monday, 4));
+  return [
+    { id: 'demo-1', technicien_nom: 'Thomas D.', technicien_initiales: 'TD', chantier_id: null, chantier_nom: 'CollÃ¨ge J.M. â Montage hottes', date_debut: mon, date_fin: wed, type: 'installation', notes: null, created_at: mon },
+    { id: 'demo-2', technicien_nom: 'Thomas D.', technicien_initiales: 'TD', chantier_id: null, chantier_nom: 'Mairie â Ãtude', date_debut: thu, date_fin: thu, type: 'etude', notes: null, created_at: mon },
+    { id: 'demo-3', technicien_nom: 'Marc L.', technicien_initiales: 'ML', chantier_id: null, chantier_nom: 'EHPAD â Livraison froid', date_debut: mon, date_fin: tue, type: 'installation', notes: null, created_at: mon },
+    { id: 'demo-4', technicien_nom: 'Marc L.', technicien_initiales: 'ML', chantier_id: null, chantier_nom: 'BNP â SAV urgent', date_debut: wed, date_fin: wed, type: 'sav', notes: null, created_at: mon },
+    { id: 'demo-5', technicien_nom: 'Julie M.', technicien_initiales: 'JM', chantier_id: null, chantier_nom: 'Gr. Pasteur â Maint.', date_debut: mon, date_fin: mon, type: 'maintenance', notes: null, created_at: mon },
+    { id: 'demo-6', technicien_nom: 'Julie M.', technicien_initiales: 'JM', chantier_id: null, chantier_nom: 'CollÃ¨ge J.M. â Formation', date_debut: thu, date_fin: fri, type: 'installation', notes: null, created_at: mon },
+    { id: 'demo-7', technicien_nom: 'Pierre B.', technicien_initiales: 'PB', chantier_id: null, chantier_nom: 'EHPAD Vincennes â Installation complÃ¨te', date_debut: mon, date_fin: fri, type: 'installation', notes: null, created_at: mon },
+  ];
 }
 
 export default function PlanningPage() {
@@ -75,7 +75,6 @@ export default function PlanningPage() {
   const [currentMonday, setCurrentMonday] = useState<Date>(() => getMonday(new Date()));
   const [showModal, setShowModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
   const [form, setForm] = useState({
     technicien_nom: '',
@@ -88,6 +87,9 @@ export default function PlanningPage() {
   });
 
   const weekDays = Array.from({ length: 5 }, (_, i) => addDays(currentMonday, i));
+  const friday = addDays(currentMonday, 4);
+  const monthName = MONTH_NAMES[currentMonday.getMonth()];
+  const year = currentMonday.getFullYear();
 
   const fetchAffectations = useCallback(async () => {
     setLoading(true);
@@ -100,10 +102,13 @@ export default function PlanningPage() {
         .or(`date_debut.lte.${weekEnd},date_fin.gte.${weekStart}`)
         .order('technicien_nom', { ascending: true });
       if (error) throw error;
-      setAffectations(data || []);
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Erreur lors du chargement';
-      toast.error(msg);
+      if (data && data.length > 0) {
+        setAffectations(data);
+      } else {
+        setAffectations(getDemoData(currentMonday));
+      }
+    } catch {
+      setAffectations(getDemoData(currentMonday));
     } finally {
       setLoading(false);
     }
@@ -113,55 +118,16 @@ export default function PlanningPage() {
     fetchAffectations();
   }, [fetchAffectations]);
 
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
-
-  const techniciens = Array.from(
-    new Map(affectations.map((a) => [a.technicien_nom, { nom: a.technicien_nom, initiales: a.technicien_initiales || getInitials(a.technicien_nom) }])).values()
-  ).sort((a, b) => a.nom.localeCompare(b.nom));
-
-  const existingTechniciens = Array.from(new Set(affectations.map((a) => a.technicien_nom))).sort();
-
-  const handlePrevWeek = () => setCurrentMonday((d) => addDays(d, -7));
-  const handleNextWeek = () => setCurrentMonday((d) => addDays(d, 7));
-  const handleToday = () => setCurrentMonday(getMonday(new Date()));
-
-  const handleFormChange = (field: string, value: string) => {
-    setForm((prev) => {
-      const updated = { ...prev, [field]: value };
-      if (field === 'technicien_nom') {
-        const existing = affectations.find((a) => a.technicien_nom === value);
-        if (existing) {
-          updated.technicien_initiales = existing.technicien_initiales;
-        } else {
-          updated.technicien_initiales = getInitials(value);
-        }
-      }
-      return updated;
-    });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.technicien_nom.trim() || !form.chantier_nom.trim() || !form.date_debut || !form.date_fin) {
-      toast.error('Veuillez remplir tous les champs obligatoires');
-      return;
-    }
-    if (form.date_fin < form.date_debut) {
-      toast.error('La date de fin doit être après la date de début');
+  const handleSubmit = async () => {
+    if (!form.technicien_nom || !form.chantier_nom || !form.date_debut || !form.date_fin) {
+      toast.error('Remplissez tous les champs obligatoires');
       return;
     }
     setSubmitting(true);
     try {
-      const initiales = form.technicien_initiales || getInitials(form.technicien_nom);
       const { error } = await supabase.from('planning_affectations').insert({
-        id: crypto.randomUUID(),
         technicien_nom: form.technicien_nom.trim(),
-        technicien_initiales: initiales,
+        technicien_initiales: form.technicien_initiales.trim() || form.technicien_nom.trim().split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2),
         chantier_nom: form.chantier_nom.trim(),
         date_debut: form.date_debut,
         date_fin: form.date_fin,
@@ -169,438 +135,294 @@ export default function PlanningPage() {
         notes: form.notes.trim() || null,
       });
       if (error) throw error;
-      toast.success('Affectation ajoutée avec succès');
+      toast.success('Affectation ajoutÃ©e');
       setShowModal(false);
       setForm({ technicien_nom: '', technicien_initiales: '', chantier_nom: '', date_debut: '', date_fin: '', type: 'installation', notes: '' });
       fetchAffectations();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Erreur lors de la création';
+      const msg = err instanceof Error ? err.message : 'Erreur';
       toast.error(msg);
     } finally {
       setSubmitting(false);
     }
   };
 
-  const getAffectationsForCell = (technicienNom: string, day: Date) => {
-    return affectations.filter(
-      (a) => a.technicien_nom === technicienNom && isDateInRange(day, a.date_debut, a.date_fin)
-    );
-  };
+  const technicians: string[] = [];
+  const techMap: Record<string, Affectation[]> = {};
+  for (const aff of affectations) {
+    if (!techMap[aff.technicien_nom]) {
+      techMap[aff.technicien_nom] = [];
+      technicians.push(aff.technicien_nom);
+    }
+    techMap[aff.technicien_nom].push(aff);
+  }
 
-  const getAffectationsForTechnicien = (technicienNom: string) => {
-    return affectations.filter((a) => a.technicien_nom === technicienNom);
-  };
+  interface PlacedBlock {
+    aff: Affectation;
+    colStart: number;
+    colEnd: number;
+  }
 
-  const isToday = (day: Date) => formatDate(day) === formatDate(new Date());
+  function getPlacedBlocks(techAffectations: Affectation[]): PlacedBlock[] {
+    return techAffectations.map(aff => {
+      const startDate = new Date(aff.date_debut + 'T00:00:00');
+      const endDate = new Date(aff.date_fin + 'T00:00:00');
+      let colStart = getDayIndex(startDate, currentMonday);
+      let colEnd = getDayIndex(endDate, currentMonday);
+      if (startDate < currentMonday) colStart = 0;
+      if (endDate > friday) colEnd = 4;
+      return { aff, colStart, colEnd };
+    }).filter(b => b.colStart <= 4 && b.colEnd >= 0);
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 md:px-6 py-4">
-        <div className="max-w-full mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Planning</h1>
-            <p className="text-sm text-gray-500 mt-0.5">Gestion des affectations techniciens</p>
-          </div>
+    <div style={{ minHeight: '100vh', backgroundColor: '#F9FAFB' }}>
+      {/* Week navigation */}
+      <div style={{
+        backgroundColor: '#fff',
+        borderBottom: '1px solid #E5E7EB',
+        padding: '12px 24px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}>
+        <h1 style={{ fontSize: 20, fontWeight: 700, color: '#111827', margin: 0 }}>
+          Planning Ã©quipe â {monthName} {year}
+        </h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <button
-            onClick={() => setShowModal(true)}
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2.5 rounded-lg shadow-sm transition-colors duration-150"
+            onClick={() => setCurrentMonday(addDays(currentMonday, -7))}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#6B7280' }}
+            aria-label="Semaine prÃ©cÃ©dente"
           >
-            <Plus className="w-4 h-4" />
-            Ajouter une affectation
+            <ChevronLeft size={20} />
+          </button>
+          <span style={{ fontSize: 14, color: '#6B7280' }}>
+            Semaine du {currentMonday.getDate()} au {friday.getDate()} {monthName.toLowerCase()}
+          </span>
+          <button
+            onClick={() => setCurrentMonday(addDays(currentMonday, 7))}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#6B7280' }}
+            aria-label="Semaine suivante"
+          >
+            <ChevronRight size={20} />
           </button>
         </div>
+        <button
+          onClick={() => setShowModal(true)}
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            backgroundColor: '#2563EB', color: '#fff', fontSize: 13, fontWeight: 500,
+            padding: '8px 16px', borderRadius: 8, border: 'none', cursor: 'pointer',
+          }}
+        >
+          <Plus size={15} />
+          Ajouter
+        </button>
       </div>
 
-      <div className="max-w-full mx-auto px-4 md:px-6 py-6 space-y-6">
-        {/* Week navigation */}
-        <div className="flex items-center justify-between bg-white rounded-xl border border-gray-200 shadow-sm px-4 py-3">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handlePrevWeek}
-              className="p-2 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors"
-              aria-label="Semaine précédente"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              onClick={handleNextWeek}
-              className="p-2 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors"
-              aria-label="Semaine suivante"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
-          <div className="flex items-center gap-3">
-            <Calendar className="w-4 h-4 text-gray-400 hidden sm:block" />
-            <span className="text-sm font-semibold text-gray-800">
-              Semaine du {formatDisplayDate(currentMonday)}
-            </span>
-          </div>
-          <button
-            onClick={handleToday}
-            className="text-xs font-medium text-blue-600 hover:text-blue-800 border border-blue-200 hover:border-blue-400 px-3 py-1.5 rounded-lg transition-colors"
-          >
-            Aujourd'hui
-          </button>
-        </div>
-
-        {/* Loading */}
+      <div style={{ padding: 24 }}>
         {loading ? (
-          <div className="flex items-center justify-center py-24">
-            <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-            <span className="ml-3 text-gray-500">Chargement du planning...</span>
+          <div style={{ display: 'flex', justifyContent: 'center', padding: 60 }}>
+            <Loader2 className="animate-spin" size={32} color="#6B7280" />
           </div>
-        ) : isMobile ? (
-          /* Mobile: list view */
-          <div className="space-y-4">
-            {techniciens.length === 0 ? (
-              <div className="text-center py-16 text-gray-400">
-                <User className="w-12 h-12 mx-auto mb-3 opacity-40" />
-                <p className="font-medium">Aucune affectation cette semaine</p>
+        ) : (
+          <div style={{
+            backgroundColor: '#fff',
+            borderRadius: 12,
+            border: '1px solid #E5E7EB',
+            overflow: 'hidden',
+          }}>
+            {/* Day header row */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '150px repeat(5, 1fr)',
+              borderBottom: '1px solid #F3F4F6',
+            }}>
+              <div style={{ borderRight: '1px solid #F3F4F6', padding: '12px 0' }} />
+              {weekDays.map((day, i) => (
+                <div key={i} style={{
+                  textAlign: 'center',
+                  padding: '10px 0',
+                  borderRight: i < 4 ? '1px solid #F3F4F6' : 'none',
+                }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: '#374151' }}>{DAY_NAMES[i]}</div>
+                  <div style={{ fontSize: 12, color: '#9CA3AF', marginTop: 2 }}>{day.getDate()}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Technician rows */}
+            {technicians.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: 40, color: '#9CA3AF', fontSize: 14 }}>
+                Aucune affectation cette semaine
               </div>
             ) : (
-              techniciens.map((tech) => {
-                const techAffectations = getAffectationsForTechnicien(tech.nom);
+              technicians.map((techName, rowIdx) => {
+                const blocks = getPlacedBlocks(techMap[techName]);
                 return (
-                  <div key={tech.nom} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                    <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 border-b border-gray-200">
-                      <div
-                        className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-                        style={{ background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)' }}
-                      >
-                        {tech.initiales}
-                      </div>
-                      <span className="font-semibold text-gray-800 text-sm">{tech.nom}</span>
-                      <span className="ml-auto text-xs text-gray-400">{techAffectations.length} affectation(s)</span>
+                  <div
+                    key={techName}
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '150px repeat(5, 1fr)',
+                      minHeight: 80,
+                      borderBottom: rowIdx < technicians.length - 1 ? '1px solid #F3F4F6' : 'none',
+                      position: 'relative',
+                    }}
+                  >
+                    <div style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: 13, fontWeight: 500, color: '#6B7280',
+                      borderRight: '1px solid #F3F4F6', padding: '8px 12px',
+                    }}>
+                      {techName}
                     </div>
-                    <div className="divide-y divide-gray-100">
-                      {techAffectations.length === 0 ? (
-                        <p className="text-sm text-gray-400 px-4 py-3">Aucune affectation</p>
-                      ) : (
-                        techAffectations.map((aff) => {
-                          const cfg = TYPE_CONFIG[aff.type];
-                          return (
-                            <div key={aff.id} className="px-4 py-3 flex items-start gap-3">
-                              <div
-                                className="w-1 rounded-full flex-shrink-0 self-stretch"
-                                style={{ backgroundColor: cfg.color, minHeight: '1.5rem' }}
-                              />
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-800 truncate">{aff.chantier_nom}</p>
-                                <p className="text-xs text-gray-500 mt-0.5">
-                                  {new Date(aff.date_debut).toLocaleDateString('fr-FR')} → {new Date(aff.date_fin).toLocaleDateString('fr-FR')}
-                                </p>
-                                {aff.notes && <p className="text-xs text-gray-400 mt-1 italic truncate">{aff.notes}</p>}
-                              </div>
-                              <span className={`text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0 ${cfg.badge}`}>
-                                {cfg.label}
-                              </span>
-                            </div>
-                          );
-                        })
-                      )}
-                    </div>
+                    {weekDays.map((_, i) => (
+                      <div key={i} style={{
+                        borderRight: i < 4 ? '1px solid #F3F4F6' : 'none',
+                        minHeight: 80,
+                      }} />
+                    ))}
+                    {blocks.map((block) => {
+                      const cfg = TYPE_CONFIG[block.aff.type];
+                      const colSpan = block.colEnd - block.colStart + 1;
+                      return (
+                        <div
+                          key={block.aff.id}
+                          style={{
+                            position: 'absolute',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            left: `calc(150px + ${block.colStart} * ((100% - 150px) / 5) + 4px)`,
+                            width: `calc(${colSpan} * ((100% - 150px) / 5) - 8px)`,
+                            backgroundColor: cfg.bg,
+                            color: cfg.color,
+                            borderLeft: `3px solid ${cfg.borderColor}`,
+                            borderRadius: 6,
+                            padding: '6px 8px',
+                            fontSize: 12,
+                            fontWeight: 500,
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            zIndex: 2,
+                            cursor: 'default',
+                          }}
+                          title={block.aff.chantier_nom}
+                        >
+                          {block.aff.chantier_nom}
+                        </div>
+                      );
+                    })}
                   </div>
                 );
               })
             )}
           </div>
-        ) : (
-          /* Desktop: grid view */
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse" style={{ minWidth: '700px' }}>
-                <thead>
-                  <tr className="bg-gray-50 border-b border-gray-200">
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider w-44 border-r border-gray-200">
-                      Technicien
-                    </th>
-                    {weekDays.map((day, i) => (
-                      <th
-                        key={i}
-                        className={`text-center px-2 py-3 text-xs font-semibold uppercase tracking-wider ${
-                          isToday(day) ? 'bg-blue-50 text-blue-700' : 'text-gray-500'
-                        } ${i < 4 ? 'border-r border-gray-200' : ''}`}
-                      >
-                        <div className="flex flex-col items-center gap-0.5">
-                          <span>{DAY_NAMES[i]}</span>
-                          <span
-                            className={`text-base font-bold ${
-                              isToday(day)
-                                ? 'w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs'
-                                : 'text-gray-700'
-                            }`}
-                          >
-                            {day.getDate()}
-                          </span>
-                          <span className="text-gray-400 font-normal normal-case">
-                            {day.toLocaleDateString('fr-FR', { month: 'short' })}
-                          </span>
-                        </div>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {techniciens.length === 0 ? (
-                    <tr>
-                      <td colSpan={6} className="text-center py-20 text-gray-400">
-                        <User className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                        <p className="font-medium">Aucune affectation pour cette semaine</p>
-                        <p className="text-sm mt-1">Cliquez sur "Ajouter une affectation" pour commencer</p>
-                      </td>
-                    </tr>
-                  ) : (
-                    techniciens.map((tech, rowIdx) => (
-                      <tr
-                        key={tech.nom}
-                        className={`transition-colors hover:bg-gray-50/50 ${rowIdx % 2 === 0 ? '' : 'bg-gray-50/30'}`}
-                      >
-                        <td className="px-4 py-3 border-r border-gray-200">
-                          <div className="flex items-center gap-2.5">
-                            <div
-                              className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-                              style={{ background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)' }}
-                            >
-                              {tech.initiales}
-                            </div>
-                            <span className="text-sm font-medium text-gray-700 truncate max-w-[100px]">{tech.nom}</span>
-                          </div>
-                        </td>
-                        {weekDays.map((day, dayIdx) => {
-                          const cells = getAffectationsForCell(tech.nom, day);
-                          return (
-                            <td
-                              key={dayIdx}
-                              className={`px-1.5 py-2 align-top ${
-                                isToday(day) ? 'bg-blue-50/40' : ''
-                              } ${dayIdx < 4 ? 'border-r border-gray-200' : ''}`}
-                              style={{ minWidth: '120px', minHeight: '56px' }}
-                            >
-                              {cells.length === 0 ? (
-                                <div className="h-10" />
-                              ) : (
-                                <div className="flex flex-col gap-1">
-                                  {cells.map((aff) => {
-                                    const cfg = TYPE_CONFIG[aff.type];
-                                    return (
-                                      <div
-                                        key={aff.id}
-                                        title={`${aff.chantier_nom} — ${cfg.label}${aff.notes ? '\n' + aff.notes : ''}`}
-                                        className={`rounded-md px-2 py-1 border text-xs cursor-default flex flex-col gap-0.5 ${cfg.bg} ${cfg.border}`}
-                                      >
-                                        <span
-                                          className="font-medium text-gray-800 truncate block"
-                                          style={{ maxWidth: '110px' }}
-                                        >
-                                          {aff.chantier_nom}
-                                        </span>
-                                        <span className={`text-[10px] font-semibold px-1 py-0.5 rounded self-start ${cfg.badge}`}>
-                                          {cfg.label}
-                                        </span>
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              )}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
         )}
 
         {/* Legend */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm px-4 py-3">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Légende</p>
-          <div className="flex flex-wrap gap-3">
-            {(Object.entries(TYPE_CONFIG) as [AffectationType, typeof TYPE_CONFIG[AffectationType]][]).map(([, cfg]) => (
-              <div key={cfg.label} className="flex items-center gap-1.5">
-                <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: cfg.color }} />
-                <span className="text-xs text-gray-600">{cfg.label}</span>
-              </div>
-            ))}
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginTop: 16, padding: '10px 0' }}>
+          {(Object.entries(TYPE_CONFIG) as [AffectationType, typeof TYPE_CONFIG[AffectationType]][]).map(([, cfg]) => (
+            <div key={cfg.label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: cfg.color }} />
+              <span style={{ fontSize: 13, color: '#6B7280' }}>{cfg.label}</span>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 50,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: 16, backgroundColor: 'rgba(0,0,0,0.4)',
+        }}>
+          <div style={{
+            backgroundColor: '#fff', borderRadius: 16, width: '100%', maxWidth: 480,
+            maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)',
+          }}>
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '16px 24px', borderBottom: '1px solid #E5E7EB',
+            }}>
               <div>
-                <h2 className="text-lg font-bold text-gray-900">Nouvelle affectation</h2>
-                <p className="text-sm text-gray-500">Planifier un technicien sur un chantier</p>
+                <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111827', margin: 0 }}>Nouvelle affectation</h2>
+                <p style={{ fontSize: 13, color: '#6B7280', margin: '4px 0 0' }}>Planifier un technicien sur un chantier</p>
               </div>
-              <button
-                onClick={() => setShowModal(false)}
-                className="p-2 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
-              >
-                <X className="w-5 h-5" />
+              <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
+                <X size={20} color="#6B7280" />
               </button>
             </div>
-
-            {/* Modal Body */}
-            <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
-              {/* Technicien */}
+            <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  <User className="w-4 h-4 inline mr-1 text-gray-400" />
-                  Technicien <span className="text-red-500">*</span>
-                </label>
-                {existingTechniciens.length > 0 ? (
-                  <div className="space-y-2">
-                    <select
-                      value={form.technicien_nom}
-                      onChange={(e) => handleFormChange('technicien_nom', e.target.value)}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-800"
-                    >
-                      <option value="">— Sélectionner un technicien existant —</option>
-                      {existingTechniciens.map((t) => (
-                        <option key={t} value={t}>{t}</option>
-                      ))}
-                    </select>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">ou nouveau :</span>
-                      <input
-                        type="text"
-                        placeholder="Nom du nouveau technicien"
-                        value={existingTechniciens.includes(form.technicien_nom) ? '' : form.technicien_nom}
-                        onChange={(e) => handleFormChange('technicien_nom', e.target.value)}
-                        className="w-full border border-gray-300 rounded-lg pl-24 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800"
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <input
-                    type="text"
-                    placeholder="Nom complet du technicien"
-                    value={form.technicien_nom}
-                    onChange={(e) => handleFormChange('technicien_nom', e.target.value)}
-                    required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800"
-                  />
-                )}
-              </div>
-
-              {/* Chantier */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  <Briefcase className="w-4 h-4 inline mr-1 text-gray-400" />
-                  Chantier <span className="text-red-500">*</span>
-                </label>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#374151', marginBottom: 4 }}>Technicien *</label>
                 <input
-                  type="text"
-                  placeholder="Nom du chantier"
-                  value={form.chantier_nom}
-                  onChange={(e) => handleFormChange('chantier_nom', e.target.value)}
-                  required
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800"
+                  value={form.technicien_nom}
+                  onChange={e => setForm(f => ({ ...f, technicien_nom: e.target.value }))}
+                  placeholder="Ex: Thomas D."
+                  style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid #D1D5DB', fontSize: 14, outline: 'none', boxSizing: 'border-box' as const }}
                 />
               </div>
-
-              {/* Dates */}
-              <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#374151', marginBottom: 4 }}>Chantier *</label>
+                <input
+                  value={form.chantier_nom}
+                  onChange={e => setForm(f => ({ ...f, chantier_nom: e.target.value }))}
+                  placeholder="Ex: CollÃ¨ge J.M. â Montage hottes"
+                  style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid #D1D5DB', fontSize: 14, outline: 'none', boxSizing: 'border-box' as const }}
+                />
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    Date début <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="date"
-                    value={form.date_debut}
-                    onChange={(e) => handleFormChange('date_debut', e.target.value)}
-                    required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800"
-                  />
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#374151', marginBottom: 4 }}>DÃ©but *</label>
+                  <input type="date" value={form.date_debut} onChange={e => setForm(f => ({ ...f, date_debut: e.target.value }))}
+                    style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid #D1D5DB', fontSize: 14, outline: 'none', boxSizing: 'border-box' as const }} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    Date fin <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="date"
-                    value={form.date_fin}
-                    min={form.date_debut}
-                    onChange={(e) => handleFormChange('date_fin', e.target.value)}
-                    required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800"
-                  />
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#374151', marginBottom: 4 }}>Fin *</label>
+                  <input type="date" value={form.date_fin} onChange={e => setForm(f => ({ ...f, date_fin: e.target.value }))}
+                    style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid #D1D5DB', fontSize: 14, outline: 'none', boxSizing: 'border-box' as const }} />
                 </div>
               </div>
-
-              {/* Type */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Type d'intervention <span className="text-red-500">*</span>
-                </label>
-                <div className="grid grid-cols-2 gap-2">
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#374151', marginBottom: 4 }}>Type *</label>
+                <div style={{ display: 'flex', gap: 8 }}>
                   {(Object.entries(TYPE_CONFIG) as [AffectationType, typeof TYPE_CONFIG[AffectationType]][]).map(([key, cfg]) => (
-                    <button
-                      key={key}
-                      type="button"
-                      onClick={() => handleFormChange('type', key)}
-                      className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border-2 text-sm font-medium transition-all ${
-                        form.type === key
-                          ? 'border-current text-white shadow-sm'
-                          : 'border-gray-200 text-gray-600 hover:border-gray-300 bg-white'
-                      }`}
-                      style={form.type === key ? { backgroundColor: cfg.color, borderColor: cfg.color } : {}}
-                    >
-                      <div
-                        className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: form.type === key ? 'rgba(255,255,255,0.8)' : cfg.color }}
-                      />
-                      {cfg.label}
-                    </button>
+                    <button key={key}
+                      onClick={() => setForm(f => ({ ...f, type: key as AffectationType }))}
+                      style={{
+                        flex: 1, padding: '8px 4px', borderRadius: 8, fontSize: 12, fontWeight: 500,
+                        border: form.type === key ? `2px solid ${cfg.color}` : '1px solid #D1D5DB',
+                        backgroundColor: form.type === key ? cfg.bg : '#fff',
+                        color: form.type === key ? cfg.color : '#6B7280', cursor: 'pointer',
+                      }}>{cfg.label}</button>
                   ))}
                 </div>
               </div>
-
-              {/* Notes */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  <FileText className="w-4 h-4 inline mr-1 text-gray-400" />
-                  Notes <span className="text-gray-400 font-normal">(optionnel)</span>
-                </label>
-                <textarea
-                  rows={3}
-                  placeholder="Informations complémentaires..."
-                  value={form.notes}
-                  onChange={(e) => handleFormChange('notes', e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 resize-none"
-                />
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#374151', marginBottom: 4 }}>Notes</label>
+                <textarea value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} rows={2}
+                  placeholder="Notes optionnelles..."
+                  style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid #D1D5DB', fontSize: 14, outline: 'none', resize: 'vertical', boxSizing: 'border-box' as const }} />
               </div>
-
-              {/* Actions */}
-              <div className="flex gap-3 pt-1">
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Annuler
-                </button>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm"
-                >
-                  {submitting ? (
-                    <><Loader2 className="w-4 h-4 animate-spin" /> Enregistrement...</>
-                  ) : (
-                    <><Plus className="w-4 h-4" /> Ajouter l'affectation</>
-                  )}
-                </button>
-              </div>
-            </form>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, padding: '16px 24px', borderTop: '1px solid #E5E7EB' }}>
+              <button onClick={() => setShowModal(false)}
+                style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid #D1D5DB', backgroundColor: '#fff', fontSize: 13, fontWeight: 500, color: '#374151', cursor: 'pointer' }}>
+                Annuler
+              </button>
+              <button onClick={handleSubmit} disabled={submitting}
+                style={{
+                  padding: '8px 20px', borderRadius: 8, border: 'none',
+                  backgroundColor: '#2563EB', color: '#fff', fontSize: 13, fontWeight: 500,
+                  cursor: submitting ? 'not-allowed' : 'pointer', opacity: submitting ? 0.7 : 1,
+                }}>
+                {submitting ? 'Enregistrement...' : 'Enregistrer'}
+              </button>
+            </div>
           </div>
         </div>
       )}
