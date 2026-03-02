@@ -1,448 +1,537 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../lib/supabase';
-import { Plus, Filter, Upload, X, MessageSquare, AlertTriangle, Edit, Camera } from 'lucide-react';
+import { Plus, Filter, Upload, X, MessageSquare, AlertTriangle, Edit, Camera, WifiOff } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 interface JournalEntry {
- id: string;
- chantier_id: string;
- type: string;
- contenu: string;
- auteur: string;
- piece_jointe_url: string | null;
- piece_jointe_nom: string | null;
- created_at: string;
+  id: string;
+  chantier_id: string;
+  type: string;
+  contenu: string;
+  auteur: string;
+  piece_jointe_url: string | null;
+  piece_jointe_nom: string | null;
+  created_at: string;
 }
 
 interface JournalChantierProps {
- chantierId: string;
+  chantierId: string;
 }
 
 const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
- const [entries, setEntries] = useState<JournalEntry[]>([]);
- const [loading, setLoading] = useState(true);
- const [showForm, setShowForm] = useState(false);
- const [filterType, setFilterType] = useState<string>('all');
- const [page, setPage] = useState(1);
- const [hasMore, setHasMore] = useState(true);
- const observerTarget = useRef<HTMLDivElement>(null);
+  const [entries, setEntries] = useState<JournalEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [filterType, setFilterType] = useState<string>('all');
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [tableExists, setTableExists] = useState<boolean>(true);
+  const [localEntries, setLocalEntries] = useState<JournalEntry[]>([]);
+  const observerTarget = useRef<HTMLDivElement>(null);
 
- // Form state
- const [newEntry, setNewEntry] = useState({
- type: 'Note',
- contenu: '',
- });
- const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  // Form state
+  const [newEntry, setNewEntry] = useState({
+    type: 'Note',
+    contenu: '',
+  });
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
- useEffect(() => {
- loadEntries();
+  const isTableMissingError = (error: any): boolean => {
+    if (!error) return false;
+    const message = (error.message || '').toLowerCase();
+    const code = error.code || '';
+    return (
+      code === '42P01' ||
+      message.includes('does not exist') ||
+      message.includes('relation') ||
+      message.includes('undefined table') ||
+      message.includes('journal_chantier')
+    );
+  };
 
- // Supabase realtime
- const channel = supabase
- .channel(`journal-${chantierId}`)
- .on(
- 'postgres_changes',
- {
- event: '*',
- schema: 'public',
- table: 'journal_chantier',
- filter: `chantier_id=eq.${chantierId}`,
- },
- () => {
- loadEntries(true);
- }
- )
- .subscribe();
+  useEffect(() => {
+    loadEntries();
 
- return () => {
- supabase.removeChannel(channel);
- };
- }, [chantierId, filterType]);
+    if (!tableExists) {
+      return;
+    }
 
- // Infinite scroll
- useEffect(() => {
- const observer = new IntersectionObserver(
- (entries) => {
- if (entries[0].isIntersecting && hasMore && !loading) {
- setPage((prev) => prev + 1);
- }
- },
- { threshold: 1.0 }
- );
+    const channel = supabase
+      .channel(`journal-${chantierId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'journal_chantier',
+          filter: `chantier_id=eq.${chantierId}`,
+        },
+        () => {
+          loadEntries(true);
+        }
+      )
+      .subscribe();
 
- if (observerTarget.current) {
- observer.observe(observerTarget.current);
- }
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [chantierId, filterType, tableExists]);
 
- return () => observer.disconnect();
- }, [hasMore, loading]);
+  // Infinite scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loading) {
+          setPage((prev) => prev + 1);
+        }
+      },
+      { threshold: 1.0 }
+    );
 
- useEffect(() => {
- if (page > 1) {
- loadMoreEntries();
- }
- }, [page]);
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
 
- const loadEntries = async (refresh = false) => {
- try {
- setLoading(true);
- let query = supabase
- .from('journal_chantier')
- .select('*')
- .eq('chantier_id', chantierId)
- .order('created_at', { ascending: false })
- .range(0, 9);
+    return () => observer.disconnect();
+  }, [hasMore, loading]);
 
- if (filterType !== 'all') {
- query = query.eq('type', filterType);
- }
+  useEffect(() => {
+    if (page > 1) {
+      loadMoreEntries();
+    }
+  }, [page]);
 
- const { data, error } = await query;
+  const loadEntries = async (refresh = false) => {
+    try {
+      setLoading(true);
 
- if (error) throw error;
- setEntries(data || []);
- setHasMore((data || []).length === 10);
- setPage(1);
- } catch (error: any) {
- console.error('Erreur chargement journal:', error);
- toast.error('Erreur lors du chargement du journal');
- } finally {
- setLoading(false);
- }
- };
+      let query = supabase
+        .from('journal_chantier')
+        .select('*')
+        .eq('chantier_id', chantierId)
+        .order('created_at', { ascending: false })
+        .range(0, 9);
 
- const loadMoreEntries = async () => {
- try {
- let query = supabase
- .from('journal_chantier')
- .select('*')
- .eq('chantier_id', chantierId)
- .order('created_at', { ascending: false })
- .range(page * 10, (page + 1) * 10 - 1);
+      if (filterType !== 'all') {
+        query = query.eq('type', filterType);
+      }
 
- if (filterType !== 'all') {
- query = query.eq('type', filterType);
- }
+      const { data, error } = await query;
 
- const { data, error } = await query;
+      if (error) {
+        if (isTableMissingError(error)) {
+          console.warn('Table journal_chantier introuvable, basculement en mode local:', error);
+          setTableExists(false);
+          setEntries([]);
+          setHasMore(false);
+          return;
+        }
+        throw error;
+      }
 
- if (error) throw error;
+      setTableExists(true);
+      setEntries(data || []);
+      setHasMore((data || []).length === 10);
+      setPage(1);
+    } catch (error: any) {
+      if (isTableMissingError(error)) {
+        console.warn('Table journal_chantier introuvable, basculement en mode local:', error);
+        setTableExists(false);
+        setEntries([]);
+        setHasMore(false);
+      } else {
+        console.error('Erreur chargement journal:', error);
+        toast.error('Erreur lors du chargement du journal');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
- if (data && data.length > 0) {
- setEntries((prev) => [...prev, ...data]);
- setHasMore(data.length === 10);
- } else {
- setHasMore(false);
- }
- } catch (error: any) {
- console.error('Erreur chargement plus d\'entrées:', error);
- }
- };
+  const loadMoreEntries = async () => {
+    if (!tableExists) return;
 
- const handleSubmit = async (e: React.FormEvent) => {
- e.preventDefault();
+    try {
+      let query = supabase
+        .from('journal_chantier')
+        .select('*')
+        .eq('chantier_id', chantierId)
+        .order('created_at', { ascending: false })
+        .range(page * 10, (page + 1) * 10 - 1);
 
- if (!newEntry.contenu.trim()) {
- toast.error('Le contenu est requis');
- return;
- }
+      if (filterType !== 'all') {
+        query = query.eq('type', filterType);
+      }
 
- try {
- let pieceJointeUrl = null;
- let pieceJointeNom = null;
+      const { data, error } = await query;
 
- // Upload file if present
- if (uploadedFile) {
- const fileExt = uploadedFile.name.split('.').pop();
- const fileName = `${chantierId}/${Date.now()}.${fileExt}`;
+      if (error) {
+        if (isTableMissingError(error)) {
+          setTableExists(false);
+          return;
+        }
+        throw error;
+      }
 
- const { data: uploadData, error: uploadError } = await supabase.storage
- .from('journal-attachments')
- .upload(fileName, uploadedFile);
+      if (data && data.length > 0) {
+        setEntries((prev) => [...prev, ...data]);
+        setHasMore(data.length === 10);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error: any) {
+      console.error("Erreur chargement plus d'entrÃ©es:", error);
+    }
+  };
 
- if (uploadError) throw uploadError;
+  const getFilteredLocalEntries = (): JournalEntry[] => {
+    if (filterType === 'all') {
+      return localEntries.filter((e) => e.chantier_id === chantierId);
+    }
+    return localEntries.filter(
+      (e) => e.chantier_id === chantierId && e.type === filterType
+    );
+  };
 
- const { data: urlData } = supabase.storage
- .from('journal-attachments')
- .getPublicUrl(fileName);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
- pieceJointeUrl = urlData.publicUrl;
- pieceJointeNom = uploadedFile.name;
- }
+    if (!newEntry.contenu.trim()) {
+      toast.error('Le contenu est requis');
+      return;
+    }
 
- const { error } = await supabase.from('journal_chantier').insert({
- chantier_id: chantierId,
- type: newEntry.type,
- contenu: newEntry.contenu,
- auteur: 'Utilisateur actuel', // TODO: Get from auth context
- piece_jointe_url: pieceJointeUrl,
- piece_jointe_nom: pieceJointeNom,
- });
+    if (!tableExists) {
+      const localEntry: JournalEntry = {
+        id: `local-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        chantier_id: chantierId,
+        type: newEntry.type,
+        contenu: newEntry.contenu,
+        auteur: 'Utilisateur actuel',
+        piece_jointe_url: uploadedFile ? URL.createObjectURL(uploadedFile) : null,
+        piece_jointe_nom: uploadedFile ? uploadedFile.name : null,
+        created_at: new Date().toISOString(),
+      };
 
- if (error) throw error;
+      setLocalEntries((prev) => [localEntry, ...prev]);
+      toast.success('EntrÃ©e ajoutÃ©e localement (mode hors-ligne)');
+      setNewEntry({ type: 'Note', contenu: '' });
+      setUploadedFile(null);
+      setShowForm(false);
+      return;
+    }
 
- toast.success('Entrée ajoutée au journal');
- setNewEntry({ type: 'Note', contenu: '' });
- setUploadedFile(null);
- setShowForm(false);
- } catch (error: any) {
- console.error('Erreur ajout entrée:', error);
- toast.error('Erreur lors de l\'ajout de l\'entrée');
- }
- };
+    try {
+      let pieceJointeUrl = null;
+      let pieceJointeNom = null;
 
- const getTypeIcon = (type: string) => {
- switch (type) {
- case 'Note':
- return <MessageSquare className="w-5 h-5 text-blue-600" />;
- case 'Alerte':
- return <AlertTriangle className="w-5 h-5 text-red-600" />;
- case 'Modification':
- return <Edit className="w-5 h-5 text-orange-600" />;
- case 'Photo':
- return <Camera className="w-5 h-5 text-green-600" />;
- default:
- return <MessageSquare className="w-5 h-5 text-gray-600" />;
- }
- };
+      if (uploadedFile) {
+        const fileExt = uploadedFile.name.split('.').pop();
+        const fileName = `${chantierId}/${Date.now()}.${fileExt}`;
 
- const getTypeBgColor = (type: string) => {
- switch (type) {
- case 'Note':
- return 'bg-blue-100';
- case 'Alerte':
- return 'bg-red-100';
- case 'Modification':
- return 'bg-orange-100';
- case 'Photo':
- return 'bg-green-100';
- default:
- return 'bg-gray-100';
- }
- };
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('journal-attachments')
+          .upload(fileName, uploadedFile);
 
- const formatDate = (date: string) => {
- const d = new Date(date);
- const now = new Date();
- const diffMs = now.getTime() - d.getTime();
- const diffMins = Math.floor(diffMs / 60000);
- const diffHours = Math.floor(diffMs / 3600000);
- const diffDays = Math.floor(diffMs / 86400000);
+        if (uploadError) throw uploadError;
 
- if (diffMins < 1) return 'À l\'instant';
- if (diffMins < 60) return `Il y a ${diffMins} min`;
- if (diffHours < 24) return `Il y a ${diffHours}h`;
- if (diffDays < 7) return `Il y a ${diffDays}j`;
+        const { data: urlData } = supabase.storage
+          .from('journal-attachments')
+          .getPublicUrl(fileName);
 
- return d.toLocaleDateString('fr-FR', {
- day: 'numeric',
- month: 'short',
- year: d.getFullYear() !== now.getFullYear() ? 'numeric' : undefined,
- });
- };
+        pieceJointeUrl = urlData.publicUrl;
+        pieceJointeNom = uploadedFile.name;
+      }
 
- return (
- <div className="space-y-6">
- {/* Header */}
- <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
- <div className="flex items-center justify-between mb-4">
- <h2 className="text-lg font-semibold text-gray-900">Journal de chantier</h2>
- <button
- onClick={() => setShowForm(!showForm)}
- className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
- >
- <Plus className="w-4 h-4" />
- <span>Nouvelle entrée</span>
- </button>
- </div>
+      const { error } = await supabase.from('journal_chantier').insert({
+        chantier_id: chantierId,
+        type: newEntry.type,
+        contenu: newEntry.contenu,
+        auteur: 'Utilisateur actuel',
+        piece_jointe_url: pieceJointeUrl,
+        piece_jointe_nom: pieceJointeNom,
+      });
 
- {/* Filtres */}
- <div className="flex items-center space-x-2">
- <Filter className="w-4 h-4 text-gray-400" />
- {['all', 'Note', 'Alerte', 'Modification', 'Photo'].map((type) => (
- <button
- key={type}
- onClick={() => setFilterType(type)}
- className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
- filterType === type
- ? 'bg-blue-100 text-blue-800'
- : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
- }`}
- >
- {type === 'all' ? 'Tous' : type}
- </button>
- ))}
- </div>
- </div>
+      if (error) {
+        if (isTableMissingError(error)) {
+          setTableExists(false);
+          toast.error('La table est indisponible. Veuillez rÃ©essayer en mode local.');
+          return;
+        }
+        throw error;
+      }
 
- {/* Formulaire nouvelle entrée */}
- {showForm && (
- <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
- <form onSubmit={handleSubmit} className="space-y-4">
- <div>
- <label className="block text-sm font-medium text-gray-700 mb-2">
- Type d'entrée
- </label>
- <div className="grid grid-cols-4 gap-2">
- {['Note', 'Alerte', 'Modification', 'Photo'].map((type) => (
- <button
- key={type}
- type="button"
- onClick={() => setNewEntry({ ...newEntry, type })}
- className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
- newEntry.type === type
- ? 'bg-blue-600 text-white'
- : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
- }`}
- >
- {type}
- </button>
- ))}
- </div>
- </div>
+      toast.success('EntrÃ©e ajoutÃ©e au journal');
+      setNewEntry({ type: 'Note', contenu: '' });
+      setUploadedFile(null);
+      setShowForm(false);
+    } catch (error: any) {
+      console.error('Erreur ajout entrÃ©e:', error);
+      toast.error("Erreur lors de l'ajout de l'entrÃ©e");
+    }
+  };
 
- <div>
- <label className="block text-sm font-medium text-gray-700 mb-2">
- Contenu
- </label>
- <textarea
- value={newEntry.contenu}
- onChange={(e) => setNewEntry({ ...newEntry, contenu: e.target.value })}
- placeholder="Décrivez l'événement, la note, ou l'alerte..."
- className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
- rows={4}
- required
- />
- </div>
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'Note':
+        return <MessageSquare className="w-5 h-5 text-blue-600" />;
+      case 'Alerte':
+        return <AlertTriangle className="w-5 h-5 text-red-600" />;
+      case 'Modification':
+        return <Edit className="w-5 h-5 text-orange-600" />;
+      case 'Photo':
+        return <Camera className="w-5 h-5 text-purple-600" />;
+      default:
+        return <MessageSquare className="w-5 h-5 text-gray-600" />;
+    }
+  };
 
- <div>
- <label className="block text-sm font-medium text-gray-700 mb-2">
- Pièce jointe (optionnel)
- </label>
- <div className="flex items-center space-x-2">
- <label className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 cursor-pointer transition-colors">
- <Upload className="w-4 h-4" />
- <span>Choisir un fichier</span>
- <input
- type="file"
- onChange={(e) => setUploadedFile(e.target.files?.[0] || null)}
- className="hidden"
- accept="image/*,.pdf,.doc,.docx"
- />
- </label>
- {uploadedFile && (
- <div className="flex items-center space-x-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-lg">
- <span className="text-sm">{uploadedFile.name}</span>
- <button
- type="button"
- onClick={() => setUploadedFile(null)}
- className="hover:bg-blue-100 rounded p-1"
- >
- <X className="w-3 h-3" />
- </button>
- </div>
- )}
- </div>
- </div>
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case 'Note':
+        return 'bg-blue-50 text-blue-800 border-blue-200';
+      case 'Alerte':
+        return 'bg-red-50 text-red-800 border-red-200';
+      case 'Modification':
+        return 'bg-orange-50 text-orange-800 border-orange-200';
+      case 'Photo':
+        return 'bg-purple-50 text-purple-800 border-purple-200';
+      default:
+        return 'bg-gray-50 text-gray-800 border-gray-200';
+    }
+  };
 
- <div className="flex items-center space-x-3">
- <button
- type="submit"
- className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
- >
- Ajouter l'entrée
- </button>
- <button
- type="button"
- onClick={() => {
- setShowForm(false);
- setNewEntry({ type: 'Note', contenu: '' });
- setUploadedFile(null);
- }}
- className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
- >
- Annuler
- </button>
- </div>
- </form>
- </div>
- )}
+  const displayedEntries = tableExists ? entries : getFilteredLocalEntries();
 
- {/* Timeline */}
- <div className="bg-white rounded-lg shadow border border-gray-200">
- {loading && entries.length === 0 ? (
- <div className="flex justify-center items-center py-12">
- <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
- </div>
- ) : entries.length > 0 ? (
- <div className="relative">
- {/* Timeline line */}
- <div className="absolute left-12 top-0 bottom-0 w-0.5 bg-gray-200" />
+  return (
+    <div className="space-y-6">
+      {/* Warning Banner - shown when table does not exist */}
+      {!tableExists && (
+        <div className="flex items-start space-x-3 bg-yellow-50 border border-yellow-300 rounded-lg p-4">
+          <WifiOff className="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-yellow-800">
+              Table de base de donnÃ©es introuvable
+            </p>
+            <p className="text-sm text-yellow-700 mt-1">
+              La table <code className="font-mono bg-yellow-100 px-1 rounded">journal_chantier</code> n&apos;existe pas dans Supabase. Les entrÃ©es que vous ajoutez sont stockÃ©es <strong>uniquement en mÃ©moire locale</strong> et seront perdues lors du rechargement de la page. Veuillez contacter votre administrateur pour crÃ©er la table.
+            </p>
+          </div>
+        </div>
+      )}
 
- <div className="divide-y divide-gray-200">
- {entries.map((entry, index) => (
- <div key={entry.id} className="relative px-6 py-4 hover:bg-gray-50">
- {/* Timeline dot */}
- <div
- className={`absolute left-10 w-5 h-5 rounded-full border-4 border-white ${
- getTypeBgColor(entry.type)
- }`}
- />
+      {/* Header */}
+      <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">Journal de chantier</h2>
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Nouvelle entrÃ©e</span>
+          </button>
+        </div>
 
- <div className="pl-10">
- <div className="flex items-start justify-between mb-2">
- <div className="flex items-center space-x-3">
- <div className={`p-2 rounded-lg ${getTypeBgColor(entry.type)}`}>
- {getTypeIcon(entry.type)}
- </div>
- <div>
- <p className="text-sm font-medium text-gray-900">{entry.type}</p>
- <p className="text-xs text-gray-500">
- {entry.auteur} • {formatDate(entry.created_at)}
- </p>
- </div>
- </div>
- </div>
+        {/* Filtres */}
+        <div className="flex items-center space-x-2">
+          <Filter className="w-4 h-4 text-gray-400" />
+          {['all', 'Note', 'Alerte', 'Modification', 'Photo'].map((type) => (
+            <button
+              key={type}
+              onClick={() => setFilterType(type)}
+              className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                filterType === type
+                  ? 'bg-blue-100 text-blue-800'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              {type === 'all' ? 'Tous' : type}
+            </button>
+          ))}
+        </div>
+      </div>
 
- <p className="text-sm text-gray-700 whitespace-pre-wrap">
- {entry.contenu}
- </p>
+      {/* Formulaire nouvelle entrÃ©e */}
+      {showForm && (
+        <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
+          {!tableExists && (
+            <div className="flex items-center space-x-2 mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <AlertTriangle className="w-4 h-4 text-yellow-600 flex-shrink-0" />
+              <p className="text-xs text-yellow-700">
+                Mode local actif â cette entrÃ©e ne sera pas sauvegardÃ©e dans la base de donnÃ©es.
+              </p>
+            </div>
+          )}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Type d&apos;entrÃ©e
+              </label>
+              <div className="grid grid-cols-4 gap-2">
+                {['Note', 'Alerte', 'Modification', 'Photo'].map((type) => (
+                  <button
+                    key={type}
+                    type="button"
+                    onClick={() => setNewEntry({ ...newEntry, type })}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      newEntry.type === type
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
+            </div>
 
- {entry.piece_jointe_url && (
- <a
- href={entry.piece_jointe_url}
- target="_blank"
- rel="noopener noreferrer"
- className="inline-flex items-center space-x-2 mt-3 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
- >
- <Upload className="w-4 h-4" />
- <span>{entry.piece_jointe_nom || 'Pièce jointe'}</span>
- </a>
- )}
- </div>
- </div>
- ))}
- </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Contenu
+              </label>
+              <textarea
+                value={newEntry.contenu}
+                onChange={(e) => setNewEntry({ ...newEntry, contenu: e.target.value })}
+                rows={4}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Saisissez votre note, alerte ou commentaire..."
+                required
+              />
+            </div>
 
- {/* Infinite scroll trigger */}
- {hasMore && (
- <div ref={observerTarget} className="flex justify-center py-4">
- <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600" />
- </div>
- )}
- </div>
- ) : (
- <div className="text-center py-12">
- <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-4" />
- <p className="text-gray-500">Aucune entrée dans le journal</p>
- <p className="text-sm text-gray-400 mt-1">
- Commencez par ajouter une note ou une alerte
- </p>
- </div>
- )}
- </div>
- </div>
- );
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                PiÃ¨ce jointe (optionnel)
+              </label>
+              <div className="flex items-center space-x-4">
+                <label className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+                  <Upload className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm text-gray-700">
+                    {uploadedFile ? uploadedFile.name : 'Choisir un fichier'}
+                  </span>
+                  <input
+                    type="file"
+                    onChange={(e) => setUploadedFile(e.target.files?.[0] || null)}
+                    className="hidden"
+                    accept="image/*,.pdf,.doc,.docx"
+                  />
+                </label>
+                {uploadedFile && (
+                  <button
+                    type="button"
+                    onClick={() => setUploadedFile(null)}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-3">
+              <button
+                type="button"
+                onClick={() => setShowForm(false)}
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Annuler
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                {tableExists ? 'Ajouter' : 'Ajouter localement'}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* Liste des entrÃ©es */}
+      {loading ? (
+        <div className="flex justify-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+        </div>
+      ) : displayedEntries.length > 0 ? (
+        <div className="space-y-4">
+          {displayedEntries.map((entry) => (
+            <div
+              key={entry.id}
+              className={`bg-white rounded-lg shadow p-6 border ${
+                entry.id.startsWith('local-')
+                  ? 'border-yellow-300'
+                  : 'border-gray-200'
+              }`}
+            >
+              {entry.id.startsWith('local-') && (
+                <div className="flex items-center space-x-1 mb-3">
+                  <WifiOff className="w-3 h-3 text-yellow-500" />
+                  <span className="text-xs text-yellow-600 font-medium">StockÃ© localement uniquement</span>
+                </div>
+              )}
+              <div className="flex items-start justify-between">
+                <div className="flex items-start space-x-3">
+                  <div className={`p-2 rounded-lg ${getTypeColor(entry.type)}`}>
+                    {getTypeIcon(entry.type)}
+                  </div>
+                  <div>
+                    <div className="flex items-center space-x-2 mb-1">
+                      <span
+                        className={`px-2 py-1 rounded text-xs font-medium ${getTypeColor(entry.type)}`}
+                      >
+                        {entry.type}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        {new Date(entry.created_at).toLocaleDateString('fr-FR', {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </span>
+                    </div>
+                    <p className="text-gray-900 whitespace-pre-wrap">{entry.contenu}</p>
+                    {entry.piece_jointe_url && (
+                      <a
+                        href={entry.piece_jointe_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center space-x-2 mt-2 text-blue-600 hover:text-blue-800"
+                      >
+                        <Upload className="w-4 h-4" />
+                        <span className="text-sm">
+                          {entry.piece_jointe_nom || 'Voir la piÃ¨ce jointe'}
+                        </span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+                <span className="text-sm text-gray-500">{entry.auteur}</span>
+              </div>
+            </div>
+          ))}
+
+          {tableExists && hasMore && (
+            <div ref={observerTarget} className="flex justify-center py-4">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600" />
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="text-center py-12">
+          <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+          <p className="text-gray-500">Aucune entrÃ©e dans le journal</p>
+          <p className="text-sm text-gray-400 mt-1">
+            {!tableExists
+              ? 'La table est indisponible. Vous pouvez ajouter des entrÃ©es localement.'
+              : 'Commencez par ajouter une note ou une alerte'}
+          </p>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default JournalChantier;
