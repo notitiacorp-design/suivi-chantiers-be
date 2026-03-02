@@ -323,7 +323,7 @@ function AvenantForm({ chantierId, avenant, onClose, onSuccess }: AvenantFormPro
  Date *
  </label>
  <input
- type="date"
+ type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
  required
  value={formData.date_demande}
  onChange={(e) => setFormData({ ...formData, date_demande: e.target.value })}

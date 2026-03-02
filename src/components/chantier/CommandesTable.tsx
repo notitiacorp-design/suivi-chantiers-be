@@ -495,7 +495,7 @@ function CommandeForm({ chantierId, commande, onClose, onSuccess }: CommandeForm
  Date Commande *
  </label>
  <input
- type="date"
+ type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
  required
  value={formData.date_commande}
  onChange={(e) => setFormData({ ...formData, date_commande: e.target.value })}
@@ -508,7 +508,7 @@ function CommandeForm({ chantierId, commande, onClose, onSuccess }: CommandeForm
  Livraison Prévue *
  </label>
  <input
- type="date"
+ type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
  required
  value={formData.date_livraison_prevue}
  onChange={(e) => setFormData({ ...formData, date_livraison_prevue: e.target.value })}
@@ -521,7 +521,7 @@ function CommandeForm({ chantierId, commande, onClose, onSuccess }: CommandeForm
  Livraison Réelle
  </label>
  <input
- type="date"
+ type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
  value={formData.date_livraison_reelle}
  onChange={(e) => setFormData({ ...formData, date_livraison_reelle: e.target.value })}
  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"

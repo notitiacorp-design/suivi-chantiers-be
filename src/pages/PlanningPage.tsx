@@ -378,12 +378,12 @@ export default function PlanningPage() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
                   <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#374151', marginBottom: 4 }}>DÃ©but *</label>
-                  <input type="date" value={form.date_debut} onChange={e => setForm(f => ({ ...f, date_debut: e.target.value }))}
+                  <input type="date" lang="fr-FR" placeholder="jj/mm/aaaa" value={form.date_debut} onChange={e => setForm(f => ({ ...f, date_debut: e.target.value }))}
                     style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid #D1D5DB', fontSize: 14, outline: 'none', boxSizing: 'border-box' as const }} />
                 </div>
                 <div>
                   <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#374151', marginBottom: 4 }}>Fin *</label>
-                  <input type="date" value={form.date_fin} onChange={e => setForm(f => ({ ...f, date_fin: e.target.value }))}
+                  <input type="date" lang="fr-FR" placeholder="jj/mm/aaaa" value={form.date_fin} onChange={e => setForm(f => ({ ...f, date_fin: e.target.value }))}
                     style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid #D1D5DB', fontSize: 14, outline: 'none', boxSizing: 'border-box' as const }} />
                 </div>
               </div>

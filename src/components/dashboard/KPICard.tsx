@@ -3,8 +3,8 @@ import { TrendingUp, TrendingDown } from 'lucide-react';
 
 interface KPICardProps {
   title: string;
-  value: number;
-  variation: number;
+  value: number | string;
+  variation?: number | null;
   icon: React.ReactNode;
   color: 'blue' | 'green' | 'red' | 'orange' | 'purple';
   suffix?: string;
@@ -13,18 +13,16 @@ interface KPICardProps {
 const KPICard: React.FC<KPICardProps> = ({
   title,
   value,
-  variation,
+  variation = null,
   icon,
   color,
   suffix = '',
 }) => {
   const [isVisible, setIsVisible] = useState(false);
-  
-  // Check if variation is valid (not null, undefined, or NaN)
-  const hasValidVariation = variation !== null && variation !== undefined && !isNaN(variation);
+
+  const hasValidVariation = Number.isFinite(variation);
 
   useEffect(() => {
-    // Animation au chargement
     setTimeout(() => setIsVisible(true), 100);
   }, []);
 
@@ -45,7 +43,8 @@ const KPICard: React.FC<KPICardProps> = ({
   };
 
   return (
-    <div      className={`
+    <div
+      className={`
         bg-white rounded-lg shadow-md p-6 border-l-4 ${colorClasses[color]}
         transform transition-all duration-500
         ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}
@@ -56,27 +55,28 @@ const KPICard: React.FC<KPICardProps> = ({
         <div className={`p-3 rounded-full ${iconBgClasses[color]}`}>
           {icon}
         </div>
-        <div className="flex items-center">
-          {hasValidVariation && (
-            <>
-              {variation >= 0 ? (
-                <TrendingUp className="w-4 h-4 text-green-600" />
-              ) : (
-                <TrendingDown className="w-4 h-4 text-red-600" />
-              )}
-              <span                className={`ml-1 text-sm font-semibold ${
-                  variation >= 0 ? 'text-green-600' : 'text-red-600'
-                }`}
-              >
-                {variation > 0 ? '+' : ''}{variation}%
-              </span>
-            </>
-          )}
-        </div>
+        {hasValidVariation && (
+          <div className="flex items-center">
+            {variation! >= 0 ? (
+              <TrendingUp className="w-4 h-4 text-green-600" />
+            ) : (
+              <TrendingDown className="w-4 h-4 text-red-600" />
+            )}
+            <span
+              className={`ml-1 text-sm font-semibold ${
+                variation! >= 0 ? 'text-green-600' : 'text-red-600'
+              }`}
+            >
+              {variation! > 0 ? '+' : ''}
+              {variation}%
+            </span>
+          </div>
+        )}
       </div>
       <h3 className="text-gray-600 text-sm font-medium mb-2">{title}</h3>
-      <p>        className="text-3xl font-bold text-gray-800">
-        {value}{suffix}
+      <p className="text-3xl font-bold text-gray-800">
+        {value}
+        {suffix}
       </p>
     </div>
   );

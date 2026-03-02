@@ -300,14 +300,14 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  label="Date début"
  value={new Date(chantier.date_debut).toLocaleDateString('fr-FR')}
  field="date_debut"
- type="date"
+ type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
  />
  <InfoCard
  icon={Calendar}
  label="Date fin prévue"
  value={new Date(chantier.date_fin_prevue).toLocaleDateString('fr-FR')}
  field="date_fin_prevue"
- type="date"
+ type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
  />
  </div>
  </div>

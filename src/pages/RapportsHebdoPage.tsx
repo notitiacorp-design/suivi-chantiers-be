@@ -534,7 +534,7 @@ const RapportsHebdoPage: React.FC = () => {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Semaine du *</label>
                     <input
-                      type="date"
+                      type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
                       value={formData.semaine_du}
                       onChange={(e) => setFormData({ ...formData, semaine_du: e.target.value })}
                       required

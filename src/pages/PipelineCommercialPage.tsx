@@ -695,7 +695,7 @@ export default function PipelineCommercialPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Date de relance</label>
                   <input
-                    type="date"
+                    type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
                     value={formData.date_relance}
                     onChange={(e) => setFormData({ ...formData, date_relance: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -707,7 +707,7 @@ export default function PipelineCommercialPage() {
                     Date de clôture prévue
                   </label>
                   <input
-                    type="date"
+                    type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
                     value={formData.date_cloture_prevue}
                     onChange={(e) => setFormData({ ...formData, date_cloture_prevue: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"

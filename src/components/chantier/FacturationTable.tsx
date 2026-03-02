@@ -281,7 +281,7 @@ const FacturationTable: React.FC<FacturationTableProps> = ({ chantierId }) => {
  Date d'émission *
  </label>
  <input
- type="date"
+ type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
  required
  value={formData.date_emission}
  onChange={(e) => setFormData({ ...formData, date_emission: e.target.value })}
@@ -326,7 +326,7 @@ const FacturationTable: React.FC<FacturationTableProps> = ({ chantierId }) => {
  Date d'échéance *
  </label>
  <input
- type="date"
+ type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
  required
  value={formData.date_echeance}
  onChange={(e) => setFormData({ ...formData, date_echeance: e.target.value })}

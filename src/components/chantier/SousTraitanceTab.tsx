@@ -533,7 +533,7 @@ function SousTraitantForm({ chantierId, sousTraitant, onClose, onSuccess }: Sous
  Date Déclaration
  </label>
  <input
- type="date"
+ type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
  value={formData.date_declaration}
  onChange={(e) => setFormData({ ...formData, date_declaration: e.target.value })}
  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -552,7 +552,7 @@ function SousTraitantForm({ chantierId, sousTraitant, onClose, onSuccess }: Sous
  Date Début *
  </label>
  <input
- type="date"
+ type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
  required
  value={formData.date_debut}
  onChange={(e) => setFormData({ ...formData, date_debut: e.target.value })}
@@ -565,7 +565,7 @@ function SousTraitantForm({ chantierId, sousTraitant, onClose, onSuccess }: Sous
  Date Fin Prévue *
  </label>
  <input
- type="date"
+ type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
  required
  value={formData.date_fin_prevue}
  onChange={(e) => setFormData({ ...formData, date_fin_prevue: e.target.value })}
@@ -578,7 +578,7 @@ function SousTraitantForm({ chantierId, sousTraitant, onClose, onSuccess }: Sous
  Date Fin Réelle
  </label>
  <input
- type="date"
+ type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
  value={formData.date_fin_reelle}
  onChange={(e) => setFormData({ ...formData, date_fin_reelle: e.target.value })}
  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"

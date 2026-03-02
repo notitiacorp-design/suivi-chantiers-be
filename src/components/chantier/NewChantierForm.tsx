@@ -374,7 +374,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  Date de début *
  </label>
  <input
- type="date"
+ type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
  value={formData.date_debut}
  onChange={(e) => updateFormData('date_debut', e.target.value)}
  className={`w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
@@ -389,7 +389,7 @@ const NewChantierForm: React.FC<NewChantierFormProps> = ({ onClose }) => {
  Date de fin prévue *
  </label>
  <input
- type="date"
+ type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
  value={formData.date_fin_prevue}
  onChange={(e) => updateFormData('date_fin_prevue', e.target.value)}
  className={`w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
