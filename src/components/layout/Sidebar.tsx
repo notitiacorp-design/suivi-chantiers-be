@@ -51,7 +51,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     const fetchUnreadCount = async () => {
       const { count, error } = await supabase
         .from('notifications')
-        .select('*', { count: 'exact', head: true })
+        .select(')', { count: 'exact', head: true })
         .eq('user_id', profile.id)
         .eq('lu', false);
 
@@ -90,151 +90,127 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   const navSections: NavSection[] = [
     {
-      title: 'Général',
+      title: '',
       items: [
-        { to: '/dashboard', icon: LayoutDashboard, label: 'Tableau de bord', show: true },
+        { to: '/', icon: LayoutDashboard, label: 'Tableau de bord', show: true },
       ],
     },
     {
-      title: 'Chantiers',
+      title: 'CHANTIERS',
       items: [
-        { to: '/mes-chantiers', icon: Building, label: 'Mes Chantiers', show: true },
-        { to: '/tous-chantiers', icon: Building2, label: 'Tous les Chantiers', show: true },
-        { to: '/journal-chantier', icon: ClipboardList, label: 'Journal de Chantier', show: true },
+        { to: '/mes-chantiers', icon: Building2, label: 'Mes Chantiers', show: true },
+        { to: '/tous-chantiers', icon: Building, label: 'Tous les Chantiers', show: true },
       ],
     },
     {
-      title: 'Direction',
+      title: 'DIRECTION',
       items: [
-        { to: '/tableau-charge', icon: BarChart3, label: 'Tableau de Charge', show: isDirecteur },
-        { to: '/planning', icon: CalendarDays, label: 'Planning', show: true },
-        { to: '/dashboard-financier', icon: DollarSign, label: 'Dashboard Financier', show: isDirecteur },
-        { to: '/pipeline', icon: TrendingUp, label: 'Pipeline Commercial', show: true },
+        { to: '/tableau-de-charge', icon: BarChart3, label: 'Tableau de Charge', show: true },
+        { to: 'dashboard-financier', icon: DollarSign, label: 'Dashboard Financier', show: true },
+        { to: 'pipeline-commercial', icon: TrendingUp, label: 'Pipeline Commercial', show: isDirecteur },
       ],
     },
     {
-        title: "Bureau d'études",
-        items: [
-          { to: '/etudes-techniques', icon: Microscope, label: 'Études techniques', show: true },
-          { to: '/rapports-hebdo', icon: CalendarCheck, label: 'Rapports hebdo', show: true },
-        ],
-      },
-      {
-      title: 'Gestion',
+      title: 'BUREAU D'ATUDEAS',
+      items: [
+        { to: '/etudes-techniques', icon: Microscope, label: 'Etudes techniques', show: true },
+        { to: '/rapports-hebdo', icon: CalendarCheck, label: 'Rapports hebdo', show: true },
+      ],
+    },
+    {
+      title: 'GESTION',
       items: [
         { to: '/achats', icon: ShoppingCart, label: 'Gestion Achats', show: true },
-        { to: '/facturation', icon: FileText, label: 'Facturation', show: true },
-        { to: '/documents', icon: FolderOpen, label: 'Documents', show: true },
+        { to: 'facturation', icon: FileText, label: 'Facturation', show: true },
+        { to: 'documents', icon: FolderOpen, label: 'Documents', show: true },
       ],
     },
     {
-      title: 'Système',
+      title: 'SYSTEME',
       items: [
         { to: '/notifications', icon: Bell, label: 'Notifications', show: true, badge: unreadCount },
       ],
     },
   ];
 
-  const linkClasses = ({ isActive }: { isActive: boolean }) =>
-    `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-      isActive
-        ? 'bg-white/20 text-white shadow-sm'
-        : 'text-blue-100 hover:bg-white/10 hover:text-white'
-    }`;
-
   return (
     <>
-      {/* Overlay mobile */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={onClose}
-        />
-      )}
-
-      {/* Sidebar */}
-      <aside
-        className={`fixed top-0 left-0 h-screen w-64 bg-[#1e3a5f] z-50 transform transition-transform duration-300 ease-in-out ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 flex flex-col`}
+      {/* Sidebar pour desktop */}
+      <div        className={`         hidden ld:flex          min-h-screen          bg-stone-900          w-64          flex-col          border-r border-stone-800          transition-all duration-300          ${isOpen ? 'translate-x-0' : '-translate-x-full opacity-0'}        `}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between px-5 py-5 border-b border-white/10">
+        <div className="p-6 border-b border-stone-800">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
-              <Building2 className="w-5 h-5 text-white" />
+            <div className="bg-blue-600 p-2 rounded">
+              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21h-6.173a2.285 2.285 0 01-.607-1.317l-.008-.083a5.5 5.5 0 00-4.459-5.445l-.083-.008a2.285 2.285 0 01-1.317-.607L12 18h-6a2 2 0 01-2-2v-6a2 2 0 012-2h6.173z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 13l4-4m4 0l4 4M7 13l-4 4m0 0l4 4" />
+              </svg>
             </div>
             <div>
-              <h1 className="text-lg font-bold text-white tracking-tight">BE Pilot</h1>
-              <p className="text-xs text-blue-200/60">Suivi de chantiers</p>
+              <h1 className="text-xl loading font-bold text-white">BE Pilot</h1>
+              <p className="text-stone-400 text-sm">Suivi de chantiers</p>
+            </div>
+          </div>
+        </div>
+
+        <nav className="flex-1 px-4 py-6 overflow-y-auto">
+          {navSections.map((section) => (
+            <div key={section.title} className="mb-6">
+              {section.title && (
+                <h3 className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-3">
+                  {section.title}
+                </h3>
+              )}
+              <ul className="space-y-1">
+                {section.items.map((item) =>
+                  item.show ? (
+                    <li key={item.label}>
+                      <NavLink
+                        to={item.to}
+                        className={({ isActive }) =>
+                          `flex items-center px-3 py-2 rounded transition-colors duration-200 ${
+                            isActive
+                              ? 'bg-blue-600 text-white'
+                              : 'text-stone-300 hover:text-white hover:bg-stone-800'
+                          }`
+                        }
+                      >
+                        <item.icon className="w-5 h-5 mr-3" />
+                        <span className="font-medium">{item.label}</span>
+                        </NavLink>
+                    </li>
+                  ) : null
+                }
+              </ul>
+            </div>
+          ))}
+        </nav>
+
+        <div className="p-4 border-t border-stone-800">
+          <div className="flex items-center mb-3">
+            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
+              <span className="text-sm font-medium text-white">
+                {profile?.prenom?.slice(0, 1)}{profile?.nom?.slice(0, 1)}
+              </span>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm font-medium text-white">
+                {profile?.prenom ? profile.prenom + ' ' + profile.nom : 'Quentin CONVERT'}
+              </p>
+              <p className="text-xs text-stone-400">
+                {isDirecteur ? 'Directeur' : 'Charge d&#39;affaires'}
+              </p>
             </div>
           </div>
           <button
-            onClick={onClose}
-            className="lg:hidden text-blue-200 hover:text-white transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-          {navSections.map((section) => {
-            const visibleItems = section.items.filter((item) => item.show);
-            if (visibleItems.length === 0) return null;
-
-            return (
-              <div key={section.title} className="mb-4">
-                <p className="text-xs uppercase tracking-wider text-blue-300/50 font-semibold px-4 mb-2 mt-3">
-                  {section.title}
-                </p>
-                {visibleItems.map((item) => (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    className={linkClasses}
-                    onClick={onClose}
-                  >
-                    <item.icon className="w-5 h-5 flex-shrink-0" />
-                    <span className="flex-1">{item.label}</span>
-                    {item.badge && item.badge > 0 ? (
-                      <span className="bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                        {item.badge > 9 ? '9+' : item.badge}
-                      </span>
-                    ) : null}
-                  </NavLink>
-                ))}
-              </div>
-            );
-          })}
-        </nav>
-
-        {/* User info + Logout */}
-        <div className="border-t border-white/10 px-4 py-4">
-          {profile && (
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white text-sm font-bold">
-                {profile.prenom?.[0]}{profile.nom?.[0]}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">
-                  {profile.prenom} {profile.nom}
-                </p>
-                <p className="text-xs text-blue-200/60 truncate capitalize">
-                  {profile.role}
-                </p>
-              </div>
-            </div>
-          )}
-          <button
             onClick={handleSignOut}
-            className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-blue-100 hover:bg-white/10 hover:text-white rounded-lg transition-colors"
+            className="flex items-center w-full px-4 py-2 text-stone-300 hover:text-white hover:bg-stone-800 rounded transition-colors duration-200"
           >
-            <LogOut className="w-5 h-5" />
-            <span>{'Déconnexion'}</span>
+            <LogOut className="w-5 h-5 mr-2" />
+            <span>D&eacute;connexion</span>
           </button>
         </div>
-      </aside>
+      </div>
     </>
   );
 }
