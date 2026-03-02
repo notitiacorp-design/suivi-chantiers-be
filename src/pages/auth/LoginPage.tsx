@@ -94,7 +94,7 @@ const LoginPage: React.FC = () => {
           </ul>
         </div>
         <div className="text-blue-200 text-sm">
-          © 2024 BE Pilot. Tous droits réservés.
+          © 2026 BE Pilot — Notitia Corp
         </div>
       </div>
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">

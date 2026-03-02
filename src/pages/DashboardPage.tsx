@@ -116,7 +116,7 @@ const DashboardPage: React.FC = () => {
           <h1 className="text-3xl font-bold text-slate-900">
             Bienvenue, {profile?.prenom} {profile?.nom}
           </h1>
-          <p className="text-slate-600 mt-2">Tableau de bord - Suivi Chantiers BE</p>
+          <p className="text-slate-600 mt-2">Tableau de bord - BE Pilot</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
