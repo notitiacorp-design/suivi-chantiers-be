@@ -65,7 +65,7 @@ const App: React.FC = () => {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
-              {/* Routes protégées */}
+              {/* Routes protÃ©gÃ©es */}
               <Route
                 path="/"
                 element={
@@ -90,9 +90,10 @@ const App: React.FC = () => {
                 <Route path="journal-chantier" element={<JournalChantierPage />} />
                 <Route path="pipeline" element={<PipelineCommercialPage />} />
                 <Route path="achats" element={<AchatsPage />} />
+                <Route path="planning" element={<PlanningPage />} />
               </Route>
 
-              {/* Redirection par défaut */}
+              {/* Redirection par dÃ©faut */}
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Routes>
           </Suspense>
