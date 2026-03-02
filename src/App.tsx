@@ -25,6 +25,7 @@ const RapportsHebdoPage = lazy(() => import('./pages/RapportsHebdoPage'));
 const JournalChantierPage = lazy(() => import('./pages/JournalChantierPage'));
 const PipelineCommercialPage = lazy(() => import('./pages/PipelineCommercialPage'));
 const AchatsPage = lazy(() => import('./pages/AchatsPage'));
+const PlanningPage = lazy(() => import('./pages/PlanningPage'));
 
 const queryClient = new QueryClient({
   defaultOptions: {

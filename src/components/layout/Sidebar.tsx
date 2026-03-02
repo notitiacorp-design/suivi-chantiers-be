@@ -19,6 +19,7 @@ import {
   ChevronRight,
   Microscope,
   CalendarCheck,
+  CalendarDays,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -106,6 +107,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       title: 'Direction',
       items: [
         { to: '/tableau-charge', icon: BarChart3, label: 'Tableau de Charge', show: isDirecteur },
+        { to: '/planning', icon: CalendarDays, label: 'Planning', show: true },
         { to: '/dashboard-financier', icon: DollarSign, label: 'Dashboard Financier', show: isDirecteur },
         { to: '/pipeline', icon: TrendingUp, label: 'Pipeline Commercial', show: true },
       ],
