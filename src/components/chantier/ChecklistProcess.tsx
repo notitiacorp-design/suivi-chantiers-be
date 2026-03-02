@@ -383,7 +383,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  {phaseTaches.map((tache) => (
  <div
  key={tache.id}
- className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+ className="relative z-0 border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
  >
  <div className="flex items-start space-x-4">
  {/* Checkbox */}
@@ -430,7 +430,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  <select
  value={tache.statut}
  onChange={(e) => updateTache(tache.id, { statut: e.target.value })}
- className={`px-2 py-1 text-xs font-medium rounded-md border-0 focus:ring-2 focus:ring-blue-500 ${
+ className={`relative z-[9999] px-2 py-1 text-xs font-medium rounded-md border-0 focus:ring-2 focus:ring-blue-500 ${
  getStatutColor(tache.statut)
  }`}
  onClick={(e) => e.stopPropagation()}
@@ -467,7 +467,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  <div>
  <label className="text-gray-500 block mb-1">Début</label>
  <input
- type="date"
+ type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
  value={tache.created_at || ''}
  onChange={(e) =>
  updateTache(tache.id, { created_at: e.target.value })
@@ -478,7 +478,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  <div>
  <label className="text-gray-500 block mb-1">Fin prévue</label>
  <input
- type="date"
+ type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
  value={tache.date_echeance || ''}
  onChange={(e) =>
  updateTache(tache.id, { date_fin_prevue: e.target.value })
@@ -489,7 +489,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  <div>
  <label className="text-gray-500 block mb-1">Fin réelle</label>
  <input
- type="date"
+ type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
  value={tache.date_echeance || ''}
  onChange={(e) =>
  updateTache(tache.id, { date_fin_reelle: e.target.value })

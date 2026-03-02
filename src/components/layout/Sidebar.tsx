@@ -111,7 +111,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       ],
     },
     {
-      title: 'BUREAU D'ATUDEAS',
+      title: "BUREAU D'ÉTUDES",
       items: [
         { to: '/etudes-techniques', icon: Microscope, label: 'Etudes techniques', show: true },
         { to: '/rapports-hebdo', icon: CalendarCheck, label: 'Rapports hebdo', show: true },
@@ -180,7 +180,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                         </NavLink>
                     </li>
                   ) : null
-                }
+                )}
               </ul>
             </div>
           ))}

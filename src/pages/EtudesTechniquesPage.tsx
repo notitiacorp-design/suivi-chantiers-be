@@ -582,7 +582,7 @@ export default function EtudesTechniquesPage() {
                     Date de remise
                   </label>
                   <input
-                    type="date"
+                    type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
                     value={formData.date_remise || ''}
                     onChange={(e) => setFormData({ ...formData, date_remise: e.target.value })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6]"
@@ -594,7 +594,7 @@ export default function EtudesTechniquesPage() {
                     Date de validation
                   </label>
                   <input
-                    type="date"
+                    type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
                     value={formData.date_validation || ''}
                     onChange={(e) => setFormData({ ...formData, date_validation: e.target.value })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6]"

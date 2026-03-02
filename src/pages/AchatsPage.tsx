@@ -729,7 +729,7 @@ const AchatsPage: React.FC = () => {
                     Date de livraison prévue
                   </label>
                   <input
-                    type="date"
+                    type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
                     value={formData.date_livraison_prevue}
                     onChange={(e) =>
                       setFormData({ ...formData, date_livraison_prevue: e.target.value })
