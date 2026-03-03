@@ -208,7 +208,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  (t) =>
  t.date_echeance &&
  new Date(t.date_echeance) < new Date() &&
- t.statut !== 'Terminé'
+ t.statut !== 'terminee'
  );
  break;
  case 'blocked':
@@ -390,9 +390,9 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  <button
  onClick={() =>
  updateTache(tache.id, {
- statut: tache.statut === 'Terminé' ? 'À faire' : 'Terminé',
+ statut: tache.statut === 'terminee' ? 'a_faire' : 'terminee',
  date_fin_reelle:
- tache.statut === 'Terminé'
+ tache.statut === 'terminee'
  ? null
  : new Date().toISOString(),
  })
@@ -401,7 +401,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  >
  <CheckCircle2
  className={`w-5 h-5 ${
- tache.statut === 'Terminé'
+ tache.statut === 'terminee'
  ? 'text-green-600 fill-green-600'
  : 'text-gray-300'
  }`}
@@ -416,7 +416,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  </span>
  <h4
  className={`font-medium ${
- tache.statut === 'Terminé'
+ tache.statut === 'terminee'
  ? 'text-gray-400 line-through'
  : 'text-gray-900'
  }`}
@@ -435,10 +435,10 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  }`}
  onClick={(e) => e.stopPropagation()}
  >
- <option value="À faire">À faire</option>
- <option value="En cours">En cours</option>
- <option value="Terminé">Terminé</option>
- <option value="Bloqué">Bloqué</option>
+ <option value="a_faire">À faire</option>
+ <option value="en_cours">En cours</option>
+ <option value="terminee">Terminé</option>
+ <option value="bloque">Bloqué</option>
  </select>
 
  {/* Priorité dropdown */}
@@ -495,7 +495,7 @@ const ChecklistProcess: React.FC<ChecklistProcessProps> = ({ chantierId }) => {
  updateTache(tache.id, { date_fin_reelle: e.target.value })
  }
  className="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
- disabled={tache.statut !== 'Terminé'}
+ disabled={tache.statut !== 'terminee'}
  />
  </div>
  </div>

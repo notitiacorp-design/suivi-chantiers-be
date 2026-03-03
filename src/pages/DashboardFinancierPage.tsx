@@ -218,13 +218,17 @@ const DashboardFinancierPage: React.FC = () => {
 
  const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 
+
+ const hasFinancialData = chantiers.length > 0 || factures.length > 0 || avenants.length > 0 || budgetsPostes.length > 0;
+
  const formatEuro = (value: number) => {
+ const safeValue = Number.isFinite(value) ? value : 0;
  return new Intl.NumberFormat('fr-FR', {
  style: 'currency',
  currency: 'EUR',
  minimumFractionDigits: 0,
  maximumFractionDigits: 0
- }).format(value);
+ }).format(safeValue);
  };
 
  const KPICard: React.FC<{
@@ -277,6 +281,12 @@ const DashboardFinancierPage: React.FC = () => {
  </button>
  </div>
  </div>
+
+ {!hasFinancialData && (
+ <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-800">
+ Aucune donnée financière disponible pour le moment. Ajoutez des chantiers, des budgets et des factures pour activer les indicateurs.
+ </div>
+ )}
 
  {/* KPIs Principaux */}
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

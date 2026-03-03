@@ -180,7 +180,7 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
         setHasMore(false);
       }
     } catch (error: any) {
-      console.error("Erreur chargement plus d'entrÃ©es:", error);
+      console.error("Erreur chargement plus d'entrées:", error);
     }
   };
 
@@ -214,7 +214,7 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
       };
 
       setLocalEntries((prev) => [localEntry, ...prev]);
-      toast.success('EntrÃ©e ajoutÃ©e localement (mode hors-ligne)');
+      toast.success('Entrée ajoutée localement (mode hors-ligne)');
       setNewEntry({ type: 'Note', contenu: '' });
       setUploadedFile(null);
       setShowForm(false);
@@ -255,19 +255,19 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
       if (error) {
         if (isTableMissingError(error)) {
           setTableExists(false);
-          toast.error('La table est indisponible. Veuillez rÃ©essayer en mode local.');
+          toast.error('Le journal est temporairement indisponible. Veuillez réessayer.');
           return;
         }
         throw error;
       }
 
-      toast.success('EntrÃ©e ajoutÃ©e au journal');
+      toast.success('Entrée ajoutée au journal');
       setNewEntry({ type: 'Note', contenu: '' });
       setUploadedFile(null);
       setShowForm(false);
     } catch (error: any) {
-      console.error('Erreur ajout entrÃ©e:', error);
-      toast.error("Erreur lors de l'ajout de l'entrÃ©e");
+      console.error("Erreur lors de l'ajout d'entrée:", error);
+      toast.error("Erreur lors de l'ajout de l'entrée");
     }
   };
 
@@ -311,10 +311,10 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
           <WifiOff className="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0" />
           <div>
             <p className="text-sm font-semibold text-yellow-800">
-              Table de base de donnÃ©es introuvable
+              Table de base de données introuvable
             </p>
             <p className="text-sm text-yellow-700 mt-1">
-              La table <code className="font-mono bg-yellow-100 px-1 rounded">journal_chantier</code> n&apos;existe pas dans Supabase. Les entrÃ©es que vous ajoutez sont stockÃ©es <strong>uniquement en mÃ©moire locale</strong> et seront perdues lors du rechargement de la page. Veuillez contacter votre administrateur pour crÃ©er la table.
+              La table <code className="font-mono bg-yellow-100 px-1 rounded">journal_chantier</code> n&apos;existe pas dans Supabase. Les entrées que vous ajoutez sont stockées <strong>uniquement en mémoire locale</strong> et seront perdues lors du rechargement de la page. Veuillez contacter votre administrateur pour créer la table.
             </p>
           </div>
         </div>
@@ -329,7 +329,7 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
             className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <Plus className="w-4 h-4" />
-            <span>Nouvelle entrÃ©e</span>
+            <span>Nouvelle entrée</span>
           </button>
         </div>
 
@@ -352,21 +352,21 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
         </div>
       </div>
 
-      {/* Formulaire nouvelle entrÃ©e */}
+      {/* Formulaire nouvelle entrée */}
       {showForm && (
         <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
           {!tableExists && (
             <div className="flex items-center space-x-2 mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
               <AlertTriangle className="w-4 h-4 text-yellow-600 flex-shrink-0" />
               <p className="text-xs text-yellow-700">
-                Mode local actif â cette entrÃ©e ne sera pas sauvegardÃ©e dans la base de donnÃ©es.
+                Mode local actif — cette entrée ne sera pas sauvegardée dans la base de données.
               </p>
             </div>
           )}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Type d&apos;entrÃ©e
+                Type d&apos;entrée
               </label>
               <div className="grid grid-cols-4 gap-2">
                 {['Note', 'Alerte', 'Modification', 'Photo'].map((type) => (
@@ -402,7 +402,7 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                PiÃ¨ce jointe (optionnel)
+                Pièce jointe (optionnel)
               </label>
               <div className="flex items-center space-x-4">
                 <label className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
@@ -448,7 +448,7 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
         </div>
       )}
 
-      {/* Liste des entrÃ©es */}
+      {/* Liste des entrées */}
       {loading ? (
         <div className="flex justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
@@ -467,7 +467,7 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
               {entry.id.startsWith('local-') && (
                 <div className="flex items-center space-x-1 mb-3">
                   <WifiOff className="w-3 h-3 text-yellow-500" />
-                  <span className="text-xs text-yellow-600 font-medium">StockÃ© localement uniquement</span>
+                  <span className="text-xs text-yellow-600 font-medium">Stocké localement uniquement</span>
                 </div>
               )}
               <div className="flex items-start justify-between">
@@ -502,7 +502,7 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
                       >
                         <Upload className="w-4 h-4" />
                         <span className="text-sm">
-                          {entry.piece_jointe_nom || 'Voir la piÃ¨ce jointe'}
+                          {entry.piece_jointe_nom || 'Voir la pièce jointe'}
                         </span>
                       </a>
                     )}
@@ -522,10 +522,10 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
       ) : (
         <div className="text-center py-12">
           <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-500">Aucune entrÃ©e dans le journal</p>
+          <p className="text-gray-500">Aucune entrée dans le journal</p>
           <p className="text-sm text-gray-400 mt-1">
             {!tableExists
-              ? 'La table est indisponible. Vous pouvez ajouter des entrÃ©es localement.'
+              ? 'La table est indisponible. Vous pouvez ajouter des entrées localement.'
               : 'Commencez par ajouter une note ou une alerte'}
           </p>
         </div>

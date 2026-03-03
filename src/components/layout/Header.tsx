@@ -69,6 +69,8 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
     return 'Utilisateur';
   };
 
+  const displayName = profile?.full_name || [profile?.prenom, profile?.nom].filter(Boolean).join(' ') || 'Utilisateur';
+
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
       <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
@@ -164,7 +166,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
               )}
               <div className="hidden lg:block text-left">
                 <div className="text-sm font-medium text-slate-900">
-                  {profile?.full_name || 'Utilisateur'}
+                  {displayName}
                 </div>
                 <div className="text-xs text-slate-500">{getRoleLabel()}</div>
               </div>
@@ -188,7 +190,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                     )}
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-slate-900 truncate">
-                        {profile?.full_name || 'Utilisateur'}
+                        {displayName}
                       </div>
                       <div className="text-sm text-slate-500 truncate">{user?.email}</div>
                       <div className="mt-1">
