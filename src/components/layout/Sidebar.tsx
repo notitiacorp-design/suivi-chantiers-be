@@ -107,8 +107,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       title: 'DIRECTION',
       items: [
         { to: '/tableau-de-charge', icon: BarChart3, label: 'Tableau de Charge', show: true },
-        { to: 'dashboard-financier', icon: DollarSign, label: 'Dashboard Financier', show: true },
-        { to: 'pipeline-commercial', icon: TrendingUp, label: 'Pipeline Commercial', show: isDirecteur },
+        { to: '/dashboard-financier', icon: DollarSign, label: 'Dashboard Financier', show: true },
+        { to: '/pipeline-commercial', icon: TrendingUp, label: 'Pipeline Commercial', show: isDirecteur },
       ],
     },
     {
@@ -122,8 +122,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       title: 'GESTION',
       items: [
         { to: '/achats', icon: ShoppingCart, label: 'Gestion Achats', show: true },
-        { to: 'facturation', icon: FileText, label: 'Facturation', show: true },
-        { to: 'documents', icon: FolderOpen, label: 'Documents', show: true },
+        { to: '/facturation', icon: FileText, label: 'Facturation', show: true },
+        { to: '/documents', icon: FolderOpen, label: 'Documents', show: true },
       ],
     },
     {
@@ -137,7 +137,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   return (
     <>
       {/* Sidebar pour desktop */}
-      <div        className={`         hidden lg:flex          min-h-screen          bg-stone-900          w-64          flex-col          border-r border-stone-800          transition-all duration-300          ${isOpen ? 'translate-x-0' : '-translate-x-full opacity-0'}        `}
+      <div        className={`         hidden lg:flex          min-h-screen          bg-stone-900          w-64          flex-col          border-r border-stone-800          transition-all duration-300 lg:translate-x-0 lg:opacity-100          ${isOpen ? 'translate-x-0' : '-translate-x-full opacity-0'}        `}
       >
         <div className="p-6 border-b border-stone-800">
           <div className="flex items-center gap-3">
