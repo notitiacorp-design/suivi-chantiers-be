@@ -137,7 +137,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   return (
     <>
       {/* Sidebar pour desktop */}
-      <div        className={`         hidden lg:flex          min-h-screen          bg-stone-900          w-64          flex-col          border-r border-stone-800          transition-all duration-300 lg:translate-x-0 lg:opacity-100          ${isOpen ? 'translate-x-0' : '-translate-x-full opacity-0'}        `}
+      <div        className={`         hidden lg:flex fixed inset-y-0 left-0 z-30          min-h-screen          bg-stone-900          w-64          flex-col          border-r border-stone-800          transition-all duration-300 lg:translate-x-0 lg:opacity-100          ${isOpen ? 'translate-x-0' : '-translate-x-full opacity-0'}        `}
       >
         <div className="p-6 border-b border-stone-800">
           <div className="flex items-center gap-3">
