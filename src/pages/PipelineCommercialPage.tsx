@@ -389,31 +389,66 @@ export default function PipelineCommercialPage() {
               <span className="text-sm font-medium text-gray-700">Filtres :</span>
             </div>
 
-            <select
-              value={selectedCommercial}
-              onChange={(e) => setSelectedCommercial(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="all">Tous les commerciaux</option>
-              {commercials.map((commercial) => (
-                <option key={commercial.id} value={commercial.id}>
-                  {commercial.prenom} {commercial.nom}
-                </option>
-              ))}
-            </select>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-sm text-gray-600">Commercial :</span>
+              <button
+                type="button"
+                onClick={() => setSelectedCommercial('all')}
+                className={`px-3 py-1.5 rounded-lg text-sm border transition-colors ${
+                  selectedCommercial === 'all'
+                    ? 'bg-blue-600 text-white border-blue-600'
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                Tous
+              </button>
+              {commercials.map((commercial) => {
+                const fullName = `${commercial.prenom} ${commercial.nom}`;
+                return (
+                  <button
+                    key={commercial.id}
+                    type="button"
+                    onClick={() => setSelectedCommercial(commercial.id)}
+                    className={`px-3 py-1.5 rounded-lg text-sm border transition-colors ${
+                      selectedCommercial === commercial.id
+                        ? 'bg-blue-600 text-white border-blue-600'
+                        : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    {fullName}
+                  </button>
+                );
+              })}
+            </div>
 
-            <select
-              value={selectedStage}
-              onChange={(e) => setSelectedStage(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="all">Tous les stades</option>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-sm text-gray-600">Stade :</span>
+              <button
+                type="button"
+                onClick={() => setSelectedStage('all')}
+                className={`px-3 py-1.5 rounded-lg text-sm border transition-colors ${
+                  selectedStage === 'all'
+                    ? 'bg-indigo-600 text-white border-indigo-600'
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                Tous
+              </button>
               {stages.map((stage) => (
-                <option key={stage.id} value={stage.id}>
+                <button
+                  key={stage.id}
+                  type="button"
+                  onClick={() => setSelectedStage(stage.id)}
+                  className={`px-3 py-1.5 rounded-lg text-sm border transition-colors ${
+                    selectedStage === stage.id
+                      ? 'bg-indigo-600 text-white border-indigo-600'
+                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
                   {stage.label}
-                </option>
+                </button>
               ))}
-            </select>
+            </div>
 
             <label className="flex items-center gap-2 cursor-pointer">
               <input
@@ -694,7 +729,7 @@ export default function PipelineCommercialPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Date de relance</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Date de relance (jj/mm/aaaa)</label>
                   <input
                     type="date" lang="fr-FR" placeholder="jj/mm/aaaa"
                     value={formData.date_relance}
@@ -705,7 +740,7 @@ export default function PipelineCommercialPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Date de clôture prévue
+                    Date de clôture prévue (jj/mm/aaaa)
                   </label>
                   <input
                     type="date" lang="fr-FR" placeholder="jj/mm/aaaa"

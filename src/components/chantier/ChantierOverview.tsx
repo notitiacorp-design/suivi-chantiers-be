@@ -338,7 +338,7 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  <div className="flex items-center justify-between mb-2">
  <span className="text-sm font-medium text-gray-700">{phase.phase}</span>
  <span className="text-sm text-gray-600">
- {phase.taches_terminees}/{phase.total_taches} tâches â¢ {phase.score}%
+ {phase.taches_terminees}/{phase.total_taches} tâches • {phase.score}%
  </span>
  </div>
  <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
@@ -368,7 +368,7 @@ const ChantierOverview: React.FC<ChantierOverviewProps> = ({ chantier, onUpdate 
  <div className="flex-1 min-w-0">
  <p className="text-sm text-gray-900 truncate">{entry.contenu}</p>
  <p className="text-xs text-gray-500 mt-1">
- {entry.auteur} â¢{' '}
+ {entry.auteur} •{' '}
  {new Date(entry.created_at).toLocaleDateString('fr-FR', {
  day: 'numeric',
  month: 'short',

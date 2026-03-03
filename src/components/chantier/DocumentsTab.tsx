@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
@@ -41,6 +41,7 @@ export default function DocumentsTab({ chantierId }: DocumentsTabProps) {
  const [searchTerm, setSearchTerm] = useState('');
  const [previewDocument, setPreviewDocument] = useState<Document | null>(null);
  const queryClient = useQueryClient();
+ const quickUploadInputRef = useRef<HTMLInputElement>(null);
 
  const { data: documents = [], isLoading } = useQuery({
  queryKey: ['documents', chantierId, selectedCategory],
@@ -130,6 +131,17 @@ export default function DocumentsTab({ chantierId }: DocumentsTabProps) {
  });
  }, [uploadMutation]);
 
+ const handleQuickUpload = useCallback(
+ (event: React.ChangeEvent<HTMLInputElement>) => {
+ const file = event.target.files?.[0];
+ if (!file) return;
+
+ uploadMutation.mutate({ file, category: 'autres', version: 'V1' });
+ event.target.value = '';
+ },
+ [uploadMutation]
+ );
+
  const filteredDocuments = documents.filter(doc =>
  doc.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
  doc.version.toLowerCase().includes(searchTerm.toLowerCase())
@@ -159,9 +171,10 @@ export default function DocumentsTab({ chantierId }: DocumentsTabProps) {
  return (
  <div className="space-y-6">
  {/* Header avec recherche */}
- <div className="flex justify-between items-center">
+ <div className="flex justify-between items-center gap-4 flex-wrap">
  <h2 className="text-2xl font-bold text-gray-900">Documents</h2>
- <div className="relative w-96">
+ <div className="flex items-center gap-3 w-full md:w-auto">
+ <div className="relative flex-1 md:w-96">
  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
  <input
  type="text"
@@ -169,6 +182,21 @@ export default function DocumentsTab({ chantierId }: DocumentsTabProps) {
  value={searchTerm}
  onChange={(e) => setSearchTerm(e.target.value)}
  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+ />
+ </div>
+ <button
+ type="button"
+ onClick={() => quickUploadInputRef.current?.click()}
+ className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors whitespace-nowrap"
+ >
+ <Upload className="h-4 w-4" />
+ Ajouter un document
+ </button>
+ <input
+ ref={quickUploadInputRef}
+ type="file"
+ className="hidden"
+ onChange={handleQuickUpload}
  />
  </div>
  </div>
