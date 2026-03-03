@@ -106,7 +106,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     {
       title: 'DIRECTION',
       items: [
-        { to: '/tableau-de-charge', icon: BarChart3, label: 'Tableau de Charge', show: true },
+        { to: '/tableau-charge', icon: BarChart3, label: 'Tableau de Charge', show: true },
         { to: '/dashboard-financier', icon: DollarSign, label: 'Dashboard Financier', show: true },
         { to: '/pipeline-commercial', icon: TrendingUp, label: 'Pipeline Commercial', show: isDirecteur },
       ],

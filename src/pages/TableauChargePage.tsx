@@ -16,7 +16,7 @@ interface ChargeAffaire {
 interface Chantier {
  id: string;
  nom: string;
- charge_affaire_id: string;
+ charge_affaires_id: string;
  heures_estimees: number;
  date_debut: string;
  date_fin_prevue: string;
@@ -59,7 +59,7 @@ const TableauChargePage: React.FC = () => {
  const { data, error } = await supabase
  .from('users')
  .select('id, nom, prenom, email')
- .eq('role', 'charge_affaire')
+ .eq('role', 'charge_affaires')
  .order('nom');
  if (error) throw error;
  return data as ChargeAffaire[];
@@ -72,7 +72,7 @@ const TableauChargePage: React.FC = () => {
  queryFn: async () => {
  const { data, error } = await supabase
  .from('chantiers')
- .select('id, nom, charge_affaire_id, heures_estimees, date_debut, date_fin_prevue, statut, phase')
+ .select('id, nom, charge_affaires_id, heures_estimees, date_debut, date_fin_prevue, statut, phase')
  .in('statut', ['actif', 'en_cours', 'planifie']);
  if (error) throw error;
  return data as Chantier[];
@@ -101,7 +101,7 @@ const TableauChargePage: React.FC = () => {
  });
 
  chantiers.forEach((chantier) => {
- if (!chantier.charge_affaire_id) return;
+ if (!chantier.charge_affaires_id) return;
 
  const dateDebut = new Date(chantier.date_debut);
  const dateFin = new Date(chantier.date_fin_prevue);
@@ -114,10 +114,10 @@ const TableauChargePage: React.FC = () => {
  const dateComparaison = semaine;
  if (dateComparaison >= dateDebut && dateComparaison <= dateFin) {
  const key = format(semaine, 'yyyy-MM-dd');
- if (result[chantier.charge_affaire_id]?.[key]) {
- result[chantier.charge_affaire_id][key].heures += heuresParSemaine;
- result[chantier.charge_affaire_id][key].chantiers += 1;
- result[chantier.charge_affaire_id][key].chantiersDetails.push({
+ if (result[chantier.charge_affaires_id]?.[key]) {
+ result[chantier.charge_affaires_id][key].heures += heuresParSemaine;
+ result[chantier.charge_affaires_id][key].chantiers += 1;
+ result[chantier.charge_affaires_id][key].chantiersDetails.push({
  id: chantier.id,
  nom: chantier.nom,
  heures: heuresParSemaine,

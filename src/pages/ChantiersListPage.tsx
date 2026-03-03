@@ -18,7 +18,7 @@ interface Chantier {
   statut: 'en_attente' | 'en_cours' | 'termine' | 'suspendu' | 'annule';
   health_score: number;
   avancement_physique: number;
-  charge_affaire_id: string;
+  charge_affaires_id: string;
   date_debut: string;
   date_fin_prevue: string;
   priorite: string;
@@ -58,7 +58,7 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
       let query = supabase.from('chantiers').select('*');
 
       if (filterMine && profile?.id) {
-        query = query.eq('charge_affaire_id', profile.id);
+        query = query.eq('charge_affaires_id', profile.id);
       }
 
       const { data, error } = await query.order('date_debut', { ascending: false });

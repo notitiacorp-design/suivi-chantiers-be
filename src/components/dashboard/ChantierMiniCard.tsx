@@ -7,13 +7,12 @@ interface Chantier {
  id: string;
  nom: string;
  client: string;
- phase: 'Études' | 'Exécution' | 'OPR';
- score_sante: number;
- taux_avancement: number;
- ca_responsable: string;
- date_debut: string;
- date_fin_prevue: string;
- budget_total: number;
+ phase: string;
+ health_score?: number;
+ score_sante?: number;
+ avancement_physique?: number;
+ taux_avancement?: number;
+ ca_responsable?: string;
 }
 
 interface ChantierMiniCardProps {
@@ -42,11 +41,15 @@ const ChantierMiniCard: React.FC<ChantierMiniCardProps> = ({ chantier }) => {
  }
  };
 
+ const scoreSante = chantier.health_score ?? chantier.score_sante ?? 0;
+ const tauxAvancement = chantier.avancement_physique ?? chantier.taux_avancement ?? 0;
+ const phaseLabel = chantier.phase ? chantier.phase.charAt(0).toUpperCase() + chantier.phase.slice(1) : 'Non défini';
+
  return (
  <div
  onClick={() => navigate(`/chantiers/${chantier.id}`)}
  className={`
- bg-white rounded-lg shadow-md p-4 border-l-4 ${getBorderColor(chantier.score_sante)}
+ bg-white rounded-lg shadow-md p-4 border-l-4 ${getBorderColor(scoreSante)}
  cursor-pointer transition-all hover:shadow-lg hover:-translate-y-1
  `}
  >
@@ -61,29 +64,29 @@ const ChantierMiniCard: React.FC<ChantierMiniCardProps> = ({ chantier }) => {
  </div>
  </div>
  <div className="ml-3">
- <HealthScoreGauge score={chantier.score_sante} size="small" showLabel={false} />
+ <HealthScoreGauge score={scoreSante} size="small" showLabel={false} />
  </div>
  </div>
 
  <div className="flex items-center justify-between">
- <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getPhaseColor(chantier.phase)}`}>
- {chantier.phase}
+ <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getPhaseColor(phaseLabel)}`}>
+ {phaseLabel}
  </span>
  <div className="flex items-center text-sm text-gray-600">
  <User className="w-4 h-4 mr-1" />
- <span>{chantier.ca_responsable}</span>
+ <span>{chantier.ca_responsable || "—"}</span>
  </div>
  </div>
 
  <div className="mt-3 pt-3 border-t border-gray-200">
  <div className="flex justify-between items-center text-sm">
  <span className="text-gray-600">Avancement</span>
- <span className="font-semibold text-gray-900">{chantier.taux_avancement}%</span>
+ <span className="font-semibold text-gray-900">{tauxAvancement}%</span>
  </div>
  <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
  <div
  className="bg-blue-600 h-2 rounded-full transition-all"
- style={{ width: `${chantier.taux_avancement}%` }}
+ style={{ width: `${tauxAvancement}%` }}
  ></div>
  </div>
  </div>

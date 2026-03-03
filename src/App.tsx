@@ -81,6 +81,7 @@ const App: React.FC = () => {
                 <Route path="tous-chantiers" element={<TousChantiersPage />} />
                 <Route path="chantiers/:id" element={<ChantierDetailPage />} />
                 <Route path="tableau-charge" element={<TableauChargePage />} />
+                <Route path="tableau-de-charge" element={<TableauChargePage />} />
                 <Route path="facturation" element={<FacturationPage />} />
                 <Route path="facturation-globale" element={<FacturationGlobalePage />} />
                 <Route path="documents" element={<DocumentsPage />} />
@@ -89,6 +90,7 @@ const App: React.FC = () => {
                   <Route path="notifications" element={<NotificationsPage />} />
                 <Route path="journal-chantier" element={<JournalChantierPage />} />
                 <Route path="pipeline" element={<PipelineCommercialPage />} />
+                <Route path="pipeline-commercial" element={<PipelineCommercialPage />} />
                 <Route path="achats" element={<AchatsPage />} />
                 <Route path="planning" element={<PlanningPage />} />
               </Route>
