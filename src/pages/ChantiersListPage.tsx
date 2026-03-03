@@ -111,7 +111,8 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
       setLoading(true);
       let query = supabase.from('chantiers').select('*');
 
-      if (filterMine && profile?.id) {
+      const isDirecteur = profile?.role === 'directeur' || profile?.role === 'admin';
+      if (filterMine && profile?.id && !isDirecteur) {
         query = query.eq('charge_affaires_id', profile.id);
       }
 
@@ -215,7 +216,7 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
 
       {filteredChantiers.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-xl shadow-sm">
-          <p className="text-gray-500 text-lg">Aucun chantier trouvé</p>
+          <p className="text-gray-500 text-lg">{filterMine ? 'Aucun chantier assigné à votre profil' : 'Aucun chantier trouvé'}</p>
         </div>
       ) : (
         <div className="bg-white shadow overflow-hidden sm:rounded-xl">
@@ -311,8 +312,8 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
               <input className="border rounded p-2" placeholder="Code postal" value={newChantier.code_postal} onChange={(e)=>setNewChantier({...newChantier, code_postal:e.target.value})}/>
               <input className="border rounded p-2" type="number" placeholder="Budget initial" value={newChantier.budget_initial} onChange={(e)=>setNewChantier({...newChantier, budget_initial:Number(e.target.value)})}/>
               <input className="border rounded p-2 md:col-span-2" placeholder="Adresse" value={newChantier.adresse} onChange={(e)=>setNewChantier({...newChantier, adresse:e.target.value})}/>
-              <input className="border rounded p-2" type="date" value={newChantier.date_debut} onChange={(e)=>setNewChantier({...newChantier, date_debut:e.target.value})}/>
-              <input className="border rounded p-2" type="date" value={newChantier.date_fin_prevue} onChange={(e)=>setNewChantier({...newChantier, date_fin_prevue:e.target.value})}/>
+              <input className="border rounded p-2" type="date" lang="fr-FR" placeholder="jj/mm/aaaa" value={newChantier.date_debut} onChange={(e)=>setNewChantier({...newChantier, date_debut:e.target.value})}/>
+              <input className="border rounded p-2" type="date" lang="fr-FR" placeholder="jj/mm/aaaa" value={newChantier.date_fin_prevue} onChange={(e)=>setNewChantier({...newChantier, date_fin_prevue:e.target.value})}/>
               <select className="border rounded p-2" value={newChantier.phase} onChange={(e)=>setNewChantier({...newChantier, phase:e.target.value})}>
                 <option value="etude">Étude</option><option value="preparation">Préparation</option><option value="execution">Exécution</option><option value="reception">Réception</option><option value="garantie">Garantie</option>
               </select>

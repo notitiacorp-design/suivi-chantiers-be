@@ -189,7 +189,7 @@ export default function PlanningPage() {
           <button
             onClick={() => setCurrentMonday(addDays(currentMonday, -7))}
             style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#6B7280' }}
-            aria-label="Semaine prÃ©cÃ©dente"
+            aria-label="Semaine précédente"
           >
             <ChevronLeft size={20} />
           </button>

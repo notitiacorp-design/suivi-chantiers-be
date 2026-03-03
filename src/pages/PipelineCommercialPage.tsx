@@ -287,10 +287,11 @@ export default function PipelineCommercialPage() {
   };
 
   const formatCurrency = (amount: number) => {
+    const safeAmount = Number.isFinite(amount) ? amount : 0;
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
       currency: 'EUR',
-    }).format(amount);
+    }).format(safeAmount);
   };
 
   const isOverdue = (date: string | undefined) => {
@@ -381,7 +382,7 @@ export default function PipelineCommercialPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
+        <div className="relative z-20 bg-white rounded-xl shadow-sm p-6 mb-8">
           <div className="flex items-center gap-4 flex-wrap">
             <div className="flex items-center gap-2">
               <Filter className="w-5 h-5 text-gray-500" />

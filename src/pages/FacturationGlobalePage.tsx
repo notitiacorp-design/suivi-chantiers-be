@@ -346,7 +346,7 @@ const FacturationGlobalePage: React.FC = () => {
  {/* Top 5 chantiers par facturation */}
  <div className="bg-white rounded-xl shadow-sm p-6">
  <h3 className="text-lg font-semibold text-gray-900 mb-4">Top 5 Chantiers par Facturation</h3>
- <div className="space-y-3">
+ <div className="space-y-3 max-h-[360px] overflow-y-auto pr-1">
  {facturationParChantier.map((chantier, index) => (
  <div key={index} className="flex items-center gap-3">
  <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
@@ -357,7 +357,7 @@ const FacturationGlobalePage: React.FC = () => {
  <div className="mt-1 w-full bg-gray-200 rounded-full h-2">
  <div
  className="bg-blue-600 h-2 rounded-full"
- style={{ width: `${(chantier.total / facturationParChantier[0].total) * 100}%` }}
+ style={{ width: `${facturationParChantier[0]?.total ? (chantier.total / facturationParChantier[0].total) * 100 : 0}%` }}
  />
  </div>
  </div>
@@ -375,7 +375,7 @@ const FacturationGlobalePage: React.FC = () => {
  {/* Liste des factures récentes */}
  <div className="bg-white rounded-xl shadow-sm p-6">
  <h3 className="text-lg font-semibold text-gray-900 mb-4">Factures Récentes</h3>
- <div className="space-y-3">
+ <div className="space-y-3 max-h-[360px] overflow-y-auto pr-1">
  {factures.slice(0, 10).map((facture) => {
  const chantier = chantiers.find(c => c.id === facture.chantier_id);
  const isEnRetard = facture.statut === 'emise' && isPast(parseISO(facture.date_echeance));
