@@ -102,13 +102,9 @@ export default function PlanningPage() {
         .or(`date_debut.lte.${weekEnd},date_fin.gte.${weekStart}`)
         .order('technicien_nom', { ascending: true });
       if (error) throw error;
-      if (data && data.length > 0) {
-        setAffectations(data);
-      } else {
-        setAffectations(getDemoData(currentMonday));
-      }
+      setAffectations(data || []);
     } catch {
-      setAffectations(getDemoData(currentMonday));
+      setAffectations([]);
     } finally {
       setLoading(false);
     }
@@ -135,7 +131,7 @@ export default function PlanningPage() {
         notes: form.notes.trim() || null,
       });
       if (error) throw error;
-      toast.success('Affectation ajoutÃ©e');
+      toast.success('Affectation ajoutée');
       setShowModal(false);
       setForm({ technicien_nom: '', technicien_initiales: '', chantier_nom: '', date_debut: '', date_fin: '', type: 'installation', notes: '' });
       fetchAffectations();
@@ -187,7 +183,7 @@ export default function PlanningPage() {
         justifyContent: 'space-between',
       }}>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#111827', margin: 0 }}>
-          Planning Ã©quipe — {monthName} {year}
+          Planning équipe — {monthName} {year}
         </h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <button
