@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { Download, Upload, Search, X, Eye, Trash2, FileText, Image as ImageIcon, File } from 'lucide-react';
 import { format } from 'date-fns';
+import { toast } from 'react-hot-toast';
 import { fr } from 'date-fns/locale';
 
 type DocumentCategory = 'plans' | 'pv_reunion' | 'doe' | 'dgd' | 'fiches_techniques' | 'photos' | 'autres';
@@ -99,6 +100,10 @@ export default function DocumentsTab({ chantierId }: DocumentsTabProps) {
  },
  onSuccess: () => {
  queryClient.invalidateQueries({ queryKey: ['documents', chantierId] });
+ toast.success('Document ajouté avec succès');
+ },
+ onError: (error: any) => {
+ toast.error(error?.message || "Erreur lors de l'envoi du document");
  },
  });
 
@@ -119,6 +124,10 @@ export default function DocumentsTab({ chantierId }: DocumentsTabProps) {
  },
  onSuccess: () => {
  queryClient.invalidateQueries({ queryKey: ['documents', chantierId] });
+ toast.success('Document supprimé avec succès');
+ },
+ onError: (error: any) => {
+ toast.error(error?.message || 'Erreur lors de la suppression du document');
  },
  });
 
@@ -187,15 +196,17 @@ export default function DocumentsTab({ chantierId }: DocumentsTabProps) {
  <button
  type="button"
  onClick={() => quickUploadInputRef.current?.click()}
- className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors whitespace-nowrap"
+ disabled={uploadMutation.isPending}
+ className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
  >
  <Upload className="h-4 w-4" />
- Ajouter un document
+ {uploadMutation.isPending ? 'Envoi en cours…' : 'Ajouter un document'}
  </button>
  <input
  ref={quickUploadInputRef}
  type="file"
  className="hidden"
+ accept="image/*,.pdf,.doc,.docx,.xls,.xlsx"
  onChange={handleQuickUpload}
  />
  </div>
