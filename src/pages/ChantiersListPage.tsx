@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
-import { MagnifyingGlassIcon, FunnelIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, FunnelIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 
 interface ChantiersListPageProps {
@@ -47,6 +48,59 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [phaseFilter, setPhaseFilter] = useState<string>('all');
+  const [showCreate, setShowCreate] = useState(false);
+  const [newChantier, setNewChantier] = useState({
+    nom: '',
+    numero: '',
+    client: '',
+    adresse: '',
+    ville: '',
+    code_postal: '',
+    charge_affaires_id: '',
+    date_debut: new Date().toISOString().split('T')[0],
+    date_fin_prevue: '',
+    budget_initial: 0,
+    phase: 'etude',
+  });
+
+  const { data: chargesAffaires = [] } = useQuery({
+    queryKey: ['charges-affaires-list'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, nom, prenom')
+        .eq('role', 'charge_affaires')
+        .order('nom');
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  const createChantierMutation = useMutation({
+    mutationFn: async () => {
+      const payload = {
+        ...newChantier,
+        budget_actuel: Number(newChantier.budget_initial) || 0,
+        depenses_actuelles: 0,
+        avancement_physique: 0,
+        health_score: 100,
+        actif: true,
+        statut: 'en_attente',
+      };
+      const { error } = await supabase.from('chantiers').insert(payload);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success('Chantier créé');
+      setShowCreate(false);
+      setNewChantier({
+        nom: '', numero: '', client: '', adresse: '', ville: '', code_postal: '', charge_affaires_id: '',
+        date_debut: new Date().toISOString().split('T')[0], date_fin_prevue: '', budget_initial: 0, phase: 'etude',
+      });
+      fetchChantiers();
+    },
+    onError: (error: any) => toast.error(error.message || 'Erreur création chantier'),
+  });
 
   useEffect(() => {
     fetchChantiers();
@@ -117,10 +171,15 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-6">
+      <div className="mb-6 flex items-center justify-between gap-3">
         <h1 className="text-3xl font-bold text-gray-900">
           {filterMine ? 'Mes Chantiers' : 'Tous les Chantiers'}
         </h1>
+        {!filterMine && (
+          <button onClick={() => setShowCreate(true)} className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            <PlusIcon className="w-5 h-5" /> Nouveau chantier
+          </button>
+        )}
       </div>
 
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
@@ -237,6 +296,34 @@ const ChantiersListPage: React.FC<ChantiersListPageProps> = ({ filterMine = fals
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+      {showCreate && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setShowCreate(false)}>
+          <div className="bg-white rounded-xl w-full max-w-2xl p-6" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4"><h2 className="text-xl font-semibold">Nouveau chantier</h2><button onClick={() => setShowCreate(false)}><XMarkIcon className="w-5 h-5" /></button></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <input className="border rounded p-2" placeholder="Numéro" value={newChantier.numero} onChange={(e)=>setNewChantier({...newChantier, numero:e.target.value})}/>
+              <input className="border rounded p-2" placeholder="Nom" value={newChantier.nom} onChange={(e)=>setNewChantier({...newChantier, nom:e.target.value})}/>
+              <input className="border rounded p-2" placeholder="Client" value={newChantier.client} onChange={(e)=>setNewChantier({...newChantier, client:e.target.value})}/>
+              <input className="border rounded p-2" placeholder="Ville" value={newChantier.ville} onChange={(e)=>setNewChantier({...newChantier, ville:e.target.value})}/>
+              <input className="border rounded p-2" placeholder="Code postal" value={newChantier.code_postal} onChange={(e)=>setNewChantier({...newChantier, code_postal:e.target.value})}/>
+              <input className="border rounded p-2" type="number" placeholder="Budget initial" value={newChantier.budget_initial} onChange={(e)=>setNewChantier({...newChantier, budget_initial:Number(e.target.value)})}/>
+              <input className="border rounded p-2 md:col-span-2" placeholder="Adresse" value={newChantier.adresse} onChange={(e)=>setNewChantier({...newChantier, adresse:e.target.value})}/>
+              <input className="border rounded p-2" type="date" value={newChantier.date_debut} onChange={(e)=>setNewChantier({...newChantier, date_debut:e.target.value})}/>
+              <input className="border rounded p-2" type="date" value={newChantier.date_fin_prevue} onChange={(e)=>setNewChantier({...newChantier, date_fin_prevue:e.target.value})}/>
+              <select className="border rounded p-2" value={newChantier.phase} onChange={(e)=>setNewChantier({...newChantier, phase:e.target.value})}>
+                <option value="etude">Étude</option><option value="preparation">Préparation</option><option value="execution">Exécution</option><option value="reception">Réception</option><option value="garantie">Garantie</option>
+              </select>
+              <select className="border rounded p-2" value={newChantier.charge_affaires_id} onChange={(e)=>setNewChantier({...newChantier, charge_affaires_id:e.target.value})}>
+                <option value="">Chargé d'affaires</option>
+                {chargesAffaires.map((ca: any)=><option key={ca.id} value={ca.id}>{ca.prenom} {ca.nom}</option>)}
+              </select>
+            </div>
+            <div className="mt-4 flex justify-end">
+              <button disabled={createChantierMutation.isPending || !newChantier.nom || !newChantier.numero || !newChantier.client || !newChantier.charge_affaires_id || !newChantier.date_fin_prevue} onClick={()=>createChantierMutation.mutate()} className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50">Créer</button>
+            </div>
           </div>
         </div>
       )}
