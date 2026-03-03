@@ -184,6 +184,8 @@ const FacturationGlobalePage: React.FC = () => {
  ].filter(s => s.value > 0);
  }, [factures]);
 
+ const hasFacturationData = factures.length > 0;
+
  const formatEuro = (value: number) => {
  const safeValue = Number.isFinite(value) ? value : 0;
  return new Intl.NumberFormat('fr-FR', {
@@ -232,6 +234,12 @@ const FacturationGlobalePage: React.FC = () => {
  Retour aux chantiers
  </button>
  </div>
+
+ {!hasFacturationData && (
+ <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-800">
+ Aucune facture enregistrée pour le moment. Créez des factures pour alimenter les graphiques et indicateurs.
+ </div>
+ )}
 
  {/* KPIs */}
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
