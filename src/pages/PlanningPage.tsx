@@ -22,11 +22,11 @@ const TYPE_CONFIG: Record<AffectationType, { label: string; color: string; bg: s
   installation: { label: 'Installation', color: '#2563EB', bg: '#EFF6FF', borderColor: '#2563EB' },
   sav: { label: 'SAV', color: '#DC2626', bg: '#FEF2F2', borderColor: '#DC2626' },
   maintenance: { label: 'Maintenance', color: '#16A34A', bg: '#F0FDF4', borderColor: '#16A34A' },
-  etude: { label: 'Ãtude', color: '#7C3AED', bg: '#FAF5FF', borderColor: '#7C3AED' },
+  etude: { label: 'Étude', color: '#7C3AED', bg: '#FAF5FF', borderColor: '#7C3AED' },
 };
 
 const DAY_NAMES = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven'];
-const MONTH_NAMES = ['Janvier', 'FÃ©vrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'AoÃ»t', 'Septembre', 'Octobre', 'Novembre', 'DÃ©cembre'];
+const MONTH_NAMES = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
 function getMonday(date: Date): Date {
   const d = new Date(date);
@@ -59,13 +59,13 @@ function getDemoData(monday: Date): Affectation[] {
   const thu = formatDate(addDays(monday, 3));
   const fri = formatDate(addDays(monday, 4));
   return [
-    { id: 'demo-1', technicien_nom: 'Thomas D.', technicien_initiales: 'TD', chantier_id: null, chantier_nom: 'CollÃ¨ge J.M. â Montage hottes', date_debut: mon, date_fin: wed, type: 'installation', notes: null, created_at: mon },
-    { id: 'demo-2', technicien_nom: 'Thomas D.', technicien_initiales: 'TD', chantier_id: null, chantier_nom: 'Mairie â Ãtude', date_debut: thu, date_fin: thu, type: 'etude', notes: null, created_at: mon },
-    { id: 'demo-3', technicien_nom: 'Marc L.', technicien_initiales: 'ML', chantier_id: null, chantier_nom: 'EHPAD â Livraison froid', date_debut: mon, date_fin: tue, type: 'installation', notes: null, created_at: mon },
-    { id: 'demo-4', technicien_nom: 'Marc L.', technicien_initiales: 'ML', chantier_id: null, chantier_nom: 'BNP â SAV urgent', date_debut: wed, date_fin: wed, type: 'sav', notes: null, created_at: mon },
-    { id: 'demo-5', technicien_nom: 'Julie M.', technicien_initiales: 'JM', chantier_id: null, chantier_nom: 'Gr. Pasteur â Maint.', date_debut: mon, date_fin: mon, type: 'maintenance', notes: null, created_at: mon },
-    { id: 'demo-6', technicien_nom: 'Julie M.', technicien_initiales: 'JM', chantier_id: null, chantier_nom: 'CollÃ¨ge J.M. â Formation', date_debut: thu, date_fin: fri, type: 'installation', notes: null, created_at: mon },
-    { id: 'demo-7', technicien_nom: 'Pierre B.', technicien_initiales: 'PB', chantier_id: null, chantier_nom: 'EHPAD Vincennes â Installation complÃ¨te', date_debut: mon, date_fin: fri, type: 'installation', notes: null, created_at: mon },
+    { id: 'demo-1', technicien_nom: 'Thomas D.', technicien_initiales: 'TD', chantier_id: null, chantier_nom: 'Collège J.M. — Montage hottes', date_debut: mon, date_fin: wed, type: 'installation', notes: null, created_at: mon },
+    { id: 'demo-2', technicien_nom: 'Thomas D.', technicien_initiales: 'TD', chantier_id: null, chantier_nom: 'Mairie — Étude', date_debut: thu, date_fin: thu, type: 'etude', notes: null, created_at: mon },
+    { id: 'demo-3', technicien_nom: 'Marc L.', technicien_initiales: 'ML', chantier_id: null, chantier_nom: 'EHPAD — Livraison froid', date_debut: mon, date_fin: tue, type: 'installation', notes: null, created_at: mon },
+    { id: 'demo-4', technicien_nom: 'Marc L.', technicien_initiales: 'ML', chantier_id: null, chantier_nom: 'BNP — SAV urgent', date_debut: wed, date_fin: wed, type: 'sav', notes: null, created_at: mon },
+    { id: 'demo-5', technicien_nom: 'Julie M.', technicien_initiales: 'JM', chantier_id: null, chantier_nom: 'Gr. Pasteur — Maint.', date_debut: mon, date_fin: mon, type: 'maintenance', notes: null, created_at: mon },
+    { id: 'demo-6', technicien_nom: 'Julie M.', technicien_initiales: 'JM', chantier_id: null, chantier_nom: 'Collège J.M. — Formation', date_debut: thu, date_fin: fri, type: 'installation', notes: null, created_at: mon },
+    { id: 'demo-7', technicien_nom: 'Pierre B.', technicien_initiales: 'PB', chantier_id: null, chantier_nom: 'EHPAD Vincennes — Installation complète', date_debut: mon, date_fin: fri, type: 'installation', notes: null, created_at: mon },
   ];
 }
 
@@ -187,7 +187,7 @@ export default function PlanningPage() {
         justifyContent: 'space-between',
       }}>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#111827', margin: 0 }}>
-          Planning Ã©quipe â {monthName} {year}
+          Planning Ã©quipe — {monthName} {year}
         </h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <button
@@ -371,13 +371,13 @@ export default function PlanningPage() {
                 <input
                   value={form.chantier_nom}
                   onChange={e => setForm(f => ({ ...f, chantier_nom: e.target.value }))}
-                  placeholder="Ex: CollÃ¨ge J.M. â Montage hottes"
+                  placeholder="Ex: Collège J.M. — Montage hottes"
                   style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid #D1D5DB', fontSize: 14, outline: 'none', boxSizing: 'border-box' as const }}
                 />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#374151', marginBottom: 4 }}>DÃ©but *</label>
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#374151', marginBottom: 4 }}>Début *</label>
                   <input type="date" lang="fr-FR" placeholder="jj/mm/aaaa" value={form.date_debut} onChange={e => setForm(f => ({ ...f, date_debut: e.target.value }))}
                     style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid #D1D5DB', fontSize: 14, outline: 'none', boxSizing: 'border-box' as const }} />
                 </div>

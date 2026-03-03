@@ -50,6 +50,8 @@ const TableauChargePage: React.FC = () => {
  } | null>(null);
  const [nbSemaines, setNbSemaines] = useState(12);
 
+ const safeDivide = (value: number, divisor: number) => (divisor > 0 ? value / divisor : 0);
+
  // Récupération des chargés d'affaires
  const { data: chargesAffaires = [], isLoading: loadingCA } = useQuery({
  queryKey: ['charges-affaires'],
@@ -136,7 +138,7 @@ const TableauChargePage: React.FC = () => {
  (sum, cell) => sum + cell.heures,
  0
  );
- const moyenneHebdo = totalHeures / nbSemaines;
+ const moyenneHebdo = safeDivide(totalHeures, nbSemaines);
  return {
  nom: `${ca.prenom} ${ca.nom}`,
  charge: Math.round(moyenneHebdo),
@@ -213,9 +215,10 @@ const TableauChargePage: React.FC = () => {
  <p className="text-sm text-purple-600 font-medium">Charge moyenne hebdo</p>
  <p className="text-2xl font-bold text-purple-900">
  {Math.round(
- chantiers.reduce((sum, c) => sum + (c.heures_estimees || 0), 0) /
- chargesAffaires.length /
+ safeDivide(
+ safeDivide(chantiers.reduce((sum, c) => sum + (c.heures_estimees || 0), 0), chargesAffaires.length),
  nbSemaines
+ )
  )}h
  </p>
  </div>

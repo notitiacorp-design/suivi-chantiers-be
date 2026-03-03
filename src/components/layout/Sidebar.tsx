@@ -44,6 +44,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { user, profile, isDirecteur, signOut } = useAuth();
   const navigate = useNavigate();
   const [unreadCount, setUnreadCount] = useState(0);
+  const displayName = profile?.full_name || [profile?.prenom, profile?.nom].filter(Boolean).join(' ') || 'Utilisateur';
 
   useEffect(() => {
     if (!profile?.id) return;
@@ -195,7 +196,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             </div>
             <div className="ml-3">
               <p className="text-sm font-medium text-white">
-                {profile?.prenom ? profile.prenom + ' ' + profile.nom : 'Quentin CONVERT'}
+                {displayName}
               </p>
               <p className="text-xs text-stone-400">
                 {isDirecteur ? 'Directeur' : 'Charge d&#39;affaires'}

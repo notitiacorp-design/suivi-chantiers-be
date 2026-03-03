@@ -219,12 +219,13 @@ const DashboardFinancierPage: React.FC = () => {
  const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 
  const formatEuro = (value: number) => {
+ const safeValue = Number.isFinite(value) ? value : 0;
  return new Intl.NumberFormat('fr-FR', {
  style: 'currency',
  currency: 'EUR',
  minimumFractionDigits: 0,
  maximumFractionDigits: 0
- }).format(value);
+ }).format(safeValue);
  };
 
  const KPICard: React.FC<{

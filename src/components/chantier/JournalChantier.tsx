@@ -180,7 +180,7 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
         setHasMore(false);
       }
     } catch (error: any) {
-      console.error("Erreur chargement plus d'entrÃ©es:", error);
+      console.error("Erreur chargement plus d'entrées:", error);
     }
   };
 
@@ -329,7 +329,7 @@ const JournalChantier: React.FC<JournalChantierProps> = ({ chantierId }) => {
             className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <Plus className="w-4 h-4" />
-            <span>Nouvelle entrÃ©e</span>
+            <span>Nouvelle entrée</span>
           </button>
         </div>
 
